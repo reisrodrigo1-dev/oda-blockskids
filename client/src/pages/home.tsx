@@ -23,7 +23,13 @@ export default function Home() {
             Sou professor
           </button>
           <button
-            onClick={() => setLocation("/editor")}
+            onClick={() => setLocation("/exploracao-espacial")}
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full shadow-block transition-all duration-200 text-sm"
+          >
+            🚀 Exploração Espacial
+          </button>
+          <button
+            onClick={() => setLocation("/editor-offline")}
             className="bg-kid-orange hover:bg-yellow-400 text-white font-bold py-3 px-8 rounded-full shadow-playful transition-all duration-200 text-lg"
           >
             Iniciar
@@ -47,7 +53,7 @@ export default function Home() {
           <div className="flex justify-center gap-4 mt-8">
             <a href="https://oficinadoamanha.com.br" target="_blank" rel="noopener" className="bg-kid-green hover:bg-green-500 text-white font-bold py-3 px-8 rounded-full shadow-block transition-all duration-200">Conheça a Oficina do Amanhã</a>
             <button
-              onClick={() => setLocation("/editor")}
+              onClick={() => setLocation("/editor-offline")}
               className="bg-kid-orange hover:bg-yellow-400 text-white font-bold py-3 px-8 rounded-full shadow-playful transition-all duration-200"
             >
               Iniciar agora

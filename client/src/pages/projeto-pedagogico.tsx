@@ -19,7 +19,7 @@ const anos = [
 ];
 
 
-const aulasPorAno: Record<string, Array<{ titulo: string; atividade: string; habilidade: string }>> = {
+const aulasPorAno: Record<string, Array<{ titulo: string; atividade: string; habilidade: string; link?: string }>> = {
   "1º Ano do Fundamental": [
     {
       titulo: "Tema #M21 – Exploração Espacial: Robô Marciano",
@@ -258,12 +258,14 @@ const aulasPorAno: Record<string, Array<{ titulo: string; atividade: string; hab
     {
       titulo: "Tema #M14 – Projeto Final – Exploração Espacial",
       atividade: "6 aulas de projeto final integrando Mecânica, Eletrônica e Programação (MEP) para exploração de lugares remotos no universo.",
-      habilidade: "Integração completa de conhecimentos técnicos em projeto espacial."
+      habilidade: "Integração completa de conhecimentos técnicos em projeto espacial.",
+      link: "/projeto-final-espacial"
     },
     {
       titulo: "Projeto #1 – Exploração Espacial",
       atividade: "6 aulas: Apresentação do problema de exploração universal, pesquisa sobre importância da exploração espacial, idealização e desenvolvimento do projeto, apresentação final.",
-      habilidade: "Pensamento científico aplicado à exploração espacial e apresentação técnica."
+      habilidade: "Pensamento científico aplicado à exploração espacial e apresentação técnica.",
+      link: "/exploracao-espacial"
     },
   ],
   "Turmas Mistas - Problemas Urbanos": [
@@ -355,20 +357,25 @@ const ProjetoPedagogico: React.FC = () => {
         </div>
         <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {aulasPorAno[anoSelecionado].map((aula, idx) => {
-            const isInteractive = aula.titulo.includes('Robô Marciano') || 
+            const isInteractive = aula.link || aula.titulo.includes('Robô Marciano') || 
                                  aula.titulo.includes('Tema #611') || 
                                  aula.titulo.includes('Tema #613') ||
                                  aula.titulo.includes('Tema #M11') ||
                                  aula.titulo.includes('Tema #M12') ||
-                                 aula.titulo.includes('Tema #M13');
+                                 aula.titulo.includes('Tema #M13') ||
+                                 aula.titulo.includes('Tema #M14') ||
+                                 aula.titulo.includes('Exploração Espacial');
             
-            const getRoute = (titulo: string) => {
+            const getRoute = (titulo: string, link?: string) => {
+              if (link) return link;
               if (titulo.includes('Robô Marciano')) return '/robo-marciano';
               if (titulo.includes('Tema #611')) return '/robos-por-humanos';
               if (titulo.includes('Tema #613')) return '/cidade-inteligente';
               if (titulo.includes('Tema #M11')) return '/agronomia-sustentavel';
               if (titulo.includes('Tema #M12')) return '/robos-por-humanos';
               if (titulo.includes('Tema #M13')) return '/energias-sustentaveis';
+              if (titulo.includes('Tema #M14')) return '/projeto-final-espacial';
+              if (titulo.includes('Exploração Espacial')) return '/exploracao-espacial';
               return '';
             };
 
@@ -379,6 +386,7 @@ const ProjetoPedagogico: React.FC = () => {
               if (titulo.includes('Tema #M11')) return '🌱';
               if (titulo.includes('Tema #M12')) return '🦾';
               if (titulo.includes('Tema #M13')) return '⚡';
+              if (titulo.includes('Tema #M14') || titulo.includes('Exploração Espacial')) return '🛸';
               return '📘';
             };
 
@@ -390,7 +398,7 @@ const ProjetoPedagogico: React.FC = () => {
                 }`}
                 onClick={() => {
                   if (isInteractive) {
-                    setLocation(getRoute(aula.titulo));
+                    setLocation(getRoute(aula.titulo, aula.link));
                   }
                 }}
               >
