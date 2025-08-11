@@ -69,6 +69,9 @@ export default function Header({ onShowTutorial }: HeaderProps) {
               <p className="text-sm text-gray-600 font-semibold">
                 Programe com blocos coloridos!
               </p>
+              <p className="text-sm text-gray-600">
+                Powered by Oficina do Amanhã
+              </p>
             </div>
           </div>
 

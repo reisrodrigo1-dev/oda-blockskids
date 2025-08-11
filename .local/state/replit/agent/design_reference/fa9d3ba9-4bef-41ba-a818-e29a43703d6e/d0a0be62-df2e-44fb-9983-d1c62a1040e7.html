@@ -1,0 +1,581 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Blocks Kids - IDE Visual para Crianças</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'nunito': ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        'kid-blue': '#4A90E2',
+                        'kid-green': '#7ED321', 
+                        'kid-orange': '#F5A623',
+                        'kid-red': '#D0021B',
+                        'kid-purple': '#9013FE',
+                        'kid-pink': '#E91E63',
+                    },
+                    boxShadow: {
+                        'playful': '0 4px 15px rgba(74, 144, 226, 0.3)',
+                        'block': '0 2px 8px rgba(0, 0, 0, 0.15)',
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+</head>
+<body class="font-nunito bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    
+    <!-- @COMPONENT: Header [top navigation with logo, title, and main actions] -->
+    <header class="bg-white shadow-lg border-b-4 border-kid-blue">
+        <div class="max-w-full mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo and Title -->
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-r from-kid-blue to-kid-purple p-3 rounded-xl shadow-playful">
+                        <i class="fas fa-cubes text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-gray-800">Arduino Blocks Kids</h1>
+                        <p class="text-sm text-gray-600 font-semibold">Programe com blocos coloridos!</p>
+                    </div>
+                </div>
+
+                <!-- Main Actions -->
+                <div class="flex items-center space-x-3">
+                    <!-- Arduino Connection -->
+                    <div class="flex items-center bg-gray-100 rounded-xl px-4 py-2 shadow-block">
+                        <div class="w-3 h-3 bg-kid-red rounded-full mr-2 animate-pulse"></div>
+                        <span class="text-sm font-semibold text-gray-700">Desconectado</span>
+                        <select class="ml-2 bg-transparent text-sm font-semibold text-gray-700 focus:outline-none">
+                            <option>Selecione a porta</option>
+                            <option>COM3 (Arduino Uno)</option>
+                            <option>COM4 (Arduino Nano)</option>
+                        </select>
+                    </div>
+
+                    <!-- Upload Button -->
+                    <button class="bg-gradient-to-r from-kid-green to-green-400 hover:from-kid-green hover:to-green-500 text-white font-bold py-3 px-6 rounded-xl shadow-playful transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                        <i class="fas fa-upload"></i>
+                        <span>Enviar pro Arduino</span>
+                    </button>
+
+                    <!-- Menu -->
+                    <button class="bg-gray-200 hover:bg-gray-300 p-3 rounded-xl shadow-block transition-all duration-200">
+                        <i class="fas fa-bars text-gray-700 text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: MainWorkspace [three-panel layout with blocks, workspace, and code] -->
+    <div class="flex h-screen pt-2">
+        
+        <!-- @COMPONENT: BlockPalette [left sidebar with draggable blocks] -->
+        <div class="w-80 bg-white shadow-lg border-r-2 border-gray-200 overflow-y-auto">
+            <div class="p-4">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-puzzle-piece text-kid-purple mr-2"></i>
+                    Blocos Mágicos
+                </h2>
+                
+                <!-- Block Categories -->
+                <div class="space-y-4">
+                    <!-- Basic Blocks -->
+                    <div class="block-category">
+                        <h3 class="font-bold text-sm text-gray-700 mb-2 flex items-center">
+                            <div class="w-4 h-4 bg-kid-blue rounded mr-2"></div>
+                            BÁSICO
+                        </h3>
+                        <div class="space-y-2">
+                            <!-- Setup Block -->
+                            <div class="drag-block bg-kid-blue text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-play-circle mr-2"></i>
+                                <span class="font-semibold">Iniciar programa</span>
+                            </div>
+                            <!-- Loop Block -->
+                            <div class="drag-block bg-kid-blue text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-sync-alt mr-2"></i>
+                                <span class="font-semibold">Repetir sempre</span>
+                            </div>
+                            <!-- Wait Block -->
+                            <div class="drag-block bg-kid-blue text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-clock mr-2"></i>
+                                <span class="font-semibold">Esperar</span>
+                                <input type="number" value="1" class="ml-2 w-12 px-1 py-1 rounded text-black text-xs" min="1">
+                                <span class="ml-1 text-xs">seg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LED Blocks -->
+                    <div class="block-category">
+                        <h3 class="font-bold text-sm text-gray-700 mb-2 flex items-center">
+                            <div class="w-4 h-4 bg-kid-orange rounded mr-2"></div>
+                            LEDS
+                        </h3>
+                        <div class="space-y-2">
+                            <!-- LED On Block -->
+                            <div class="drag-block bg-kid-orange text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-lightbulb mr-2"></i>
+                                <span class="font-semibold">Acender LED</span>
+                                <select class="ml-2 px-1 py-1 rounded text-black text-xs">
+                                    <option>Pino 13</option>
+                                    <option>Pino 12</option>
+                                    <option>Pino 11</option>
+                                </select>
+                            </div>
+                            <!-- LED Off Block -->
+                            <div class="drag-block bg-gray-600 text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="far fa-lightbulb mr-2"></i>
+                                <span class="font-semibold">Apagar LED</span>
+                                <select class="ml-2 px-1 py-1 rounded text-black text-xs">
+                                    <option>Pino 13</option>
+                                    <option>Pino 12</option>
+                                    <option>Pino 11</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sensors Blocks -->
+                    <div class="block-category">
+                        <h3 class="font-bold text-sm text-gray-700 mb-2 flex items-center">
+                            <div class="w-4 h-4 bg-kid-green rounded mr-2"></div>
+                            SENSORES
+                        </h3>
+                        <div class="space-y-2">
+                            <!-- Button Block -->
+                            <div class="drag-block bg-kid-green text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-hand-pointer mr-2"></i>
+                                <span class="font-semibold">Se botão pressionado</span>
+                                <select class="ml-2 px-1 py-1 rounded text-black text-xs">
+                                    <option>Pino 2</option>
+                                    <option>Pino 3</option>
+                                    <option>Pino 4</option>
+                                </select>
+                            </div>
+                            <!-- Temperature Block -->
+                            <div class="drag-block bg-kid-green text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-thermometer-half mr-2"></i>
+                                <span class="font-semibold">Ler temperatura</span>
+                                <select class="ml-2 px-1 py-1 rounded text-black text-xs">
+                                    <option>A0</option>
+                                    <option>A1</option>
+                                    <option>A2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control Blocks -->
+                    <div class="block-category">
+                        <h3 class="font-bold text-sm text-gray-700 mb-2 flex items-center">
+                            <div class="w-4 h-4 bg-kid-purple rounded mr-2"></div>
+                            CONTROLE
+                        </h3>
+                        <div class="space-y-2">
+                            <!-- If Block -->
+                            <div class="drag-block bg-kid-purple text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-question-circle mr-2"></i>
+                                <span class="font-semibold">Se... então...</span>
+                            </div>
+                            <!-- For Block -->
+                            <div class="drag-block bg-kid-purple text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-repeat mr-2"></i>
+                                <span class="font-semibold">Repetir</span>
+                                <input type="number" value="10" class="ml-2 w-12 px-1 py-1 rounded text-black text-xs" min="1">
+                                <span class="ml-1 text-xs">vezes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sound Blocks -->
+                    <div class="block-category">
+                        <h3 class="font-bold text-sm text-gray-700 mb-2 flex items-center">
+                            <div class="w-4 h-4 bg-kid-pink rounded mr-2"></div>
+                            SOM
+                        </h3>
+                        <div class="space-y-2">
+                            <!-- Buzzer Block -->
+                            <div class="drag-block bg-kid-pink text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center" draggable="true">
+                                <i class="fas fa-volume-up mr-2"></i>
+                                <span class="font-semibold">Tocar som</span>
+                                <select class="ml-2 px-1 py-1 rounded text-black text-xs">
+                                    <option>Nota Dó</option>
+                                    <option>Nota Ré</option>
+                                    <option>Nota Mi</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: BlockPalette -->
+
+        <!-- @COMPONENT: WorkspaceArea [center area for dragging and connecting blocks] -->
+        <div class="flex-1 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+            <!-- Workspace Header -->
+            <div class="bg-white border-b-2 border-gray-200 p-4 flex justify-between items-center">
+                <h2 class="font-bold text-lg text-gray-800 flex items-center">
+                    <i class="fas fa-magic text-kid-purple mr-2"></i>
+                    Área de Trabalho Mágica
+                </h2>
+                <div class="flex space-x-2">
+                    <button class="bg-kid-green hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg shadow-block transition-all duration-200 flex items-center">
+                        <i class="fas fa-play mr-2"></i>
+                        Executar
+                    </button>
+                    <button class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg shadow-block transition-all duration-200">
+                        <i class="fas fa-trash mr-2"></i>
+                        Limpar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Drop Zone -->
+            <div id="blockly-workspace" class="h-full p-6 relative">
+                <!-- Grid Background Pattern -->
+                <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle, #4A90E2 1px, transparent 1px); background-size: 20px 20px;"></div>
+                
+                <!-- Welcome Message -->
+                <div class="flex flex-col items-center justify-center h-full text-center" id="welcome-message">
+                    <div class="bg-white rounded-3xl p-8 shadow-playful max-w-md">
+                        <div class="text-6xl mb-4">🎨</div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Comece sua aventura!</h3>
+                        <p class="text-gray-600 font-semibold mb-4">Arraste os blocos coloridos da esquerda para cá e crie programas incríveis!</p>
+                        <div class="flex justify-center space-x-2">
+                            <div class="w-4 h-4 bg-kid-blue rounded-full"></div>
+                            <div class="w-4 h-4 bg-kid-green rounded-full"></div>
+                            <div class="w-4 h-4 bg-kid-orange rounded-full"></div>
+                            <div class="w-4 h-4 bg-kid-purple rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Block Connection (shown when blocks are dropped) -->
+                <div class="hidden" id="sample-blocks">
+                    <!-- This would be populated by Blockly -->
+                    <div class="absolute top-20 left-20">
+                        <div class="connected-block bg-kid-blue text-white p-4 rounded-lg shadow-block mb-2 flex items-center">
+                            <i class="fas fa-play-circle mr-2"></i>
+                            <span class="font-semibold">Iniciar programa</span>
+                        </div>
+                        <div class="connected-block bg-kid-orange text-white p-4 rounded-lg shadow-block mb-2 flex items-center ml-4">
+                            <i class="fas fa-lightbulb mr-2"></i>
+                            <span class="font-semibold">Acender LED Pino 13</span>
+                        </div>
+                        <div class="connected-block bg-kid-blue text-white p-4 rounded-lg shadow-block mb-2 flex items-center ml-4">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span class="font-semibold">Esperar 1 segundo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: WorkspaceArea -->
+
+        <!-- @COMPONENT: CodePanel [right panel showing generated code and serial monitor] -->
+        <div class="w-96 bg-white shadow-lg border-l-2 border-gray-200 flex flex-col">
+            <!-- Tab Headers -->
+            <div class="border-b-2 border-gray-200 flex">
+                <button class="tab-button flex-1 py-3 px-4 font-bold text-sm bg-kid-blue text-white border-r border-gray-200 flex items-center justify-center">
+                    <i class="fas fa-code mr-2"></i>
+                    Código Arduino
+                </button>
+                <button class="tab-button flex-1 py-3 px-4 font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors flex items-center justify-center">
+                    <i class="fas fa-terminal mr-2"></i>
+                    Monitor Serial
+                </button>
+            </div>
+
+            <!-- Code Tab Content -->
+            <div id="code-tab" class="flex-1 flex flex-col">
+                <div class="p-4 bg-gray-100 border-b border-gray-200">
+                    <h3 class="font-bold text-sm text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-magic text-kid-purple mr-2"></i>
+                        Código gerado automaticamente
+                    </h3>
+                    <p class="text-xs text-gray-600">Este código é criado pelos seus blocos!</p>
+                </div>
+                
+                <div class="flex-1 bg-gray-900 text-green-400 font-mono text-sm overflow-y-auto">
+                    <div class="p-4">
+                        <pre id="arduino-code">// Código Arduino gerado pelos blocos
+// 🎨 Criado com Arduino Blocks Kids
+
+void setup() {
+  // Inicializar comunicação serial
+  Serial.begin(9600);
+  Serial.println("🚀 Arduino iniciado!");
+  
+  // Configurar pinos
+  pinMode(13, OUTPUT);  // LED no pino 13
+}
+
+void loop() {
+  // Seu código aparecerá aqui quando você
+  // arrastar os blocos para o workspace!
+  
+  // Exemplo: Piscar LED
+  digitalWrite(13, HIGH);   // Acender LED
+  delay(1000);              // Esperar 1 segundo
+  digitalWrite(13, LOW);    // Apagar LED
+  delay(1000);              // Esperar 1 segundo
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Code Actions -->
+                <div class="p-4 bg-gray-100 border-t border-gray-200 flex space-x-2">
+                    <button class="bg-kid-blue hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-lg text-sm flex items-center transition-colors">
+                        <i class="fas fa-copy mr-1"></i>
+                        Copiar
+                    </button>
+                    <button class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-3 rounded-lg text-sm flex items-center transition-colors">
+                        <i class="fas fa-save mr-1"></i>
+                        Salvar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Serial Monitor Tab Content (hidden) -->
+            <div id="serial-tab" class="hidden flex-1 flex flex-col">
+                <div class="p-4 bg-gray-100 border-b border-gray-200">
+                    <h3 class="font-bold text-sm text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-satellite-dish text-kid-green mr-2"></i>
+                        Monitor Serial
+                    </h3>
+                    <div class="flex items-center space-x-2 text-xs">
+                        <span class="text-gray-600">Taxa: 9600 baud</span>
+                        <div class="flex-1"></div>
+                        <button class="bg-kid-red text-white px-2 py-1 rounded text-xs">Limpar</button>
+                    </div>
+                </div>
+                
+                <div class="flex-1 bg-black text-green-400 font-mono text-sm overflow-y-auto">
+                    <div class="p-4">
+                        <div class="space-y-1">
+                            <div class="text-yellow-400">[14:32:15] 🚀 Arduino iniciado!</div>
+                            <div>[14:32:16] LED aceso</div>
+                            <div>[14:32:17] LED apagado</div>
+                            <div>[14:32:18] LED aceso</div>
+                            <div>[14:32:19] LED apagado</div>
+                            <div class="text-gray-500">Aguardando dados...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Serial Input -->
+                <div class="p-4 bg-gray-100 border-t border-gray-200">
+                    <div class="flex space-x-2">
+                        <input type="text" placeholder="Enviar comando..." class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kid-blue">
+                        <button class="bg-kid-green hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: CodePanel -->
+
+    </div>
+    <!-- @END_COMPONENT: MainWorkspace -->
+
+    <!-- @COMPONENT: TutorialModal [getting started guide overlay] -->
+    <div id="tutorial-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl mx-4 overflow-hidden">
+            <div class="bg-gradient-to-r from-kid-purple to-kid-pink p-6 text-white">
+                <h2 class="text-3xl font-black mb-2">🌟 Bem-vindo ao Arduino Blocks Kids!</h2>
+                <p class="text-lg opacity-90">Vamos aprender a criar programas incríveis!</p>
+            </div>
+            
+            <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="text-center">
+                        <div class="bg-kid-blue rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-puzzle-piece text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">1. Arraste os blocos</h3>
+                        <p class="text-gray-600">Pegue os blocos coloridos da esquerda e arraste para o centro</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-kid-orange rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-link text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">2. Conecte os blocos</h3>
+                        <p class="text-gray-600">Una os blocos como um quebra-cabeças para criar seu programa</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-kid-green rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-code text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">3. Veja o código</h3>
+                        <p class="text-gray-600">Olhe na direita e veja o código Arduino sendo criado magicamente!</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-kid-purple rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-upload text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">4. Envie pro Arduino</h3>
+                        <p class="text-gray-600">Clique em "Enviar pro Arduino" e veja sua criação funcionando!</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button id="start-creating" class="bg-gradient-to-r from-kid-purple to-kid-pink text-white font-bold py-4 px-8 rounded-xl shadow-playful transform hover:scale-105 transition-all duration-200">
+                        🚀 Começar a Criar!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: TutorialModal -->
+
+    <!-- @COMPONENT: FloatingHelp [help button and tooltips] -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <button id="help-button" class="bg-gradient-to-r from-kid-orange to-yellow-400 text-white p-4 rounded-full shadow-playful hover:shadow-lg transform hover:scale-110 transition-all duration-200">
+            <i class="fas fa-question text-xl"></i>
+        </button>
+    </div>
+    <!-- @END_COMPONENT: FloatingHelp -->
+
+    <script>
+        (function() {
+            // TODO: Implement Blockly workspace initialization
+            // TODO: Add drag and drop functionality for blocks
+            // TODO: Implement real-time Arduino code generation
+            // TODO: Add serial port communication
+            
+            // Tab switching functionality
+            const tabs = document.querySelectorAll('.tab-button');
+            const codeTab = document.getElementById('code-tab');
+            const serialTab = document.getElementById('serial-tab');
+            
+            tabs.forEach((tab, index) => {
+                tab.addEventListener('click', function() {
+                    // Remove active state from all tabs
+                    tabs.forEach(t => {
+                        t.classList.remove('bg-kid-blue', 'text-white');
+                        t.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    
+                    // Add active state to clicked tab
+                    this.classList.remove('bg-gray-100', 'text-gray-700');
+                    this.classList.add('bg-kid-blue', 'text-white');
+                    
+                    // Show corresponding content
+                    if (index === 0) {
+                        codeTab.classList.remove('hidden');
+                        serialTab.classList.add('hidden');
+                    } else {
+                        codeTab.classList.add('hidden');
+                        serialTab.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // Show tutorial on first load
+            const tutorialModal = document.getElementById('tutorial-modal');
+            const startButton = document.getElementById('start-creating');
+            const helpButton = document.getElementById('help-button');
+            
+            // Show tutorial on load (comment out to disable auto-show)
+            // tutorialModal.classList.remove('hidden');
+            
+            startButton.addEventListener('click', function() {
+                tutorialModal.classList.add('hidden');
+            });
+            
+            helpButton.addEventListener('click', function() {
+                tutorialModal.classList.remove('hidden');
+            });
+            
+            // Close modal when clicking outside
+            tutorialModal.addEventListener('click', function(e) {
+                if (e.target === tutorialModal) {
+                    tutorialModal.classList.add('hidden');
+                }
+            });
+            
+            // Add drag and drop event listeners to blocks
+            const dragBlocks = document.querySelectorAll('.drag-block');
+            const workspace = document.getElementById('blockly-workspace');
+            const welcomeMessage = document.getElementById('welcome-message');
+            
+            dragBlocks.forEach(block => {
+                block.addEventListener('dragstart', function(e) {
+                    this.style.opacity = '0.5';
+                    e.dataTransfer.effectAllowed = 'copy';
+                    e.dataTransfer.setData('text/html', this.outerHTML);
+                });
+                
+                block.addEventListener('dragend', function(e) {
+                    this.style.opacity = '1';
+                });
+            });
+            
+            workspace.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                this.style.backgroundColor = 'rgba(74, 144, 226, 0.1)';
+            });
+            
+            workspace.addEventListener('dragleave', function(e) {
+                this.style.backgroundColor = '';
+            });
+            
+            workspace.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                
+                // Hide welcome message on first drop
+                welcomeMessage.style.display = 'none';
+                
+                // TODO: Create actual block element and position it
+                // TODO: Implement block connection logic
+                // TODO: Update generated code based on block configuration
+                
+                console.log('Block dropped! Real implementation would create Blockly blocks here.');
+            });
+            
+            // Simulate code updates
+            function updateArduinoCode(blocks) {
+                // TODO: Implement real Arduino code generation from Blockly workspace
+                // This would connect to Blockly's code generation system
+                console.log('Code would be generated here based on blocks:', blocks);
+            }
+            
+            // Serial monitor simulation
+            function simulateSerialData() {
+                // TODO: Implement real serial communication with Arduino boards
+                const serialOutput = document.querySelector('#serial-tab .bg-black div');
+                if (serialOutput && !document.getElementById('serial-tab').classList.contains('hidden')) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    const newLine = document.createElement('div');
+                    newLine.innerHTML = `[${timestamp}] Sensor reading: ${Math.floor(Math.random() * 1024)}`;
+                    serialOutput.appendChild(newLine);
+                    serialOutput.scrollTop = serialOutput.scrollHeight;
+                }
+            }
+            
+            // Simulate serial data every 2 seconds (remove in production)
+            setInterval(simulateSerialData, 2000);
+            
+        })();
+    </script>
+</body>
+</html>
