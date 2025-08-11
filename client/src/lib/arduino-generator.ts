@@ -46,15 +46,71 @@ void loop() {
         break;
 
       case 'digital_write':
-        const pin = '13'; // Default pin
+        // Tenta pegar o pino do bloco (inputs)
+        let pin = '13'; // Default pin
+        if (block.inputs && block.inputs.length > 0) {
+          const pinInput = block.inputs.find((input: any) => input.name === 'pin');
+          if (pinInput) {
+            if (pinInput.value !== undefined && pinInput.value !== null && pinInput.value !== '') {
+              pin = String(pinInput.value);
+            } else if (pinInput.default !== undefined) {
+              pin = String(pinInput.default);
+            }
+          }
+        }
         const state = block.label.includes('Acender') ? 'HIGH' : 'LOW';
         usedPins.add(pin);
         loopCode += `  digitalWrite(${pin}, ${state});   // ${block.label}\n`;
         break;
 
       case 'delay':
-        const time = '1000'; // Default 1 second in milliseconds
+        let time = '1000'; // Default 1 second in milliseconds
+        if (block.inputs && block.inputs.length > 0) {
+          const timeInput = block.inputs.find((input: any) => input.name === 'time');
+          if (timeInput) {
+            if (timeInput.value !== undefined && timeInput.value !== null && timeInput.value !== '') {
+              // Se o usuário colocou em segundos, converte para ms
+              time = String(Number(timeInput.value) * 1000);
+            } else if (timeInput.default !== undefined) {
+              time = String(Number(timeInput.default) * 1000);
+            }
+          }
+        }
         loopCode += `  delay(${time});              // Esperar\n`;
+        break;
+
+      case 'motor_on':
+        // Ligar motor no pino selecionado
+        let motorPin = '9'; // Default pin
+        if (block.inputs && block.inputs.length > 0) {
+          const pinInput = block.inputs.find((input: any) => input.name === 'pin');
+          if (pinInput) {
+            if (pinInput.value !== undefined && pinInput.value !== null && pinInput.value !== '') {
+              motorPin = String(pinInput.value);
+            } else if (pinInput.default !== undefined) {
+              motorPin = String(pinInput.default);
+            }
+          }
+        }
+        usedPins.add(motorPin);
+        loopCode += `  digitalWrite(${motorPin}, HIGH);   // Ligar motor\n`;
+        break;
+
+      case 'motor_off':
+        // Desligar motor no pino selecionado
+        let motorPinOff = '9'; // Default pin
+        if (block.inputs && block.inputs.length > 0) {
+          const pinInput = block.inputs.find((input: any) => input.name === 'pin');
+          if (pinInput) {
+            if (pinInput.value !== undefined && pinInput.value !== null && pinInput.value !== '') {
+              motorPinOff = String(pinInput.value);
+            } else if (pinInput.default !== undefined) {
+              motorPinOff = String(pinInput.default);
+            }
+          }
+        }
+        usedPins.add(motorPinOff);
+        loopCode += `  digitalWrite(${motorPinOff}, LOW);   // Desligar motor\n`;
         break;
 
       case 'digital_read':
@@ -78,10 +134,45 @@ void loop() {
         break;
 
       case 'tone':
-        const tonePin = '8'; // Default pin
-        const frequency = '262'; // C4 note
+        // Tenta pegar o pino e a nota do bloco (inputs)
+        let tonePin = '8'; // Default pin
+        let frequency = '262'; // Default C4 note
+        
+        if (block.inputs && block.inputs.length > 0) {
+          const pinInput = block.inputs.find((input: any) => input.name === 'pin');
+          if (pinInput) {
+            if (pinInput.value !== undefined && pinInput.value !== null && pinInput.value !== '') {
+              tonePin = String(pinInput.value);
+            } else if (pinInput.default !== undefined) {
+              tonePin = String(pinInput.default);
+            }
+          }
+          
+          const noteInput = block.inputs.find((input: any) => input.name === 'note');
+          if (noteInput) {
+            let selectedNote = noteInput.default;
+            if (noteInput.value !== undefined && noteInput.value !== null && noteInput.value !== '') {
+              selectedNote = noteInput.value;
+            }
+            
+            // Mapear notas para frequências
+            const noteFrequencies: Record<string, string> = {
+              'C4': '262',  // Dó
+              'D4': '294',  // Ré
+              'E4': '330',  // Mi
+              'F4': '349',  // Fá
+              'G4': '392',  // Sol
+              'A4': '440',  // Lá
+              'B4': '494',  // Si
+              'C5': '523'   // Dó agudo
+            };
+            
+            frequency = noteFrequencies[selectedNote] || '262';
+          }
+        }
+        
         usedPins.add(tonePin);
-        loopCode += `  tone(${tonePin}, ${frequency}, 500);  // Tocar nota\n`;
+        loopCode += `  tone(${tonePin}, ${frequency}, 500);  // Tocar ${block.inputs?.find((i: any) => i.name === 'note')?.value || 'C4'}\n`;
         loopCode += `  delay(500);\n`;
         break;
 
@@ -152,6 +243,8 @@ export function getBlockCategory(blockType: string): string {
     'if': 'control',
     'for': 'control',
     'tone': 'sound',
+    'motor_on': 'motor',
+    'motor_off': 'motor',
   };
 
   return categories[blockType] || 'unknown';

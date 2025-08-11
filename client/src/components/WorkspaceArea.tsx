@@ -49,18 +49,18 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
     try {
       const blockData = JSON.parse(e.dataTransfer.getData('application/json'));
       const rect = workspaceRef.current?.getBoundingClientRect();
-      
+
       if (rect) {
         const x = e.clientX - rect.left - 100; // Offset to center the block
         const y = e.clientY - rect.top - 25;
-        
+
         const newBlock: WorkspaceBlock = {
           ...blockData,
           id: `${blockData.id}_${Date.now()}`,
           x: Math.max(0, x),
           y: Math.max(0, y),
         };
-        
+
         setBlocks(prev => [...prev, newBlock]);
       }
     } catch (error) {
@@ -167,6 +167,15 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
             backgroundSize: '20px 20px'
           }}
         />
+
+        {/* Logo Watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <img 
+            src="/src/assets/618819.jpg" 
+            alt="Logo" 
+            className="w-4/5 h-4/5 object-contain opacity-5 select-none"
+          />
+        </div>
         
         {/* Welcome Message */}
         {showWelcome && (
@@ -191,12 +200,36 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
         {blocks.map((block) => (
           <div
             key={block.id}
-            className={`absolute bg-${block.color} text-white p-3 rounded-lg shadow-block cursor-move hover:shadow-lg transition-all duration-200 flex items-center group select-none`}
+            className={`absolute bg-${block.color} text-white p-3 rounded-lg shadow-block cursor-move hover:shadow-lg transition-all duration-200 flex items-center group select-none min-w-[160px]`}
             style={{ left: block.x, top: block.y }}
             onMouseDown={(e) => handleBlockDrag(block.id, e)}
           >
             <span className="mr-2">{block.icon}</span>
-            <span className="font-semibold text-sm">{block.label}</span>
+            <div className="flex flex-col">
+              <span className="font-semibold text-sm">{block.label}</span>
+              {/* Mostrar valores dos inputs */}
+              {block.inputs && block.inputs.length > 0 && (
+                <div className="text-xs opacity-90 mt-1">
+                  {block.inputs.map((input, index) => {
+                    const value = input.value !== undefined ? input.value : input.default;
+                    if (input.name === 'pin') {
+                      return <span key={index}>Pino: {value}</span>;
+                    } else if (input.name === 'time') {
+                      return <span key={index}>Tempo: {value}s</span>;
+                    } else if (input.name === 'note') {
+                      const noteNames: Record<string, string> = {
+                        'C4': 'Dó', 'D4': 'Ré', 'E4': 'Mi', 'F4': 'Fá',
+                        'G4': 'Sol', 'A4': 'Lá', 'B4': 'Si', 'C5': 'Dó agudo'
+                      };
+                      return <span key={index}>Nota: {noteNames[value] || value}</span>;
+                    } else if (input.name === 'times') {
+                      return <span key={index}>Repetir: {value}x</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+              )}
+            </div>
             
             {/* Delete button */}
             <button

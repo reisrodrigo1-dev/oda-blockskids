@@ -11,25 +11,45 @@ const anos = [
   "7º Ano do Fundamental",
   "8º Ano do Fundamental",
   "9º Ano do Fundamental",
+  "Turmas Mistas - Alpha (Agronomia)",
+  "Turmas Mistas - Gama (Robôs Humanos)",
+  "Turmas Mistas - Beta (Energias)",
+  "Turmas Mistas - Exploração Espacial",
+  "Turmas Mistas - Problemas Urbanos",
 ];
 
 
 const aulasPorAno: Record<string, Array<{ titulo: string; atividade: string; habilidade: string }>> = {
   "1º Ano do Fundamental": [
     {
-      titulo: "Aula 1 – Acenda a lâmpada no Tinkercad",
-      atividade: "Explorar protótipo com bateria e lâmpada (ligar/desligar).",
-      habilidade: "Entender circuito simples (fonte + carga)."
+      titulo: "Tema #M21 – Exploração Espacial: Robô Marciano",
+      atividade: "Projeto completo de 5 aulas sobre exploração espacial. Introdução aos conceitos espaciais, montagem de chassi e componentes eletrônicos, programação de movimentos, desafios em mapa temático e apresentação final.",
+      habilidade: "Desenvolver pensamento crítico, criatividade e interesse por STEM através da exploração espacial. Integração de Mecânica, Programação e Eletrônica."
     },
     {
-      titulo: "Aula 2 – Brincando com cores de LEDs",
-      atividade: "Trocar LEDs no circuito e observar efeito visual.",
-      habilidade: "Identificar componentes e suas funções."
+      titulo: "Aula 1 – Introdução à Exploração Espacial",
+      atividade: "Conceitos de exploração espacial e sua importância. Discussão sobre outros planetas e por que explorar o universo. Apresentação de projetos e expedições espaciais reais.",
+      habilidade: "Compreensão sobre o cosmos e nosso lugar no universo."
     },
     {
-      titulo: "Aula 3 – Sequência de LEDs com blocos",
-      atividade: "Usar programação em blocos para acender LEDs em ordem.",
-      habilidade: "Noção de sequência lógica."
+      titulo: "Aula 2 – Mecânica e Eletrônica do Robô",
+      atividade: "Montagem do chassi e dos componentes eletrônicos do robô marciano.",
+      habilidade: "Habilidades básicas de montagem e identificação de componentes."
+    },
+    {
+      titulo: "Aula 3 – Programação dos Movimentos",
+      atividade: "Problematização, idealização e construção do código responsável pelos movimentos e funcionalidades do robô.",
+      habilidade: "Lógica de programação e controle de robôs."
+    },
+    {
+      titulo: "Aula 4 – Desafios de Exploração",
+      atividade: "Cumprir desafios em mapa desenvolvido pela OdA. Cada grupo busca conseguir o maior número de pontos com os desafios propostos.",
+      habilidade: "Trabalho em equipe e resolução de problemas práticos."
+    },
+    {
+      titulo: "Aula 5 – Apresentação do Projeto",
+      atividade: "Preparação e apresentação final do projeto Robô Marciano.",
+      habilidade: "Comunicação e síntese de aprendizados."
     },
   ],
   "2º Ano do Fundamental": [
@@ -102,19 +122,34 @@ const aulasPorAno: Record<string, Array<{ titulo: string; atividade: string; hab
   ],
   "6º Ano do Fundamental": [
     {
-      titulo: "Aula 1 – Servo motor básico",
-      atividade: "Movimentar servo para ângulos definidos.",
-      habilidade: "Controle de posição."
+      titulo: "Tema #611 – Robôs por Humanos",
+      atividade: "13 aulas abordando a robótica como ferramenta fundamental para automatizar tarefas perigosas, melhorar precisão médica e auxiliar pessoas com dificuldades de acessibilidade.",
+      habilidade: "Ampliar visão sobre utilidade da robótica em prol das necessidades humanas."
     },
     {
-      titulo: "Aula 2 – Cancela automática",
-      atividade: "Servo abre/fecha com sensor ultrassônico.",
-      habilidade: "Integrar entrada e movimento."
+      titulo: "Projeto #1 – Introdução à Lógica de Programação e Algoritmos",
+      atividade: "4 aulas: Introdução ao Pensamento Computacional com atividades desplugadas e desenvolvimento de jogo simples com Scratch.",
+      habilidade: "Pensamento computacional e fundamentos de programação."
     },
     {
-      titulo: "Aula 3 – Carro com lógica simples",
-      atividade: "Simular dois motores ligando/desligando por botão.",
-      habilidade: "Simulação de robôs móveis."
+      titulo: "Projeto #2 – Introdução ao Arduino",
+      atividade: "5 aulas: Primeiros passos com Arduino no Tinkercad, acendendo LED, semáforo, programação de notas musicais e desafio do piano completo.",
+      habilidade: "Fundamentos de Arduino e programação de projetos básicos."
+    },
+    {
+      titulo: "Projeto #3 – Sensor de Ré para Deficientes Auditivos",
+      atividade: "4 aulas: Contextualização, desenvolvimento de circuito e código para auxiliar deficientes auditivos, discussão sobre melhorias e apresentação.",
+      habilidade: "Aplicação prática da robótica para inclusão social."
+    },
+    {
+      titulo: "Tema #613 – Cidade Inteligente",
+      atividade: "6 aulas focadas em planejamento sustentável para o futuro, integrando preservação, sustentabilidade e tecnologia.",
+      habilidade: "Pensamento de planejamento urbano sustentável com tecnologia."
+    },
+    {
+      titulo: "Projeto #1 – Seguidor de Linha com Sucata",
+      atividade: "6 aulas: Contextualização sobre cidades inteligentes, desenvolvimento de robô seguidor de linha com materiais recicláveis e campeonato de precisão.",
+      habilidade: "Sustentabilidade, reutilização de materiais e competição técnica."
     },
   ],
   "7º Ano do Fundamental": [
@@ -166,6 +201,81 @@ const aulasPorAno: Record<string, Array<{ titulo: string; atividade: string; hab
       titulo: "Aula 3 – Apresentação final",
       atividade: "Apresentar projeto autoral criado no Tinkercad.",
       habilidade: "Comunicação e argumentação técnica."
+    },
+  ],
+  "Turmas Mistas - Alpha (Agronomia)": [
+    {
+      titulo: "Tema #M11 – Agronomia Sustentável",
+      atividade: "8 aulas focadas na sustentabilidade agrícola para preservar recursos naturais, garantir segurança alimentar e enfrentar mudanças climáticas. Pilar principal: Programação.",
+      habilidade: "Desenvolvimento sustentável e responsabilidade social no agronegócio."
+    },
+    {
+      titulo: "Projeto #1 – Revisão do Conteúdo",
+      atividade: "3 aulas: Revisão de lógica e algoritmos, acendendo LED no Tinkercad, desenvolvendo semáforo inteligente em blocos.",
+      habilidade: "Consolidação de fundamentos de programação e eletrônica."
+    },
+    {
+      titulo: "Projeto #2 – Horta Automática",
+      atividade: "5 aulas: Apresentação do problema de desperdício de água, reflexão sobre impacto ambiental, prototipação, experimentação e apresentação final.",
+      habilidade: "Resolução de problemas ambientais através da tecnologia."
+    },
+  ],
+  "Turmas Mistas - Gama (Robôs Humanos)": [
+    {
+      titulo: "Tema #M12 – Robôs por Humanos",
+      atividade: "8 aulas focadas no desenvolvimento de robótica como auxílio para desafios humanos: próteses, exoesqueletos, assistentes para deficiência e robôs para tarefas repetitivas. Pilar principal: Eletrônica.",
+      habilidade: "Aplicação da robótica para melhoria da qualidade de vida humana."
+    },
+    {
+      titulo: "Projeto #1 – Revisão do Conteúdo",
+      atividade: "3 aulas: Revisão de lógica e algoritmos, acendendo LED no Tinkercad, desenvolvendo semáforo inteligente em blocos.",
+      habilidade: "Consolidação de fundamentos de programação e eletrônica."
+    },
+    {
+      titulo: "Projeto #3 – Bengala Inteligente",
+      atividade: "5 aulas: Apresentação empática do problema da deficiência visual, reflexão sobre dificuldades diárias, prototipação, experimentação e apresentação final.",
+      habilidade: "Desenvolvimento de tecnologia assistiva e empatia social."
+    },
+  ],
+  "Turmas Mistas - Beta (Energias)": [
+    {
+      titulo: "Tema #M13 – Energias Sustentáveis",
+      atividade: "8 aulas para conhecer conceitos de eletricidade básica, funcionamento das energias sustentáveis, crescimento do mercado e futuro da energia limpa. Pilar principal: Mecânica.",
+      habilidade: "Compreensão de sistemas energéticos sustentáveis e futuro da energia."
+    },
+    {
+      titulo: "Projeto #1 – Revisão do Conteúdo",
+      atividade: "3 aulas: Revisão de lógica e algoritmos, acendendo LED no Tinkercad, desenvolvendo semáforo inteligente em blocos.",
+      habilidade: "Consolidação de fundamentos de programação e eletrônica."
+    },
+    {
+      titulo: "Projeto #1 – Solar Tracker",
+      atividade: "5 aulas: Apresentação do problema de aproveitamento solar, debate sobre soluções, desenvolvimento do rastreador solar, aplicação em maquete e apresentação.",
+      habilidade: "Otimização de sistemas de energia solar e aplicação prática."
+    },
+  ],
+  "Turmas Mistas - Exploração Espacial": [
+    {
+      titulo: "Tema #M14 – Projeto Final – Exploração Espacial",
+      atividade: "6 aulas de projeto final integrando Mecânica, Eletrônica e Programação (MEP) para exploração de lugares remotos no universo.",
+      habilidade: "Integração completa de conhecimentos técnicos em projeto espacial."
+    },
+    {
+      titulo: "Projeto #1 – Exploração Espacial",
+      atividade: "6 aulas: Apresentação do problema de exploração universal, pesquisa sobre importância da exploração espacial, idealização e desenvolvimento do projeto, apresentação final.",
+      habilidade: "Pensamento científico aplicado à exploração espacial e apresentação técnica."
+    },
+  ],
+  "Turmas Mistas - Problemas Urbanos": [
+    {
+      titulo: "Tema #M15 – Projeto Final – Problemas Urbanos",
+      atividade: "6 aulas focadas na solução de problemas urbanos para melhorar qualidade de vida, desenvolvimento econômico, sustentabilidade e inclusão social. Pilar principal: MEP.",
+      habilidade: "Desenvolvimento de soluções tecnológicas para desafios urbanos."
+    },
+    {
+      titulo: "Projeto #1 – Sistema Automático Alimentador de Animais",
+      atividade: "6 aulas: Apresentação do problema urbano de cuidado animal, idealização de soluções automáticas, desenvolvimento do projeto e apresentação para outras turmas.",
+      habilidade: "Automação aplicada ao bem-estar animal e apresentação interdisciplinar."
     },
   ],
 };
@@ -244,22 +354,78 @@ const ProjetoPedagogico: React.FC = () => {
           </div>
         </div>
         <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {aulasPorAno[anoSelecionado].map((aula, idx) => (
-            <div key={aula.titulo} className="bg-white rounded-2xl shadow-playful p-7 border-l-8 border-kid-blue flex flex-col items-start relative">
-              <div className="absolute -top-5 -left-5 bg-kid-orange text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">{idx + 1}</div>
-              <h2 className="text-xl font-bold text-kid-blue mb-2 mt-2 flex items-center gap-2">
-                <span className="text-kid-orange">📘</span> {aula.titulo}
-              </h2>
-              <div className="mb-2">
-                <span className="font-semibold text-gray-700">Atividade:</span>
-                <span className="ml-2 text-gray-600">{aula.atividade}</span>
+          {aulasPorAno[anoSelecionado].map((aula, idx) => {
+            const isInteractive = aula.titulo.includes('Robô Marciano') || 
+                                 aula.titulo.includes('Tema #611') || 
+                                 aula.titulo.includes('Tema #613') ||
+                                 aula.titulo.includes('Tema #M11') ||
+                                 aula.titulo.includes('Tema #M12') ||
+                                 aula.titulo.includes('Tema #M13');
+            
+            const getRoute = (titulo: string) => {
+              if (titulo.includes('Robô Marciano')) return '/robo-marciano';
+              if (titulo.includes('Tema #611')) return '/robos-por-humanos';
+              if (titulo.includes('Tema #613')) return '/cidade-inteligente';
+              if (titulo.includes('Tema #M11')) return '/agronomia-sustentavel';
+              if (titulo.includes('Tema #M12')) return '/robos-por-humanos';
+              if (titulo.includes('Tema #M13')) return '/energias-sustentaveis';
+              return '';
+            };
+
+            const getIcon = (titulo: string) => {
+              if (titulo.includes('Robô Marciano')) return '🚀';
+              if (titulo.includes('Tema #611')) return '🤖';
+              if (titulo.includes('Tema #613')) return '🏙️';
+              if (titulo.includes('Tema #M11')) return '🌱';
+              if (titulo.includes('Tema #M12')) return '🦾';
+              if (titulo.includes('Tema #M13')) return '⚡';
+              return '📘';
+            };
+
+            return (
+              <div 
+                key={aula.titulo} 
+                className={`bg-white rounded-2xl shadow-playful p-7 border-l-8 border-kid-blue flex flex-col items-start relative ${
+                  isInteractive ? 'cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300' : ''
+                }`}
+                onClick={() => {
+                  if (isInteractive) {
+                    setLocation(getRoute(aula.titulo));
+                  }
+                }}
+              >
+                <div className="absolute -top-5 -left-5 bg-kid-orange text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">{idx + 1}</div>
+                <h2 className={`text-xl font-bold text-kid-blue mb-2 mt-2 flex items-center gap-2 ${
+                  isInteractive ? 'text-red-600' : ''
+                }`}>
+                  <span className={`text-2xl ${isInteractive ? 'animate-pulse' : 'text-kid-orange'}`}>
+                    {getIcon(aula.titulo)}
+                  </span> 
+                  {aula.titulo}
+                  {isInteractive && (
+                    <span className="text-sm bg-red-500 text-white px-2 py-1 rounded-full animate-bounce">INTERATIVO</span>
+                  )}
+                </h2>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">Atividade:</span>
+                  <span className="ml-2 text-gray-600">{aula.atividade}</span>
+                </div>
+                <div>
+                  <span className="font-semibold text-kid-blue">Habilidade:</span>
+                  <span className="ml-2 text-kid-orange font-semibold">{aula.habilidade}</span>
+                </div>
+                {isInteractive && (
+                  <div className="mt-4 w-full">
+                    <button className="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold py-2 px-4 rounded-xl hover:from-red-600 hover:to-orange-600 transition-all duration-300 flex items-center justify-center">
+                      <span className="mr-2">{getIcon(aula.titulo)}</span>
+                      Explorar Experiência Interativa
+                      <span className="ml-2">→</span>
+                    </button>
+                  </div>
+                )}
               </div>
-              <div>
-                <span className="font-semibold text-kid-blue">Habilidade:</span>
-                <span className="ml-2 text-kid-orange font-semibold">{aula.habilidade}</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

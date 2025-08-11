@@ -6,6 +6,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import Editor from "@/pages/editor";
 import ProjetoPedagogico from "@/pages/projeto-pedagogico";
+import RoboMarciano from "@/pages/robo-marciano";
+import RobosPorHumanos from "@/pages/robos-por-humanos";
+import CidadeInteligente from "@/pages/cidade-inteligente";
+import AgronomiaSupply from "@/pages/agronomia-sustentavel";
+import EnergiasSustentaveis from "@/pages/energias-sustentaveis";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -14,6 +19,11 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/editor" component={Editor} />
       <Route path="/projeto-pedagogico" component={ProjetoPedagogico} />
+      <Route path="/robo-marciano" component={RoboMarciano} />
+      <Route path="/robos-por-humanos" component={RobosPorHumanos} />
+      <Route path="/cidade-inteligente" component={CidadeInteligente} />
+      <Route path="/agronomia-sustentavel" component={AgronomiaSupply} />
+      <Route path="/energias-sustentaveis" component={EnergiasSustentaveis} />
       <Route component={NotFound} />
     </Switch>
   );

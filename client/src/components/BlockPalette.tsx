@@ -15,19 +15,23 @@ const blockDefinitions: Block[] = [
   { id: 'setup', type: 'setup', category: 'basic', label: 'Iniciar programa', icon: '▶️', color: 'kid-blue' },
   { id: 'loop', type: 'loop', category: 'basic', label: 'Repetir sempre', icon: '🔄', color: 'kid-blue' },
   { id: 'delay', type: 'delay', category: 'basic', label: 'Esperar', icon: '⏰', color: 'kid-blue', inputs: [{ name: 'time', type: 'number', default: 1 }] },
-  
+
   // LED Blocks
   { id: 'led_on', type: 'digital_write', category: 'led', label: 'Acender LED', icon: '💡', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
-  { id: 'led_off', type: 'digital_write', category: 'led', label: 'Apagar LED', icon: '🌑', color: 'gray-600', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
-  
+  { id: 'led_off', type: 'digital_write', category: 'led', label: 'Apagar LED', icon: '🌑', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
+
+  // Motor Blocks
+  { id: 'motor_on', type: 'motor_on', category: 'motor', label: 'Ligar motor', icon: '⚙️', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
+  { id: 'motor_off', type: 'motor_off', category: 'motor', label: 'Desligar motor', icon: '⚙️', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
+
   // Sensor Blocks
   { id: 'button_pressed', type: 'digital_read', category: 'sensors', label: 'Se botão pressionado', icon: '👆', color: 'kid-green', inputs: [{ name: 'pin', type: 'select', default: 2 }] },
   { id: 'read_temperature', type: 'analog_read', category: 'sensors', label: 'Ler temperatura', icon: '🌡️', color: 'kid-green', inputs: [{ name: 'pin', type: 'select', default: 'A0' }] },
-  
+
   // Control Blocks
   { id: 'if_then', type: 'if', category: 'control', label: 'Se... então...', icon: '❓', color: 'kid-purple' },
   { id: 'repeat_times', type: 'for', category: 'control', label: 'Repetir', icon: '🔁', color: 'kid-purple', inputs: [{ name: 'times', type: 'number', default: 10 }] },
-  
+
   // Sound Blocks
   { id: 'play_tone', type: 'tone', category: 'sound', label: 'Tocar som', icon: '🔊', color: 'kid-pink', inputs: [{ name: 'note', type: 'select', default: 'C4' }] },
 ];
@@ -35,6 +39,7 @@ const blockDefinitions: Block[] = [
 const categories = [
   { id: 'basic', name: 'BÁSICO', color: 'kid-blue' },
   { id: 'led', name: 'LEDS', color: 'kid-orange' },
+  { id: 'motor', name: 'MOTORES', color: 'kid-red' },
   { id: 'sensors', name: 'SENSORES', color: 'kid-green' },
   { id: 'control', name: 'CONTROLE', color: 'kid-purple' },
   { id: 'sound', name: 'SOM', color: 'kid-pink' },
@@ -46,7 +51,22 @@ export default function BlockPalette() {
   const handleDragStart = (block: Block, e: React.DragEvent) => {
     setDraggedBlock(block);
     e.dataTransfer.effectAllowed = 'copy';
-    e.dataTransfer.setData('application/json', JSON.stringify(block));
+    
+    // Captura valores dos inputs/selects no momento do drag
+    const blockElement = e.currentTarget as HTMLElement;
+    const updatedBlock = { ...block };
+    
+    if (block.inputs) {
+      updatedBlock.inputs = block.inputs.map(input => {
+        const inputElement = blockElement.querySelector(`select, input[type="number"]`) as HTMLInputElement | HTMLSelectElement;
+        if (inputElement) {
+          return { ...input, value: inputElement.value };
+        }
+        return input;
+      });
+    }
+    
+    e.dataTransfer.setData('application/json', JSON.stringify(updatedBlock));
     
     // Visual feedback
     const target = e.target as HTMLElement;
@@ -74,7 +94,11 @@ export default function BlockPalette() {
     
     if (input.type === 'select' && input.name === 'pin') {
       return (
-        <select className="ml-2 px-1 py-1 rounded text-black text-xs" onClick={(e) => e.stopPropagation()}>
+        <select 
+          className="ml-2 px-1 py-1 rounded text-black text-xs" 
+          defaultValue={input.default}
+          onClick={(e) => e.stopPropagation()}
+        >
           {input.name === 'pin' && typeof input.default === 'number' ? (
             <>
               <option value="13">Pino 13</option>
@@ -98,9 +122,14 @@ export default function BlockPalette() {
     if (input.type === 'select' && input.name === 'note') {
       return (
         <select className="ml-2 px-1 py-1 rounded text-black text-xs" onClick={(e) => e.stopPropagation()}>
-          <option value="C4">Nota Dó</option>
-          <option value="D4">Nota Ré</option>
-          <option value="E4">Nota Mi</option>
+          <option value="C4">Dó (C4)</option>
+          <option value="D4">Ré (D4)</option>
+          <option value="E4">Mi (E4)</option>
+          <option value="F4">Fá (F4)</option>
+          <option value="G4">Sol (G4)</option>
+          <option value="A4">Lá (A4)</option>
+          <option value="B4">Si (B4)</option>
+          <option value="C5">Dó agudo (C5)</option>
         </select>
       );
     }
