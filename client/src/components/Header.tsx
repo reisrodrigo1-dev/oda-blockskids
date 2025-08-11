@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import logoImage from "@/assets/618819.jpg";
 
 interface HeaderProps {
   onShowTutorial: () => void;
@@ -55,8 +56,8 @@ export default function Header({ onShowTutorial }: HeaderProps) {
           {/* Logo and Title */}
           <div className="flex items-center space-x-4">
             <div className="bg-white p-2 rounded-xl shadow-playful">
-              <img 
-                src="/@assets/618819_1754937035117.jpg" 
+              <img
+                src={logoImage}
                 alt="Oficina do Amanhã"
                 className="h-12 w-auto object-contain"
               />
