@@ -5,6 +5,7 @@ Arduino Blocks Kids is a visual programming environment that allows children to 
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+Brand integration: Uses "Oficina do Amanhã" logo in application header.
 
 # System Architecture
 
