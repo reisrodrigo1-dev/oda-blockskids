@@ -95,14 +95,12 @@
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
 
   body {
+    @apply font-sans antialiased bg-background text-foreground;
     font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
   }
 }
 
