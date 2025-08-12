@@ -3,12 +3,14 @@ import HeaderOffline from "@/components/HeaderOffline";
 import BlockPalette from "@/components/BlockPalette";
 import WorkspaceArea from "@/components/WorkspaceArea";
 import CodePanel from "@/components/CodePanel";
+import ArduinoPanel from "@/components/ArduinoPanel";
 import TutorialModal from "@/components/TutorialModal";
 import { LocalStorage, Project } from "@/lib/local-storage";
 
 export default function EditorOffline() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
+  const [showArduinoPanel, setShowArduinoPanel] = useState(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [savedProjects, setSavedProjects] = useState<Project[]>([]);
   const [generatedCode, setGeneratedCode] = useState(`// Código Arduino gerado pelos blocos\n// 🎨 Criado com Arduino Blocks Kids\n\nvoid setup() {\n  // Inicializar comunicação serial\n  Serial.begin(9600);\n  Serial.println(\"🚀 Arduino iniciado!\");\n  \n  // Configurar pinos\n  pinMode(13, OUTPUT);  // LED no pino 13\n}\n\nvoid loop() {\n  // Seu código aparecerá aqui quando você\n  // arrastar os blocos para o workspace!\n  \n  // Exemplo: Piscar LED\n  digitalWrite(13, HIGH);   // Acender LED\n  delay(1000);              // Esperar 1 segundo\n  digitalWrite(13, LOW);    // Apagar LED\n  delay(1000);              // Esperar 1 segundo\n}`);
@@ -73,6 +75,20 @@ export default function EditorOffline() {
     setGeneratedCode(`// Código Arduino gerado pelos blocos\n// 🎨 Criado com Arduino Blocks Kids\n\nvoid setup() {\n  // Inicializar comunicação serial\n  Serial.begin(9600);\n  Serial.println(\"🚀 Arduino iniciado!\");\n  \n  // Configurar pinos\n  pinMode(13, OUTPUT);  // LED no pino 13\n}\n\nvoid loop() {\n  // Seu código aparecerá aqui quando você\n  // arrastar os blocos para o workspace!\n  \n  // Exemplo: Piscar LED\n  digitalWrite(13, HIGH);   // Acender LED\n  delay(1000);              // Esperar 1 segundo\n  digitalWrite(13, LOW);    // Apagar LED\n  delay(1000);              // Esperar 1 segundo\n}`);
   };
 
+  const uploadToArduino = async () => {
+    try {
+      // Se o painel Arduino estiver visível, mostrar mensagem
+      if (showArduinoPanel) {
+        alert('Use o painel Arduino ao lado para conectar e fazer upload do código!');
+      } else {
+        alert('Ative o painel Arduino primeiro clicando no botão "Arduino Conectar".');
+      }
+    } catch (error) {
+      console.error('Erro ao fazer upload:', error);
+      alert('Erro ao tentar fazer upload para Arduino');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 font-nunito">
       <HeaderOffline 
@@ -94,6 +110,16 @@ export default function EditorOffline() {
         </div>
         <div className="flex items-center space-x-2">
           <button
+            onClick={() => setShowArduinoPanel(!showArduinoPanel)}
+            className={`text-sm px-3 py-1 rounded-lg transition-colors ${
+              showArduinoPanel 
+                ? 'bg-green-500 text-white hover:bg-green-600' 
+                : 'bg-gray-500 text-white hover:bg-gray-600'
+            }`}
+          >
+            🤖 Arduino {showArduinoPanel ? 'Conectado' : 'Conectar'}
+          </button>
+          <button
             onClick={createNewProject}
             className="text-sm bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-colors"
           >
@@ -111,7 +137,10 @@ export default function EditorOffline() {
       <div className="flex h-screen pt-2">
         <BlockPalette />
         <WorkspaceArea onCodeChange={setGeneratedCode} />
-        <CodePanel code={generatedCode} />
+        <CodePanel code={generatedCode} onUploadToArduino={uploadToArduino} />
+        {showArduinoPanel && (
+          <ArduinoPanel code={generatedCode} />
+        )}
       </div>
       
       <TutorialModal 

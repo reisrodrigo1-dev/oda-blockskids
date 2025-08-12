@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 
 interface CodePanelProps {
   code: string;
+  onUploadToArduino?: () => void;
 }
 
-export default function CodePanel({ code }: CodePanelProps) {
+export default function CodePanel({ code, onUploadToArduino }: CodePanelProps) {
   const [activeTab, setActiveTab] = useState<'code' | 'serial'>('code');
   const [serialMessages, setSerialMessages] = useState([
     '[14:32:15] 🚀 Arduino iniciado!',
@@ -101,6 +102,19 @@ export default function CodePanel({ code }: CodePanelProps) {
 
           {/* Code Actions */}
           <div className="p-4 bg-gray-100 border-t border-gray-200 flex space-x-2">
+            {onUploadToArduino && (
+              <Button
+                onClick={onUploadToArduino}
+                variant="outline"
+                size="sm"
+                className="bg-kid-purple hover:bg-purple-600 text-white border-none font-semibold"
+              >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                Upload
+              </Button>
+            )}
             <Button
               onClick={copyCode}
               variant="outline"

@@ -12,26 +12,42 @@ import EnergiasSustentaveis from "@/pages/energias-sustentaveis";
 import ExploracaoEspacial from "@/pages/exploracao-espacial";
 import ProjetoFinalEspacial from "@/pages/projeto-final-espacial";
 import CriadorProjetosAI from "@/pages/criador-projetos-ai";
+import CriadorProjetoPedagogico from "@/pages/criador-projeto-pedagogico";
+import ProjetosPedagogicos from "@/pages/projetos-pedagogicos";
+import CriadorProjetoAvancado from "@/pages/criador-projeto-avancado";
+import ProjetosAvancados from "@/pages/projetos-avancados";
+import CriadorProjetoMelhorado from "@/pages/criador-projeto-melhorado";
+import ProjetoIndividual from "@/pages/projeto-individual";
+import EditarProjeto from "@/pages/editar-projeto";
+import ProjetoAluno from "@/pages/projeto-aluno";
 import NotFound from "@/pages/not-found";
 
 function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={HomeOficina} />
-      <Route path="/home" component={Home} />
-      <Route path="/editor-offline" component={EditorOffline} />
-      <Route path="/projeto-pedagogico" component={ProjetoPedagogico} />
-      <Route path="/robo-marciano" component={RoboMarciano} />
-      <Route path="/robos-por-humanos" component={RobosPorHumanos} />
-      <Route path="/cidade-inteligente" component={CidadeInteligente} />
-      <Route path="/agronomia-sustentavel" component={AgronomiaSupply} />
-      <Route path="/energias-sustentaveis" component={EnergiasSustentaveis} />
-      <Route path="/exploracao-espacial" component={ExploracaoEspacial} />
-      <Route path="/projeto-final-espacial" component={ProjetoFinalEspacial} />
-      <Route path="/criador-projetos-ai" component={CriadorProjetosAI} />
-      <Route component={NotFound} />
-    </Switch>
-  );
+    return (
+      <Switch>
+        <Route path="/" component={HomeOficina} />
+        <Route path="/home" component={Home} />
+        <Route path="/editor-offline" component={EditorOffline} />
+        <Route path="/projeto-pedagogico" component={ProjetoPedagogico} />
+        <Route path="/robo-marciano" component={RoboMarciano} />
+        <Route path="/robos-por-humanos" component={RobosPorHumanos} />
+        <Route path="/cidade-inteligente" component={CidadeInteligente} />
+        <Route path="/agronomia-sustentavel" component={AgronomiaSupply} />
+        <Route path="/energias-sustentaveis" component={EnergiasSustentaveis} />
+        <Route path="/exploracao-espacial" component={ExploracaoEspacial} />
+        <Route path="/projeto-final-espacial" component={ProjetoFinalEspacial} />
+        <Route path="/criador-projetos-ai" component={CriadorProjetosAI} />
+        <Route path="/criador-projeto-pedagogico" component={CriadorProjetoPedagogico} />
+        <Route path="/projetos-pedagogicos" component={ProjetosPedagogicos} />
+        <Route path="/projetos-avancados" component={ProjetosAvancados} />
+        <Route path="/projeto/:id" component={ProjetoIndividual} />
+        <Route path="/projeto-aluno/:id" component={ProjetoAluno} />
+        <Route path="/editar-projeto/:id" component={EditarProjeto} />
+        <Route path="/criador-projeto-avancado" component={CriadorProjetoAvancado} />
+        <Route path="/criador-projeto-melhorado" component={CriadorProjetoMelhorado} />
+        <Route component={NotFound} />
+      </Switch>
+    );
 }
 
 function App() {
