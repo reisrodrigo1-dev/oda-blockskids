@@ -1,6 +1,7 @@
 import { Switch, Route } from "wouter";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
+import HomeOficina from "@/pages/home-oficina-clean";
 import EditorOffline from "@/pages/editor-offline";
 import ProjetoPedagogico from "@/pages/projeto-pedagogico";
 import RoboMarciano from "@/pages/robo-marciano";
@@ -10,12 +11,14 @@ import AgronomiaSupply from "@/pages/agronomia-sustentavel";
 import EnergiasSustentaveis from "@/pages/energias-sustentaveis";
 import ExploracaoEspacial from "@/pages/exploracao-espacial";
 import ProjetoFinalEspacial from "@/pages/projeto-final-espacial";
+import CriadorProjetosAI from "@/pages/criador-projetos-ai";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={HomeOficina} />
+      <Route path="/home" component={Home} />
       <Route path="/editor-offline" component={EditorOffline} />
       <Route path="/projeto-pedagogico" component={ProjetoPedagogico} />
       <Route path="/robo-marciano" component={RoboMarciano} />
@@ -25,6 +28,7 @@ function Router() {
       <Route path="/energias-sustentaveis" component={EnergiasSustentaveis} />
       <Route path="/exploracao-espacial" component={ExploracaoEspacial} />
       <Route path="/projeto-final-espacial" component={ProjetoFinalEspacial} />
+      <Route path="/criador-projetos-ai" component={CriadorProjetosAI} />
       <Route component={NotFound} />
     </Switch>
   );

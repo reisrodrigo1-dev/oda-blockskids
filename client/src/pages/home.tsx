@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
+import logoOficina from "../assets/618819.jpg";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -9,7 +10,7 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow-md py-6 px-8 flex items-center justify-between border-b-2 border-kid-blue">
         <div className="flex items-center gap-4">
-          <img src="/src/assets/618819.jpg" alt="Oficina do Amanhã" />
+          <img src={logoOficina} alt="Oficina do Amanhã" className="h-12 w-12 rounded-full object-cover" />
           <div>
             <h1 className="text-3xl font-extrabold text-kid-blue">Blocks Kids</h1>
             <span className="text-sm text-gray-500 font-semibold">por Oficina do Amanhã</span>
