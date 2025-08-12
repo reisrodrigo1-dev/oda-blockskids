@@ -2,6 +2,54 @@ import { Link } from "wouter";
 import { Button } from "../components/ui/button";
 import logoOficina from "../assets/618819.jpg";
 import Iridescence from "../components/Iridescence";
+import { useState, useEffect, useRef } from "react";
+
+// Hook para animação de contagem
+function useCountUp(end, duration = 2000, start = 0) {
+  const [count, setCount] = useState(start);
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentCount = Math.floor(start + (end - start) * easeOutQuart);
+      setCount(currentCount);
+      if (progress >= 1) {
+        clearInterval(timer);
+        setCount(end);
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isVisible, end, duration, start]);
+  return { count, ref };
+}
+
+function AnimatedNumber({ end, suffix = "", prefix = "", duration = 2000 }) {
+  const { count, ref } = useCountUp(end, duration);
+  return (
+    <div ref={ref} className="text-4xl font-extrabold mb-2">
+      {prefix}{count}{suffix}
+    </div>
+  );
+}
 
 export default function HomeOficina() {
   return (
@@ -38,6 +86,28 @@ export default function HomeOficina() {
               Fale Conosco
             </a>
           </div>
+
+          {/* Seção de Projetos */}
+          <div className="mt-12 pt-8 border-t border-white/20">
+            <h3 className="text-2xl font-bold mb-6 text-white/90">📚 Área de Projetos Pedagógicos</h3>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link href="/criador-projeto-melhorado">
+                <Button className="bg-green-500/90 hover:bg-green-600 backdrop-blur text-white font-bold text-lg px-6 py-3 rounded-full shadow-xl transition-all duration-200 border border-green-400/50">
+                  ✨ Criar Novo Projeto
+                </Button>
+              </Link>
+              <Link href="/projetos-avancados">
+                <Button className="bg-purple-500/90 hover:bg-purple-600 backdrop-blur text-white font-bold text-lg px-6 py-3 rounded-full shadow-xl transition-all duration-200 border border-purple-400/50">
+                  👁️ Ver Projetos Criados
+                </Button>
+              </Link>
+              <Link href="/projetos-pedagogicos">
+                <Button className="bg-blue-500/90 hover:bg-blue-600 backdrop-blur text-white font-bold text-lg px-6 py-3 rounded-full shadow-xl transition-all duration-200 border border-blue-400/50">
+                  📋 Projetos Básicos
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -73,15 +143,15 @@ export default function HomeOficina() {
           <h3 className="text-3xl font-bold mb-8">OdA em Números</h3>
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <div className="text-4xl font-extrabold mb-2">+12K</div>
+              <AnimatedNumber end={12000} prefix="+"  duration={1800} />
               <div className="text-blue-200">Crianças e jovens impactados</div>
             </div>
             <div>
-              <div className="text-4xl font-extrabold mb-2">+50</div>
+              <AnimatedNumber end={50} prefix="+" duration={1500} />
               <div className="text-blue-200">Toneladas de material reciclado</div>
             </div>
             <div>
-              <div className="text-4xl font-extrabold mb-2">+50K</div>
+              <AnimatedNumber end={50000} prefix="+"  duration={2000} />
               <div className="text-blue-200">Horas de instrução</div>
             </div>
           </div>
