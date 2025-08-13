@@ -1,3 +1,5 @@
+import AdminProjetosPedagogicos from "@/pages/admin/projetos-pedagogicos";
+import AdminProjetosAvancados from "@/pages/admin/projetos-avancados";
 import AdminAssociarRotasClientes from "@/pages/admin/associar-rotas-clientes";
         <Route path="/admin/associar-rotas-clientes" component={AdminAssociarRotasClientes} />
 import { Switch, Route } from "wouter";
@@ -38,6 +40,8 @@ function Router() {
     return (
       <Switch>
         <Route path="/admin/clientes" component={AdminClientes} />
+        <Route path="/admin/projetos-pedagogicos" component={AdminProjetosPedagogicos} />
+        <Route path="/admin/projetos-avancados" component={AdminProjetosAvancados} />
         <Route path="/admin/editar-cliente/:id" component={AdminEditarCliente} />
         <Route path="/" component={HomeOficina} />
         <Route path="/home" component={Home} />
