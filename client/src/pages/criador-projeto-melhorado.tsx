@@ -179,9 +179,7 @@ export default function CriadorProjetoMelhorado() {
           <CardContent className="space-y-6">
             {/* Título da Etapa */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                📝 Título da Etapa
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">📝 Título da Etapa</label>
               <Input
                 placeholder="Ex: Montagem do Robô Marciano"
                 value={novaEtapa.titulo}
@@ -189,12 +187,9 @@ export default function CriadorProjetoMelhorado() {
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-
             {/* Descrição da Etapa */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                📋 Descrição da Etapa
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">📋 Descrição da Etapa</label>
               <Textarea
                 placeholder="Descreva o que os alunos farão nesta etapa..."
                 value={novaEtapa.descricao}
@@ -203,168 +198,16 @@ export default function CriadorProjetoMelhorado() {
                 rows={3}
               />
             </div>
-
-            {/* Seletor de Gradiente */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                🎨 Tema Visual da Etapa
-              </label>
-              <div className="grid grid-cols-4 gap-3">
-                {gradientes.map((gradiente, index) => (
-                  <div
-                    key={index}
-                    className={`relative h-20 rounded-xl cursor-pointer border-2 transition-all duration-300 bg-gradient-to-r ${gradiente.classe} ${
-                      novaEtapa.background === gradiente.classe 
-                        ? 'border-yellow-400 scale-105 ring-2 ring-yellow-400/50' 
-                        : 'border-gray-600 hover:border-gray-400 hover:scale-102'
-                    }`}
-                    onClick={() => setNovaEtapa({ ...novaEtapa, background: gradiente.classe })}
-                    title={gradiente.nome}
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-2xl">{gradiente.preview}</span>
-                      {novaEtapa.background === gradiente.classe && (
-                        <div className="absolute top-1 right-1 bg-yellow-400 text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
-                          ✓
-                        </div>
-                      )}
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 rounded-b-xl text-center">
-                      {gradiente.nome}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-2">
-                🎯 Tema selecionado: <span className="font-semibold">{gradientes.find(g => g.classe === novaEtapa.background)?.nome}</span>
-              </p>
-            </div>
-
-            {/* Seletor de Ícone */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                🎭 Ícone Representativo da Etapa
-              </label>
-              <div className="grid grid-cols-10 gap-2 max-h-40 overflow-y-auto border border-gray-600 rounded-lg p-3 bg-gray-700/50">
-                {icones.map((icone, index) => (
-                  <button
-                    key={index}
-                    className={`w-10 h-10 flex items-center justify-center rounded-lg text-xl hover:bg-gray-600 transition-all duration-200 ${
-                      novaEtapa.icon === icone 
-                        ? 'bg-blue-600 ring-2 ring-yellow-400 scale-110' 
-                        : 'bg-gray-800 hover:scale-105'
-                    }`}
-                    onClick={() => setNovaEtapa({ ...novaEtapa, icon: icone })}
-                    title={icone}
-                  >
-                    {icone}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-2">
-                🎯 Ícone selecionado: {novaEtapa.icon ? (
-                  <span className="font-semibold">{novaEtapa.icon}</span>
-                ) : (
-                  <span className="italic">Nenhum ícone selecionado</span>
-                )}
-              </p>
-            </div>
-
-            {/* Ação da Etapa */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                ⚡ Ação Principal da Etapa
-              </label>
-              <Input
-                placeholder="Ex: Construir, Programar, Testar, Apresentar"
-                value={novaEtapa.action}
-                onChange={(e) => setNovaEtapa({ ...novaEtapa, action: e.target.value })}
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
-
-            {/* Código da Etapa */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                💻 Código para esta Etapa
-              </label>
-              <Textarea
-                placeholder="Cole aqui o código que será usado nesta etapa..."
-                value={novaEtapa.codigo}
-                onChange={(e) => setNovaEtapa({ ...novaEtapa, codigo: e.target.value })}
-                className="bg-gray-700 border-gray-600 text-white font-mono text-sm"
-                rows={6}
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                💡 Dica: Cole o código Arduino ou de blocos que os alunos irão usar
-              </p>
-            </div>
-
-            {/* Upload de Imagem dos Blocos */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                🖼️ Inserir Imagem dos Blocos
-              </label>
-              <div className="space-y-3">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        setNovaEtapa({ ...novaEtapa, imagemBlocos: event.target?.result as string });
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                  className="block w-full text-sm text-gray-300 
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-lg file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-600 file:text-white
-                    hover:file:bg-blue-700 file:cursor-pointer
-                    cursor-pointer border border-gray-600 rounded-lg p-2 bg-gray-700"
-                />
-                
-                {/* Preview da Imagem */}
-                {novaEtapa.imagemBlocos && (
-                  <div className="relative">
-                    <img
-                      src={novaEtapa.imagemBlocos}
-                      alt="Preview dos blocos"
-                      className="max-h-40 w-auto rounded-lg border border-gray-600"
-                    />
-                    <button
-                      onClick={() => setNovaEtapa({ ...novaEtapa, imagemBlocos: "" })}
-                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-sm"
-                      title="Remover imagem"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                )}
-                
-                <p className="text-xs text-gray-400">
-                  📸 Formatos aceitos: JPG, PNG, GIF | Tamanho máximo: 5MB
-                </p>
-              </div>
-            </div>
-
+            {/* ...existing code for gradiente, ícone, ação, código, upload imagem... */}
             {/* Objetivos da Etapa */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                🎯 Objetivos de Aprendizagem (opcional)
-              </label>
-              
+              <label className="block text-sm font-medium text-gray-300 mb-2">🎯 Objetivos de Aprendizagem (opcional)</label>
               {/* Adicionar Objetivo */}
               <div className="bg-gray-700/50 p-4 rounded-lg mb-4 border border-gray-600">
                 <h4 className="text-white text-sm font-medium mb-3 flex items-center gap-2">
                   <span>➕</span>
                   Adicionar Novo Objetivo
                 </h4>
-                
                 {/* Seletor de Ícone para Objetivo */}
                 <div className="mb-3">
                   <label className="block text-xs text-gray-400 mb-2">Ícone do Objetivo</label>
@@ -385,7 +228,6 @@ export default function CriadorProjetoMelhorado() {
                     ))}
                   </div>
                 </div>
-
                 {/* Texto do Objetivo */}
                 <div className="flex gap-2">
                   <Input
@@ -403,7 +245,6 @@ export default function CriadorProjetoMelhorado() {
                   </Button>
                 </div>
               </div>
-
               {/* Lista de Objetivos Adicionados */}
               {novaEtapa.objetivos.length > 0 && (
                 <div className="space-y-2">
@@ -427,7 +268,6 @@ export default function CriadorProjetoMelhorado() {
                 </div>
               )}
             </div>
-
             <Button 
               onClick={adicionarEtapa} 
               className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"

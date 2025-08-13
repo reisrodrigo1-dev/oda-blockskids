@@ -1,3 +1,5 @@
+import AdminAssociarRotasClientes from "@/pages/admin/associar-rotas-clientes";
+        <Route path="/admin/associar-rotas-clientes" component={AdminAssociarRotasClientes} />
 import { Switch, Route } from "wouter";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
@@ -21,10 +23,22 @@ import ProjetoIndividual from "@/pages/projeto-individual";
 import EditarProjeto from "@/pages/editar-projeto";
 import ProjetoAluno from "@/pages/projeto-aluno";
 import NotFound from "@/pages/not-found";
+import AdminHome from "@/pages/admin";
+import AdminLogin from "@/pages/admin/login";
+import AdminCadastro from "@/pages/admin/cadastro";
+import AdminCriadorProjetoMelhorado from "@/pages/admin/criador-projeto-melhorado";
+import AdminCriarProjetoAvancado from "@/pages/admin/criar-projeto";
+import AdminDashboard from "@/pages/admin/dashboard";
+import AdminCadastrarCliente from "@/pages/admin/cadastrar-cliente";
+import AdminRotasEstudos from "@/pages/admin/rotas-estudos";
+import AdminClientes from "@/pages/admin/clientes";
+import AdminEditarCliente from "@/pages/admin/editar-cliente";
 
 function Router() {
     return (
       <Switch>
+        <Route path="/admin/clientes" component={AdminClientes} />
+        <Route path="/admin/editar-cliente/:id" component={AdminEditarCliente} />
         <Route path="/" component={HomeOficina} />
         <Route path="/home" component={Home} />
         <Route path="/editor-offline" component={EditorOffline} />
@@ -45,6 +59,15 @@ function Router() {
         <Route path="/editar-projeto/:id" component={EditarProjeto} />
         <Route path="/criador-projeto-avancado" component={CriadorProjetoAvancado} />
         <Route path="/criador-projeto-melhorado" component={CriadorProjetoMelhorado} />
+        <Route path="/admin/login" component={AdminLogin} />
+        <Route path="/admin/cadastro" component={AdminCadastro} />
+        <Route path="/admin/criador-projeto-melhorado" component={AdminCriadorProjetoMelhorado} />
+        <Route path="/admin/criar-projeto" component={AdminCriarProjetoAvancado} />
+        <Route path="/admin/dashboard" component={AdminDashboard} />
+        <Route path="/admin/cadastrar-cliente" component={AdminCadastrarCliente} />
+        <Route path="/admin/rotas-estudos" component={AdminRotasEstudos} />
+        <Route path="/admin/associar-rotas-clientes" component={AdminAssociarRotasClientes} />
+        <Route path="/admin" component={AdminHome} />
         <Route component={NotFound} />
       </Switch>
     );
