@@ -118,6 +118,25 @@ export default function AdminVisualizarComoAluno() {
             Etapa {etapaAtual + 1} de {projeto.etapas.length}
           </div>
         </div>
+        {/* Lista de Materiais */}
+        {projeto.materiais && projeto.materiais.length > 0 && (
+          <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
+            <CardContent>
+              <h2 className="text-white text-2xl font-bold flex items-center gap-2 mb-4">
+                <span className="text-2xl">📦</span>
+                Materiais do Projeto
+              </h2>
+              <ul className="divide-y divide-gray-700">
+                {projeto.materiais.map((mat: any, idx: number) => (
+                  <li key={idx} className="flex gap-4 py-2 text-white">
+                    <span className="w-20 font-bold">{mat.quantidade}</span>
+                    <span className="flex-1">{mat.nome}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
         {/* Indicador de Progresso */}
         <div className="mb-8">
           <div className="flex items-center justify-center mb-4">

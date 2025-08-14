@@ -43,11 +43,17 @@ const iconesObjetivos = [
   "⭐", "🔥", "💪", "🌟", "🎪", "🎭", "🎲", "🎮", "🔧", "💻"
 ];
 
+export default function CriarProjeto() {
+  // ...existing code...
+// Tipos usados no projeto
 interface Objetivo {
   icon: string;
   text: string;
 }
-
+interface Material {
+  quantidade: string;
+  nome: string;
+}
 interface Etapa {
   titulo: string;
   descricao: string;
@@ -59,9 +65,10 @@ interface Etapa {
   objetivos: Objetivo[];
 }
 
-export default function CriarProjeto() {
   const [tituloProjeto, setTituloProjeto] = useState("");
   const [etapas, setEtapas] = useState<Etapa[]>([]);
+  const [materiais, setMateriais] = useState<Material[]>([]);
+  const [novoMaterial, setNovoMaterial] = useState<Material>({ quantidade: "", nome: "" });
   const [novaEtapa, setNovaEtapa] = useState<Etapa>({ 
     titulo: "", 
     descricao: "", 
@@ -112,23 +119,33 @@ export default function CriarProjeto() {
     setEtapas(novasEtapas);
   };
 
+  const adicionarMaterial = () => {
+    if (novoMaterial.quantidade.trim() && novoMaterial.nome.trim()) {
+      setMateriais([...materiais, novoMaterial]);
+      setNovoMaterial({ quantidade: "", nome: "" });
+    }
+  };
+  const removerMaterial = (index: number) => {
+    setMateriais(materiais.filter((_, i) => i !== index));
+  };
   const salvarProjeto = async () => {
     if (!tituloProjeto.trim() || etapas.length === 0) {
       setMsg("Preencha o título e adicione pelo menos uma etapa.");
       return;
     }
-
     setSalvando(true);
     setMsg("");
     try {
       await addDoc(collection(db, "projetos-pedagogicos-avancados"), {
         titulo: tituloProjeto,
         etapas,
+        materiais,
         criadoEm: new Date().toISOString(),
       });
       setMsg("🎉 Projeto salvo com sucesso!");
       setTituloProjeto("");
       setEtapas([]);
+      setMateriais([]);
     } catch (e) {
       setMsg("❌ Erro ao salvar projeto.");
     }
@@ -168,6 +185,47 @@ export default function CriarProjeto() {
               </CardContent>
             </Card>
 
+            {/* Lista de Materiais */}
+            <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <span className="text-2xl">📦</span>
+                  Lista de Materiais
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-2 mb-4">
+                  <Input
+                    placeholder="Quantidade"
+                    value={novoMaterial.quantidade}
+                    onChange={e => setNovoMaterial({ ...novoMaterial, quantidade: e.target.value })}
+                    className="bg-gray-700 border-gray-600 text-white w-32"
+                  />
+                  <Input
+                    placeholder="Material"
+                    value={novoMaterial.nome}
+                    onChange={e => setNovoMaterial({ ...novoMaterial, nome: e.target.value })}
+                    className="bg-gray-700 border-gray-600 text-white flex-1"
+                  />
+                  <Button onClick={adicionarMaterial} className="bg-green-600 hover:bg-green-700 text-white px-6" disabled={!novoMaterial.quantidade.trim() || !novoMaterial.nome.trim()}>
+                    ➕
+                  </Button>
+                </div>
+                {materiais.length > 0 && (
+                  <div className="space-y-2">
+                    {materiais.map((mat, idx) => (
+                      <div key={idx} className="flex items-center gap-2 bg-gray-700/50 p-3 rounded-lg border border-gray-600 text-white">
+                        <span className="w-20 font-bold">{mat.quantidade}</span>
+                        <span className="flex-1">{mat.nome}</span>
+                        <button onClick={() => removerMaterial(idx)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 p-2 rounded transition-all" title="Remover material">
+                          🗑️
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
             {/* Formulário para Nova Etapa */}
             <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
               <CardHeader>
@@ -376,6 +434,27 @@ export default function CriarProjeto() {
               </CardContent>
             </Card>
 
+            {/* Preview da Lista de Materiais */}
+            {materiais.length > 0 && (
+              <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <span className="text-2xl">📦</span>
+                    Materiais do Projeto
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="divide-y divide-gray-700">
+                    {materiais.map((mat, idx) => (
+                      <li key={idx} className="flex gap-4 py-2 text-white">
+                        <span className="w-20 font-bold">{mat.quantidade}</span>
+                        <span className="flex-1">{mat.nome}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
             {/* Preview das Etapas */}
             {etapas.length > 0 && (
               <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">

@@ -96,6 +96,27 @@ export default function AdminProjetoView() {
               </div>
             </CardHeader>
             <CardContent>
+              {/* Lista de Materiais */}
+              {projeto.materiais && projeto.materiais.length > 0 && (
+                <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <span className="text-2xl">📦</span>
+                      Materiais do Projeto
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="divide-y divide-gray-700">
+                      {projeto.materiais.map((mat: any, idx: number) => (
+                        <li key={idx} className="flex gap-4 py-2 text-white">
+                          <span className="w-20 font-bold">{mat.quantidade}</span>
+                          <span className="flex-1">{mat.nome}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
               <div className="space-y-8">
                 {projeto.etapas && projeto.etapas.length > 0 ? (
                   projeto.etapas.map((etapa: any, idx: number) => (
