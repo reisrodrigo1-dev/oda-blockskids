@@ -47,19 +47,19 @@ export default function AdminProjetosPedagogicos() {
   }
 
   function abrirProjeto(id: string) {
-    setLocation(`/projeto/${id}`);
+    setLocation(`/admin/projeto/${id}`);
   }
 
   function visualizarComoAluno(id: string) {
-    setLocation(`/projeto-aluno/${id}`);
+    setLocation(`/admin/projeto-aluno/${id}`);
   }
 
   function editarProjeto(id: string) {
-    setLocation(`/editar-projeto/${id}`);
+    setLocation(`/admin/editar-projeto/${id}`);
   }
 
   function criarNovoProjeto() {
-    setLocation("/criador-projeto-melhorado");
+  setLocation("/admin/criar-projeto");
   }
 
   function confirmarExclusao(id: string) {

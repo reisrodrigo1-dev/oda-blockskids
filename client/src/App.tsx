@@ -18,6 +18,9 @@ import AdminCadastro from "@/pages/admin/cadastro";
 import CriadorProjetoMelhorado from "@/pages/admin/criador-projeto-melhorado";
 import CriarProjeto from "@/pages/admin/criar-projeto";
 import AdminDashboard from "@/pages/admin/dashboard";
+import AdminProjetoView from "@/pages/admin/projeto";
+import EditarProjetoAdmin from "@/pages/admin/editar-projeto";
+import AdminVisualizarComoAluno from "@/pages/admin/projeto-aluno";
 
 function Router() {
   return (
@@ -35,6 +38,9 @@ function Router() {
       <Route path="/admin/criador-projeto-melhorado" component={CriadorProjetoMelhorado} />
       <Route path="/admin/criar-projeto" component={CriarProjeto} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+  <Route path="/admin/projeto/:id" component={AdminProjetoView} />
+  <Route path="/admin/editar-projeto/:id" component={EditarProjetoAdmin} />
+      <Route path="/admin/projeto-aluno/:id" component={AdminVisualizarComoAluno} />
       <Route path="/admin" component={AdminHome} />
       <Route component={NotFound} />
     </Switch>
