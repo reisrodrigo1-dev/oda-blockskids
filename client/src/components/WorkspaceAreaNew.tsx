@@ -262,14 +262,8 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
                     const value = input.value !== undefined ? input.value : input.default;
                     if (input.name === 'pin') {
                       return <span key={index}>Pino: {value}</span>;
-                    } else if (input.name === 'button_pin') {
-                      return <span key={index}>Botão: {value}</span>;
-                    } else if (input.name === 'servo_pin') {
-                      return <span key={index}>Servo: {value}</span>;
                     } else if (input.name === 'time') {
                       return <span key={index}>Tempo: {value}s</span>;
-                    } else if (input.name === 'angle') {
-                      return <span key={index}>Ângulo: {value}°</span>;
                     } else if (input.name === 'note') {
                       const noteNames: Record<string, string> = {
                         'C4': 'Dó', 'D4': 'Ré', 'E4': 'Mi', 'F4': 'Fá',

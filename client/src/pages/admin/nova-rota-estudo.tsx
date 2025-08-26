@@ -1,0 +1,340 @@
+import { useState, useEffect } from "react";
+import { useLocation, useRoute } from "wouter";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Textarea } from "../../components/ui/textarea";
+import { Badge } from "../../components/ui/badge";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs, addDoc, doc, getDoc, query, where } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
+  authDomain: "oda-blockskids.firebaseapp.com",
+  projectId: "oda-blockskids",
+  storageBucket: "oda-blockskids.appspot.com",
+  messagingSenderId: "567014936342",
+  appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
+  measurementId: "G-TCMP1KJK0H"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+interface Cliente {
+  id: string;
+  razaoSocial: string;
+  nomeFantasia?: string;
+  email: string;
+}
+
+interface RotaEstudo {
+  id: string;
+  titulo: string;
+  descricao: string;
+  codigo: string;
+  projetos: any[];
+}
+
+export default function NovaRotaEstudo() {
+  const [, setLocation] = useLocation();
+  const [match, params] = useRoute("/admin/cliente/:clienteId/nova-rota");
+  const [cliente, setCliente] = useState<Cliente | null>(null);
+  const [rotasExistentes, setRotasExistentes] = useState<RotaEstudo[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [salvando, setSalvando] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  
+  // Estados do formulário
+  const [titulo, setTitulo] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [codigo, setCodigo] = useState("");
+
+  useEffect(() => {
+    if (params?.clienteId) {
+      carregarDados(params.clienteId);
+    }
+  }, [params?.clienteId]);
+
+  const carregarDados = async (clienteId: string) => {
+    try {
+      setCarregando(true);
+
+      // Carregar dados do cliente
+      const clienteDoc = await getDoc(doc(db, "clientes", clienteId));
+      if (clienteDoc.exists()) {
+        setCliente({ id: clienteDoc.id, ...clienteDoc.data() } as Cliente);
+      } else {
+        setMensagem("❌ Cliente não encontrado");
+        return;
+      }
+
+      // Carregar rotas existentes do cliente
+      const rotasQuery = query(
+        collection(db, "rotasEstudo"),
+        where("clienteId", "==", clienteId)
+      );
+      const rotasSnap = await getDocs(rotasQuery);
+      const rotasData = rotasSnap.docs.map(doc => ({ 
+        id: doc.id, 
+        ...doc.data() 
+      } as RotaEstudo));
+      setRotasExistentes(rotasData);
+
+      // Gerar código automático
+      const proximoNumero = rotasData.length + 1;
+      const codigoSugerido = `${clienteDoc.data()?.razaoSocial?.substring(0, 3).toUpperCase() || 'CLI'}${proximoNumero.toString().padStart(3, '0')}`;
+      setCodigo(codigoSugerido);
+
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+      setMensagem("❌ Erro ao carregar dados");
+    }
+    setCarregando(false);
+  };
+
+  const verificarCodigoUnico = async (codigoTeste: string) => {
+    if (!params?.clienteId) return false;
+    
+    const rotasQuery = query(
+      collection(db, "rotasEstudo"),
+      where("clienteId", "==", params.clienteId),
+      where("codigo", "==", codigoTeste.toUpperCase())
+    );
+    const rotasSnap = await getDocs(rotasQuery);
+    return rotasSnap.empty;
+  };
+
+  const handleCriarRota = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!titulo || !codigo || !params?.clienteId || !cliente) {
+      setMensagem("❌ Preencha todos os campos obrigatórios");
+      return;
+    }
+
+    setSalvando(true);
+    setMensagem("");
+
+    try {
+      // Verificar se código é único para este cliente
+      const codigoUnico = await verificarCodigoUnico(codigo);
+      if (!codigoUnico) {
+        setMensagem("❌ Este código já existe para este cliente. Escolha outro código.");
+        setSalvando(false);
+        return;
+      }
+
+      const novaRota = {
+        clienteId: params.clienteId,
+        titulo,
+        descricao: descricao || "",
+        codigo: codigo.toUpperCase(),
+        projetos: [],
+        ativo: true,
+        criadoEm: new Date()
+      };
+
+      await addDoc(collection(db, "rotasEstudo"), novaRota);
+      
+      setMensagem("✅ Rota de estudo criada com sucesso!");
+      
+      // Limpar formulário
+      setTitulo("");
+      setDescricao("");
+      
+      // Gerar novo código
+      const proximoNumero = rotasExistentes.length + 2;
+      const novoCodigoSugerido = `${cliente.razaoSocial.substring(0, 3).toUpperCase()}${proximoNumero.toString().padStart(3, '0')}`;
+      setCodigo(novoCodigoSugerido);
+      
+      // Recarregar rotas
+      carregarDados(params.clienteId);
+      
+      setTimeout(() => setMensagem(""), 3000);
+
+    } catch (error) {
+      console.error("Erro ao criar rota:", error);
+      setMensagem("❌ Erro ao criar rota de estudo");
+    }
+    
+    setSalvando(false);
+  };
+
+  if (carregando) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-green-900 flex items-center justify-center">
+        <div className="text-white text-xl">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (!cliente) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-green-900 flex items-center justify-center">
+        <div className="text-white text-xl">Cliente não encontrado</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-green-900 p-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="bg-gray-800/90 backdrop-blur rounded-lg p-6 mb-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                <span className="text-4xl">📚</span>
+                Nova Rota de Estudo
+              </h1>
+              <p className="text-gray-300 mt-2">
+                Cliente: <strong>{cliente.nomeFantasia || cliente.razaoSocial}</strong>
+              </p>
+            </div>
+            <Button
+              onClick={() => setLocation('/admin/gerenciar-clientes')}
+              variant="outline"
+              className="text-white border-gray-600"
+            >
+              Voltar
+            </Button>
+          </div>
+        </div>
+
+        {mensagem && (
+          <div className={`mb-6 p-4 rounded-lg text-center font-medium ${
+            mensagem.includes("✅") 
+              ? "bg-green-600/20 text-green-400 border border-green-600" 
+              : "bg-red-600/20 text-red-400 border border-red-600"
+          }`}>
+            {mensagem}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Formulário */}
+          <Card className="bg-gray-800/90 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">Criar Nova Rota</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleCriarRota} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Título da Rota *
+                  </label>
+                  <Input
+                    value={titulo}
+                    onChange={e => setTitulo(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white"
+                    placeholder="Ex: Programação Básica Arduino - 6º Ano"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Código da Turma *
+                  </label>
+                  <Input
+                    value={codigo}
+                    onChange={e => setCodigo(e.target.value.toUpperCase())}
+                    className="bg-gray-700 border-gray-600 text-white"
+                    placeholder="Ex: ESC001"
+                    required
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Este código será usado pelos professores para se cadastrarem
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Descrição
+                  </label>
+                  <Textarea
+                    value={descricao}
+                    onChange={e => setDescricao(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white"
+                    placeholder="Descreva os objetivos e conteúdo desta rota de estudo..."
+                    rows={4}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={salvando}
+                  className="w-full bg-green-600 hover:bg-green-700"
+                >
+                  {salvando ? "Criando..." : "Criar Rota de Estudo"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Rotas existentes */}
+          <Card className="bg-gray-800/90 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">
+                Rotas Existentes ({rotasExistentes.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {rotasExistentes.length > 0 ? (
+                <div className="space-y-4">
+                  {rotasExistentes.map(rota => (
+                    <div key={rota.id} className="bg-gray-700/50 rounded-lg p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-white font-semibold">{rota.titulo}</h3>
+                        <Badge className="bg-blue-600">{rota.codigo}</Badge>
+                      </div>
+                      {rota.descricao && (
+                        <p className="text-gray-400 text-sm mb-2">{rota.descricao}</p>
+                      )}
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500">
+                          {rota.projetos?.length || 0} projetos
+                        </span>
+                        <Button
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700"
+                          onClick={() => setLocation(`/admin/rota/${rota.id}/projetos`)}
+                        >
+                          Gerenciar
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-4">📚</div>
+                  <p className="text-gray-400">
+                    Nenhuma rota de estudo criada ainda.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Dicas */}
+        <Card className="bg-blue-600/20 border-blue-600 mt-6">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">💡</span>
+              <div>
+                <h3 className="text-white font-semibold mb-2">Dicas importantes:</h3>
+                <ul className="text-blue-200 text-sm space-y-1">
+                  <li>• O código da turma deve ser único para cada cliente</li>
+                  <li>• Professores usarão este código para se cadastrar</li>
+                  <li>• Após criar a rota, você pode adicionar projetos específicos</li>
+                  <li>• Use nomes descritivos que identifiquem série, modalidade ou período</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

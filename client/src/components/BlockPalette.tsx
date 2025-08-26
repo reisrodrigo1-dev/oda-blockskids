@@ -23,9 +23,11 @@ const blockDefinitions: Block[] = [
   // Motor Blocks
   { id: 'motor_on', type: 'motor_on', category: 'motor', label: 'Ligar motor', icon: '⚙️', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
   { id: 'motor_off', type: 'motor_off', category: 'motor', label: 'Desligar motor', icon: '⚙️', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
+  { id: 'servo_move', type: 'servo_write', category: 'motor', label: 'Mover servo', icon: '🔄', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }, { name: 'angle', type: 'number', default: 90 }] },
 
   // Sensor Blocks
   { id: 'button_pressed', type: 'digital_read', category: 'sensors', label: 'Se botão pressionado', icon: '👆', color: 'kid-green', inputs: [{ name: 'pin', type: 'select', default: 2 }] },
+  { id: 'button_servo', type: 'button_servo', category: 'sensors', label: 'Botão controla servo', icon: '🎛️', color: 'kid-green', inputs: [{ name: 'button_pin', type: 'select', default: 2 }, { name: 'servo_pin', type: 'select', default: 9 }, { name: 'angle', type: 'number', default: 90 }] },
   { id: 'read_temperature', type: 'analog_read', category: 'sensors', label: 'Ler temperatura', icon: '🌡️', color: 'kid-green', inputs: [{ name: 'pin', type: 'select', default: 'A0' }] },
 
   // Control Blocks
@@ -58,7 +60,8 @@ export default function BlockPalette() {
     
     if (block.inputs) {
       updatedBlock.inputs = block.inputs.map(input => {
-        const inputElement = blockElement.querySelector(`select, input[type="number"]`) as HTMLInputElement | HTMLSelectElement;
+        // Buscar pelo input específico usando um seletor mais específico
+        const inputElement = blockElement.querySelector(`[data-input="${input.name}"]`) as HTMLInputElement | HTMLSelectElement;
         if (inputElement) {
           return { ...input, value: inputElement.value };
         }
@@ -81,25 +84,32 @@ export default function BlockPalette() {
 
   const renderInput = (input: any, blockId: string) => {
     if (input.type === 'number') {
+      const minValue = input.name === 'angle' ? 0 : 1;
+      const maxValue = input.name === 'angle' ? 180 : undefined;
+      const widthClass = input.name === 'angle' ? 'w-12' : 'w-10';
+      
       return (
         <input
           type="number"
           defaultValue={input.default}
-          className="ml-2 w-12 px-1 py-1 rounded text-black text-xs"
-          min="1"
+          className={`ml-1 ${widthClass} px-1 py-1 rounded text-black text-xs`}
+          min={minValue}
+          max={maxValue}
+          data-input={input.name}
           onClick={(e) => e.stopPropagation()}
         />
       );
     }
     
-    if (input.type === 'select' && input.name === 'pin') {
+    if (input.type === 'select' && (input.name === 'pin' || input.name === 'button_pin' || input.name === 'servo_pin')) {
       return (
         <select 
-          className="ml-2 px-1 py-1 rounded text-black text-xs" 
+          className="ml-1 px-1 py-1 rounded text-black text-xs w-16" 
           defaultValue={input.default}
+          data-input={input.name}
           onClick={(e) => e.stopPropagation()}
         >
-          {input.name === 'pin' && typeof input.default === 'number' ? (
+          {(input.name === 'pin' || input.name === 'button_pin' || input.name === 'servo_pin') && typeof input.default === 'number' ? (
             <>
               <option value="13">Pino 13</option>
               <option value="12">Pino 12</option>
@@ -107,6 +117,7 @@ export default function BlockPalette() {
               <option value="2">Pino 2</option>
               <option value="3">Pino 3</option>
               <option value="4">Pino 4</option>
+              <option value="9">Pino 9</option>
             </>
           ) : (
             <>
@@ -121,7 +132,7 @@ export default function BlockPalette() {
     
     if (input.type === 'select' && input.name === 'note') {
       return (
-        <select className="ml-2 px-1 py-1 rounded text-black text-xs" onClick={(e) => e.stopPropagation()}>
+        <select className="ml-1 px-1 py-1 rounded text-black text-xs w-20" data-input={input.name} onClick={(e) => e.stopPropagation()}>
           <option value="C4">Dó (C4)</option>
           <option value="D4">Ré (D4)</option>
           <option value="E4">Mi (E4)</option>
@@ -164,17 +175,46 @@ export default function BlockPalette() {
                       draggable
                       onDragStart={(e) => handleDragStart(block, e)}
                       onDragEnd={handleDragEnd}
-                      className={`drag-block bg-${block.color} text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 flex items-center select-none`}
+                      className={`drag-block bg-${block.color} text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 select-none min-w-0`}
                     >
-                      <span className="mr-2">{block.icon}</span>
-                      <span className="font-semibold text-sm">{block.label}</span>
-                      {block.inputs?.map((input, index) => (
-                        <span key={index}>
-                          {renderInput(input, block.id)}
-                          {input.name === 'time' && <span className="ml-1 text-xs">seg</span>}
-                          {input.name === 'times' && <span className="ml-1 text-xs">vezes</span>}
-                        </span>
-                      ))}
+                      <div className="flex items-center mb-1">
+                        <span className="mr-2">{block.icon}</span>
+                        <span className="font-semibold text-sm">{block.label}</span>
+                      </div>
+                      
+                      {/* Inputs organizados em linhas */}
+                      {block.inputs && block.inputs.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {block.inputs.map((input, index) => (
+                            <div key={index} className="flex items-center text-xs">
+                              {/* Labels para o bloco button_servo */}
+                              {block.type === 'button_servo' && (
+                                <span className="text-xs opacity-80 mr-1">
+                                  {input.name === 'button_pin' && 'Btn:'}
+                                  {input.name === 'servo_pin' && 'Servo:'}
+                                  {input.name === 'angle' && 'Ang:'}
+                                </span>
+                              )}
+                              {/* Labels para outros blocos */}
+                              {block.type !== 'button_servo' && input.name === 'pin' && (
+                                <span className="text-xs opacity-80 mr-1">Pin:</span>
+                              )}
+                              {input.name === 'time' && (
+                                <span className="text-xs opacity-80 mr-1">Tempo:</span>
+                              )}
+                              {input.name === 'times' && (
+                                <span className="text-xs opacity-80 mr-1">Rep:</span>
+                              )}
+                              
+                              {renderInput(input, block.id)}
+                              
+                              {input.name === 'time' && <span className="ml-1 text-xs">s</span>}
+                              {input.name === 'times' && <span className="ml-1 text-xs">x</span>}
+                              {input.name === 'angle' && <span className="ml-1 text-xs">°</span>}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

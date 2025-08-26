@@ -4,6 +4,8 @@ import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../../components/ui/dialog";
+import { getProfessoresByClienteId, updateProfessorSenha } from "../../lib/professores";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from "firebase/firestore";
 
@@ -56,6 +58,40 @@ export default function Clientes() {
   const [form, setForm] = useState<any>(initialCliente);
   const [editId, setEditId] = useState<string | null>(null);
   const [salvando, setSalvando] = useState(false);
+  // Professores modal state
+  const [openProfModal, setOpenProfModal] = useState(false);
+  const [professores, setProfessores] = useState<any[]>([]);
+  const [clienteSelecionado, setClienteSelecionado] = useState<any>(null);
+  const [senhaEditando, setSenhaEditando] = useState<{[profId:string]: string}>({});
+  const [senhaLoading, setSenhaLoading] = useState<{[profId:string]: boolean}>({});
+  const [senhaMsg, setSenhaMsg] = useState<{[profId:string]: string}>({});
+
+  async function abrirProfessores(cliente: any) {
+    setClienteSelecionado(cliente);
+    setOpenProfModal(true);
+    setSenhaMsg({});
+    setSenhaEditando({});
+    setSenhaLoading({});
+    const lista = await getProfessoresByClienteId(db, cliente.id);
+    setProfessores(lista);
+  }
+
+  async function handleTrocarSenha(profId: string) {
+    if (!senhaEditando[profId] || senhaEditando[profId].length < 4) {
+      setSenhaMsg(m => ({...m, [profId]: "Senha deve ter pelo menos 4 caracteres."}));
+      return;
+    }
+    setSenhaLoading(l => ({...l, [profId]: true}));
+    setSenhaMsg(m => ({...m, [profId]: ""}));
+    try {
+      await updateProfessorSenha(db, profId, senhaEditando[profId]);
+      setSenhaMsg(m => ({...m, [profId]: "Senha alterada com sucesso!"}));
+      setSenhaEditando(e => ({...e, [profId]: ""}));
+    } catch {
+      setSenhaMsg(m => ({...m, [profId]: "Erro ao alterar senha."}));
+    }
+    setSenhaLoading(l => ({...l, [profId]: false}));
+  }
 
   async function fetchClientes() {
     setLoading(true);
@@ -277,11 +313,70 @@ export default function Clientes() {
                         <div className="text-gray-400 text-xs">{cliente.endereco?.cidade} - {cliente.endereco?.estado}</div>
                       </div>
                       <div className="flex gap-2">
+                        <Button className="bg-blue-700 hover:bg-blue-800 text-white" onClick={() => abrirProfessores(cliente)}>Professores</Button>
                         <Button className="bg-yellow-600 hover:bg-yellow-700 text-white" onClick={() => editarCliente(cliente)}>Editar</Button>
                         <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={() => excluirCliente(cliente.id)}>Excluir</Button>
                       </div>
                     </div>
                   ))}
+                  {/* Modal de Professores */}
+                  <Dialog open={openProfModal} onOpenChange={setOpenProfModal}>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Professores do Cliente</DialogTitle>
+                        <DialogDescription>
+                          {clienteSelecionado?.razaoSocial || clienteSelecionado?.nomeFantasia}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="overflow-x-auto">
+                        {professores.length === 0 ? (
+                          <div className="text-gray-400">Nenhum professor associado.</div>
+                        ) : (
+                          <table className="min-w-full text-sm">
+                            <thead>
+                              <tr className="text-left text-gray-300">
+                                <th className="p-2">Nome</th>
+                                <th className="p-2">E-mail</th>
+                                <th className="p-2">Turmas</th>
+                                <th className="p-2">Senha</th>
+                                <th className="p-2"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {professores.map((prof: any) => (
+                                <tr key={prof.id} className="border-b border-gray-700">
+                                  <td className="p-2 text-white">{prof.nome}</td>
+                                  <td className="p-2 text-gray-200">{prof.email}</td>
+                                  <td className="p-2 text-gray-300">{Array.isArray(prof.codigosTurmas) ? prof.codigosTurmas.join(", ") : ""}</td>
+                                  <td className="p-2">
+                                    <input
+                                      type="text"
+                                      className="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-white w-28"
+                                      placeholder="Nova senha"
+                                      value={senhaEditando[prof.id] || ""}
+                                      onChange={e => setSenhaEditando(s => ({...s, [prof.id]: e.target.value}))}
+                                      disabled={senhaLoading[prof.id]}
+                                    />
+                                  </td>
+                                  <td className="p-2">
+                                    <Button size="sm" className="bg-green-700 hover:bg-green-800 text-white" onClick={() => handleTrocarSenha(prof.id)} disabled={senhaLoading[prof.id]}>
+                                      {senhaLoading[prof.id] ? "Salvando..." : "Alterar Senha"}
+                                    </Button>
+                                    {senhaMsg[prof.id] && (
+                                      <div className={`text-xs mt-1 ${senhaMsg[prof.id].includes("sucesso") ? "text-green-400" : "text-red-400"}`}>{senhaMsg[prof.id]}</div>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        )}
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setOpenProfModal(false)}>Fechar</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )}
             </CardContent>

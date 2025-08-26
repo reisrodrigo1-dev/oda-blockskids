@@ -6,19 +6,52 @@ interface ArduinoPanelProps {
   code: string;
 }
 
-const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
+const ArduinoPanel: React.FC<ArduinoPane          {/* Ações */}
+          <div className="space-y-2 mb-4">
+            {/* Compilar e Upload Real - NOVA FUNCIONALIDADE */}
+            <Button 
+              onClick={handleCompileAndUpload}
+              disabled={isUploading || isCompiling || isConnecting || !isConnected}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+              variant="default"
+            >
+              {isCompiling ? (
+                <>🔨 Compilando... {compilationProgress}%</>
+              ) : isUploading ? (
+                <>🚀 Uploading... {uploadProgress}%</>
+              ) : (
+                <>⚡ Compilar e Upload Real</>
+              )}
+            </Button>
+            
+            {/* Envio via Serial */}
+            <Button 
+              onClick={handleUploadCode}
+              disabled={isUploading || isCompiling || isConnecting || !isConnected}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              variant="default"
+            >
+              {isUploading && !isCompiling ? (
+                <>🔄 Enviando via Serial... {uploadProgress}%</>
+              ) : (
+                <>📤 Enviar via Serial</>
+              )}
+            </Button>de }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [serialData, setSerialData] = useState<string[]>([]);
   const { 
     isConnected, 
     isConnecting, 
     isUploading,
+    isCompiling,
     uploadProgress,
+    compilationProgress,
     error, 
     connect, 
     disconnect, 
     sendCode,
     uploadCode,
+    compileAndUpload,
     readData 
   } = useArduinoSerial();
 
@@ -53,37 +86,72 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
     }
   };
 
+  const handleCompileAndUpload = async () => {
+    try {
+      const success = await compileAndUpload(code);
+      if (success) {
+        setSerialData(prev => [...prev, `🎉 Compilação e Upload concluídos!`]);
+      } else {
+        setSerialData(prev => [...prev, `❌ Falha na compilação/upload`]);
+      }
+    } catch (err) {
+      console.error('Erro na compilação/upload:', err);
+      setSerialData(prev => [...prev, `❌ Erro: ${err}`]);
+    }
+  };
+
   const handleUploadCode = async () => {
     try {
       const success = await uploadCode(code);
       if (success) {
-        setSerialData(prev => [...prev, `✅ Upload concluído com sucesso!`]);
+        setSerialData(prev => [...prev, `✅ Código enviado via Serial!`]);
+        setSerialData(prev => [...prev, `⚠️ Para upload real: use Arduino IDE`]);
       } else {
-        setSerialData(prev => [...prev, `❌ Falha no upload`]);
+        setSerialData(prev => [...prev, `❌ Falha no envio`]);
       }
     } catch (err) {
-      console.error('Erro no upload:', err);
-      setSerialData(prev => [...prev, `❌ Erro no upload: ${err}`]);
+      console.error('Erro no envio:', err);
+      setSerialData(prev => [...prev, `❌ Erro no envio: ${err}`]);
     }
   };
 
-  const handleDownloadSketch = () => {
-    // Criar arquivo .ino para download (backup option)
-    const sketchContent = `// Sketch gerado pelo BlockuinoEditor
-// Este arquivo deve ser aberto no Arduino IDE para upload
+  const handleCompileAndDownload = () => {
+    // Criar arquivo .ino mais completo para upload real
+    const timestamp = new Date().toISOString().split('T')[0];
+    const sketchContent = `/*
+ * Sketch gerado pelo BlockuinoEditor
+ * Data: ${timestamp}
+ * 
+ * INSTRUÇÕES PARA UPLOAD:
+ * 1. Salve este arquivo como "sketch.ino"
+ * 2. Abra no Arduino IDE
+ * 3. Conecte seu Arduino via USB
+ * 4. Selecione a placa correta (Tools > Board)
+ * 5. Selecione a porta correta (Tools > Port)
+ * 6. Clique em Upload (→) no Arduino IDE
+ */
 
 ${code}
+
+/*
+ * NOTAS:
+ * - Verifique se todas as bibliotecas necessárias estão instaladas
+ * - Certifique-se de que a placa e porta estão selecionadas corretamente
+ * - Se houver erros, verifique a sintaxe do código
+ */
 `;
     
     const blob = new Blob([sketchContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'blockuino_sketch.ino';
+    a.download = `blockuino_sketch_${timestamp}.ino`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    
+    setSerialData(prev => [...prev, `💾 Arquivo .ino baixado! Use no Arduino IDE para upload real.`]);
   };
 
   return (
@@ -144,25 +212,58 @@ ${code}
             )}
           </div>
 
-          {/* Aviso sobre Web Serial API */}
+          {/* Aviso sobre Web Serial API e Upload Real */}
           {!isConnected && !isUploading && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm">
               <div className="flex items-start gap-2">
                 <span className="text-blue-500">ℹ️</span>
                 <div>
-                  <p className="font-medium text-blue-800">Upload Direto Arduino:</p>
+                  <p className="font-medium text-blue-800">Como Fazer Upload Real:</p>
                   <ul className="text-blue-700 mt-1 space-y-1">
-                    <li>• Funciona apenas no Chrome/Edge</li>
-                    <li>• Upload direto para o Arduino</li>
-                    <li>• Backup: baixar arquivo .ino</li>
+                    <li>• <strong>Via Serial:</strong> Envia código via porta serial</li>
+                    <li>• <strong>Upload Real:</strong> Baixe .ino e use Arduino IDE</li>
+                    <li>• <strong>Navegador:</strong> Funciona no Chrome/Edge</li>
                   </ul>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Instrução durante upload */}
+          {isConnected && !isUploading && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 text-sm">
+              <div className="flex items-start gap-2">
+                <span className="text-green-500">✅</span>
+                <div>
+                  <p className="font-medium text-green-800">Arduino Conectado!</p>
+                  <ul className="text-green-700 mt-1 space-y-1">
+                    <li>• <strong>Enviar Serial:</strong> Transmite código via serial</li>
+                    <li>• <strong>Para compilar:</strong> Baixe .ino e use Arduino IDE</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Progresso da Compilação */}
+          {isCompiling && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-500">🔨</span>
+                <p className="font-medium text-blue-800">Compilando Código...</p>
+              </div>
+              <div className="w-full bg-blue-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${compilationProgress}%` }}
+                />
+              </div>
+              <p className="text-blue-700 text-sm mt-1">{compilationProgress}% concluído</p>
+            </div>
+          )}
+
           {/* Progresso do Upload */}
-          {isUploading && (
+          {isUploading && !isCompiling && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-green-500">🚀</span>
@@ -180,18 +281,28 @@ ${code}
 
           {/* Ações */}
           <div className="space-y-2 mb-4">
-            {/* Upload Direto - Botão Principal */}
+            {/* Envio via Serial */}
             <Button 
               onClick={handleUploadCode}
-              disabled={isUploading || isConnecting}
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              disabled={isUploading || isConnecting || !isConnected}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               variant="default"
             >
               {isUploading ? (
-                <>🔄 Fazendo Upload... {uploadProgress}%</>
+                <>🔄 Enviando via Serial... {uploadProgress}%</>
               ) : (
-                <>🚀 Upload Direto para Arduino</>
+                <>� Enviar via Serial</>
               )}
+            </Button>
+            
+            {/* Download para Arduino IDE - Botão Principal para Upload Real */}
+            <Button 
+              onClick={handleCompileAndDownload}
+              disabled={isUploading}
+              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              variant="default"
+            >
+              � Baixar para Arduino IDE (Upload Real)
             </Button>
             
             {/* Monitoramento Serial */}
@@ -201,17 +312,7 @@ ${code}
               className="w-full"
               variant="outline"
             >
-              📤 Enviar via Serial
-            </Button>
-            
-            {/* Download .ino (backup) */}
-            <Button 
-              onClick={handleDownloadSketch}
-              disabled={isUploading}
-              className="w-full"
-              variant="outline"
-            >
-              💾 Baixar .ino (backup)
+              � Enviar Comando Serial
             </Button>
           </div>
 

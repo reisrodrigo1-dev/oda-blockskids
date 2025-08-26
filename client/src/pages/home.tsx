@@ -18,6 +18,18 @@ export default function Home() {
         </div>
         <div className="flex gap-4">
           <button
+            onClick={() => setLocation("/login-professor")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-block transition-all duration-200 text-sm"
+          >
+            👨‍🏫 Professor
+          </button>
+          <button
+            onClick={() => setLocation("/login-aluno")}
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-block transition-all duration-200 text-sm"
+          >
+            👨‍🎓 Aluno
+          </button>
+          <button
             onClick={() => setLocation("/projeto-pedagogico")}
             className="bg-kid-blue hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-block transition-all duration-200 text-lg"
           >

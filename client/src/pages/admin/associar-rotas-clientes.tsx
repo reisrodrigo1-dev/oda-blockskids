@@ -51,22 +51,38 @@ export default function AssociarRotasClientes() {
   const [rotas, setRotas] = useState<RotaEstudo[]>([]);
   const [clienteSelecionado, setClienteSelecionado] = useState("");
   const [rotaSelecionada, setRotaSelecionada] = useState("");
+  const [rotasSelecionadas, setRotasSelecionadas] = useState<string[]>([]);
   const [associando, setAssociando] = useState(false);
   const [msg, setMsg] = useState("");
   const [associacoes, setAssociacoes] = useState<RotaEstudoAssociada[]>([]);
+  const [modoMultiplo, setModoMultiplo] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      const clientesSnap = await getDocs(collection(db, "clientes"));
-      setClientes(clientesSnap.docs.map(doc => {
-        const data = doc.data();
-        return { id: doc.id, nome: data.nome || "(sem nome)", ...data };
-      }));
-      const rotasSnap = await getDocs(collection(db, "rotas-estudos"));
-      setRotas(rotasSnap.docs.map(doc => {
-        const data = doc.data();
-        return { id: doc.id, nome: data.nome || data.titulo || "(sem nome)", ...data };
-      }));
+      try {
+        const clientesSnap = await getDocs(collection(db, "clientes"));
+        
+        const clientesData = clientesSnap.docs.map(doc => {
+          const data = doc.data();
+          // Usar razaoSocial ou nomeFantasia como nome principal
+          const nome = data.razaoSocial || data.nomeFantasia || data.nome || "(sem nome)";
+          return { id: doc.id, nome, ...data };
+        });
+        
+        setClientes(clientesData);
+        
+        const rotasSnap = await getDocs(collection(db, "rotas-estudos"));
+        
+        const rotasData = rotasSnap.docs.map(doc => {
+          const data = doc.data();
+          return { id: doc.id, nome: data.nome || data.titulo || "(sem nome)", ...data };
+        });
+        
+        setRotas(rotasData);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        setMsg("❌ Erro ao carregar dados do Firebase.");
+      }
     }
     fetchData();
   }, []);
@@ -101,6 +117,59 @@ export default function AssociarRotasClientes() {
       setMsg("❌ Erro ao associar rota.");
     }
     setAssociando(false);
+  };
+
+  // Função para associar múltiplas rotas
+  const associarRotasMultiplas = async () => {
+    if (!clienteSelecionado || rotasSelecionadas.length === 0) return;
+    setAssociando(true);
+    setMsg("");
+    
+    try {
+      const clienteRef = doc(db, "clientes", clienteSelecionado);
+      const novasAssociacoes = rotasSelecionadas.map(rotaId => ({
+        rotaId,
+        codigo: gerarCodigo()
+      }));
+      
+      // Adiciona todas as rotas de uma vez
+      await updateDoc(clienteRef, {
+        rotasEstudo: arrayUnion(...novasAssociacoes)
+      });
+      
+      setMsg(`✅ ${rotasSelecionadas.length} rota(s) associada(s) com sucesso!`);
+      setRotasSelecionadas([]);
+      
+      // Atualiza lista local
+      setClientes(clientes => clientes.map(c => c.id === clienteSelecionado ? {
+        ...c,
+        rotasEstudo: [...(c.rotasEstudo || []), ...novasAssociacoes]
+      } : c));
+    } catch (e) {
+      setMsg("❌ Erro ao associar rotas.");
+    }
+    setAssociando(false);
+  };
+
+  // Função para alternar seleção de rota
+  const toggleRotaSelecionada = (rotaId: string) => {
+    setRotasSelecionadas(prev => 
+      prev.includes(rotaId) 
+        ? prev.filter(id => id !== rotaId)
+        : [...prev, rotaId]
+    );
+  };
+
+  // Função para selecionar/deselecionar todas as rotas
+  const toggleTodasRotas = () => {
+    if (rotasSelecionadas.length === rotas.length) {
+      setRotasSelecionadas([]);
+    } else {
+      // Filtra rotas que não estão já associadas
+      const rotasJaAssociadas = associacoes.map(a => a.rotaId);
+      const rotasDisponiveis = rotas.filter(r => !rotasJaAssociadas.includes(r.id));
+      setRotasSelecionadas(rotasDisponiveis.map(r => r.id));
+    }
   };
 
   // Função para remover associação
@@ -144,33 +213,116 @@ export default function AssociarRotasClientes() {
                   <select
                     className="w-full bg-gray-700 border-gray-600 text-white p-2 rounded"
                     value={clienteSelecionado}
-                    onChange={e => setClienteSelecionado(e.target.value)}
+                    onChange={e => {
+                      setClienteSelecionado(e.target.value);
+                      setRotasSelecionadas([]);
+                      setRotaSelecionada("");
+                    }}
                   >
                     <option value="">Selecione um cliente</option>
-                    {clientes.map(cliente => (
-                      <option key={cliente.id} value={cliente.id}>{cliente.nome}</option>
-                    ))}
+                    {clientes.map(cliente => {
+                      // Criar uma exibição mais completa do cliente
+                      let displayName = "";
+                      if (cliente.razaoSocial && cliente.nomeFantasia) {
+                        displayName = `${cliente.razaoSocial} (${cliente.nomeFantasia})`;
+                      } else if (cliente.razaoSocial) {
+                        displayName = cliente.razaoSocial;
+                      } else if (cliente.nomeFantasia) {
+                        displayName = cliente.nomeFantasia;
+                      } else {
+                        displayName = cliente.nome || "(sem nome)";
+                      }
+                      
+                      return (
+                        <option key={cliente.id} value={cliente.id}>{displayName}</option>
+                      );
+                    })}
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Rota de Estudos</label>
-                  <select
-                    className="w-full bg-gray-700 border-gray-600 text-white p-2 rounded"
-                    value={rotaSelecionada}
-                    onChange={e => setRotaSelecionada(e.target.value)}
-                  >
-                    <option value="">Selecione uma rota</option>
-                    {rotas.map(rota => (
-                      <option key={rota.id} value={rota.id}>{rota.nome}</option>
-                    ))}
-                  </select>
-                </div>
+
+                {/* Toggle entre modo simples e múltiplo */}
+                {clienteSelecionado && (
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 text-gray-300">
+                      <input
+                        type="checkbox"
+                        checked={modoMultiplo}
+                        onChange={e => {
+                          setModoMultiplo(e.target.checked);
+                          setRotasSelecionadas([]);
+                          setRotaSelecionada("");
+                        }}
+                        className="rounded"
+                      />
+                      Modo seleção múltipla
+                    </label>
+                  </div>
+                )}
+
+                {clienteSelecionado && !modoMultiplo && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Rota de Estudos</label>
+                    <select
+                      className="w-full bg-gray-700 border-gray-600 text-white p-2 rounded"
+                      value={rotaSelecionada}
+                      onChange={e => setRotaSelecionada(e.target.value)}
+                    >
+                      <option value="">Selecione uma rota</option>
+                      {rotas.filter(rota => !associacoes.some(a => a.rotaId === rota.id)).map(rota => (
+                        <option key={rota.id} value={rota.id}>{rota.nome}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {clienteSelecionado && modoMultiplo && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="block text-sm font-medium text-gray-300">Rotas de Estudos</label>
+                      <button
+                        type="button"
+                        onClick={toggleTodasRotas}
+                        className="text-sm text-blue-400 hover:text-blue-300"
+                      >
+                        {rotasSelecionadas.length === rotas.filter(r => !associacoes.some(a => a.rotaId === r.id)).length 
+                          ? "Desmarcar todas" 
+                          : "Selecionar todas"}
+                      </button>
+                    </div>
+                    <div className="max-h-60 overflow-y-auto space-y-2 bg-gray-800 rounded p-3">
+                      {rotas.filter(rota => !associacoes.some(a => a.rotaId === rota.id)).map(rota => (
+                        <label key={rota.id} className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={rotasSelecionadas.includes(rota.id)}
+                            onChange={() => toggleRotaSelecionada(rota.id)}
+                            className="rounded"
+                          />
+                          <span className="text-white">{rota.nome}</span>
+                        </label>
+                      ))}
+                      {rotas.filter(rota => !associacoes.some(a => a.rotaId === rota.id)).length === 0 && (
+                        <p className="text-gray-400 text-center py-4">Todas as rotas já estão associadas a este cliente</p>
+                      )}
+                    </div>
+                    {rotasSelecionadas.length > 0 && (
+                      <p className="text-sm text-gray-400 mt-2">
+                        {rotasSelecionadas.length} rota(s) selecionada(s)
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <Button
-                  onClick={associarRota}
-                  disabled={associando || !clienteSelecionado || !rotaSelecionada}
+                  onClick={modoMultiplo ? associarRotasMultiplas : associarRota}
+                  disabled={associando || !clienteSelecionado || (modoMultiplo ? rotasSelecionadas.length === 0 : !rotaSelecionada)}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-3 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
                 >
-                  {associando ? "Associando..." : "Associar Rota ao Cliente"}
+                  {associando 
+                    ? "Associando..." 
+                    : modoMultiplo 
+                      ? `Associar ${rotasSelecionadas.length} Rota(s) ao Cliente`
+                      : "Associar Rota ao Cliente"}
                 </Button>
                 {msg && (
                   <div className={`p-3 rounded-lg text-center font-semibold ${msg.includes("✅") ? "bg-green-600/20 text-green-400 border border-green-600" : "bg-red-600/20 text-red-400 border border-red-600"}`}>{msg}</div>

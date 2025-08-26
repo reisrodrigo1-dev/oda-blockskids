@@ -37,6 +37,7 @@ void loop() {
   let loopCode = '';
   let hasSerialInit = false;
   let usedPins = new Set<string>();
+  let usesServo = false;
 
   // Process blocks and generate code
   blocks.forEach(block => {
@@ -113,11 +114,99 @@ void loop() {
         loopCode += `  digitalWrite(${motorPinOff}, LOW);   // Desligar motor\n`;
         break;
 
+      case 'servo_write':
+        // Mover servo para o ângulo especificado
+        let servoPin = '9'; // Default pin
+        let angle = '90'; // Default angle
+        
+        console.log('Processando servo_write, inputs:', block.inputs);
+        
+        if (block.inputs && block.inputs.length > 0) {
+          const pinInput = block.inputs.find((input: any) => input.name === 'pin');
+          if (pinInput) {
+            if (pinInput.value !== undefined && pinInput.value !== null && pinInput.value !== '') {
+              servoPin = String(pinInput.value);
+            } else if (pinInput.default !== undefined) {
+              servoPin = String(pinInput.default);
+            }
+          }
+          
+          const angleInput = block.inputs.find((input: any) => input.name === 'angle');
+          if (angleInput) {
+            console.log('angleInput encontrado:', angleInput);
+            if (angleInput.value !== undefined && angleInput.value !== null && angleInput.value !== '') {
+              angle = String(angleInput.value);
+              console.log('Usando valor do input:', angle);
+            } else if (angleInput.default !== undefined) {
+              angle = String(angleInput.default);
+              console.log('Usando valor padrão:', angle);
+            }
+          }
+        }
+        
+        console.log('Servo final - Pin:', servoPin, 'Angle:', angle);
+        
+        usedPins.add(servoPin);
+        usesServo = true;
+        loopCode += `  servo${servoPin}.write(${angle});   // Mover servo para ${angle}°\n`;
+        break;
+
       case 'digital_read':
         const inputPin = '2'; // Default pin
         usedPins.add(inputPin);
         loopCode += `  if (digitalRead(${inputPin}) == HIGH) {\n`;
         loopCode += `    // Botão pressionado\n`;
+        loopCode += `  }\n`;
+        break;
+
+      case 'button_servo':
+        // Controle de servo por botão
+        let buttonPin = '2'; // Default button pin
+        let servoControlPin = '9'; // Default servo pin
+        let servoAngle = '90'; // Default angle
+        
+        console.log('Processando button_servo, inputs:', block.inputs);
+        
+        if (block.inputs && block.inputs.length > 0) {
+          const buttonPinInput = block.inputs.find((input: any) => input.name === 'button_pin');
+          if (buttonPinInput) {
+            if (buttonPinInput.value !== undefined && buttonPinInput.value !== null && buttonPinInput.value !== '') {
+              buttonPin = String(buttonPinInput.value);
+            } else if (buttonPinInput.default !== undefined) {
+              buttonPin = String(buttonPinInput.default);
+            }
+          }
+          
+          const servoPinInput = block.inputs.find((input: any) => input.name === 'servo_pin');
+          if (servoPinInput) {
+            if (servoPinInput.value !== undefined && servoPinInput.value !== null && servoPinInput.value !== '') {
+              servoControlPin = String(servoPinInput.value);
+            } else if (servoPinInput.default !== undefined) {
+              servoControlPin = String(servoPinInput.default);
+            }
+          }
+          
+          const angleInput = block.inputs.find((input: any) => input.name === 'angle');
+          if (angleInput) {
+            console.log('angleInput encontrado:', angleInput);
+            if (angleInput.value !== undefined && angleInput.value !== null && angleInput.value !== '') {
+              servoAngle = String(angleInput.value);
+              console.log('Usando valor do input:', servoAngle);
+            } else if (angleInput.default !== undefined) {
+              servoAngle = String(angleInput.default);
+              console.log('Usando valor padrão:', servoAngle);
+            }
+          }
+        }
+        
+        console.log('Button-Servo final - ButtonPin:', buttonPin, 'ServoPin:', servoControlPin, 'Angle:', servoAngle);
+        
+        usedPins.add(buttonPin);
+        usedPins.add(servoControlPin);
+        usesServo = true;
+        loopCode += `  if (digitalRead(${buttonPin}) == HIGH) {\n`;
+        loopCode += `    servo${servoControlPin}.write(${servoAngle});   // Mover servo para ${servoAngle}° quando botão pressionado\n`;
+        loopCode += `    delay(500);   // Debounce do botão\n`;
         loopCode += `  }\n`;
         break;
 
@@ -182,6 +271,22 @@ void loop() {
   });
 
   // Generate setup section
+  let includes = ``;
+  let globalDeclarations = ``;
+  
+  if (usesServo) {
+    includes += `#include <Servo.h>\n`;
+    // Criar objetos servo para cada pino usado
+    usedPins.forEach(pin => {
+      if (blocks.some(b => b.type === 'servo_write' && 
+          b.inputs?.find(i => i.name === 'pin')?.value == pin || 
+          b.inputs?.find(i => i.name === 'pin')?.default == pin)) {
+        globalDeclarations += `Servo servo${pin};\n`;
+      }
+    });
+    includes += `\n`;
+  }
+
   let setup = `void setup() {\n`;
   
   if (hasSerialInit || blocks.length > 0) {
@@ -194,7 +299,14 @@ void loop() {
   if (usedPins.size > 0) {
     setup += `  // Configurar pinos\n`;
     usedPins.forEach(pin => {
-      if (['13', '12', '11', '10', '9', '8'].includes(pin)) {
+      // Verificar se este pino é usado para servo
+      const isServoPin = blocks.some(b => b.type === 'servo_write' && 
+        (b.inputs?.find(i => i.name === 'pin')?.value == pin || 
+         b.inputs?.find(i => i.name === 'pin')?.default == pin));
+      
+      if (isServoPin) {
+        setup += `  servo${pin}.attach(${pin});  // Servo no pino ${pin}\n`;
+      } else if (['13', '12', '11', '10', '9', '8'].includes(pin)) {
         setup += `  pinMode(${pin}, OUTPUT);  // Pino ${pin}\n`;
       } else {
         setup += `  pinMode(${pin}, INPUT_PULLUP);  // Pino ${pin}\n`;
@@ -218,7 +330,7 @@ void loop() {
 // 🎨 Criado com Arduino Blocks Kids
 // Blocos usados: ${blocks.length}
 
-${setup}${loop}`;
+${includes}${globalDeclarations}${setup}${loop}`;
 }
 
 export function validateBlockConnection(sourceBlock: Block, targetBlock: Block): boolean {
@@ -240,11 +352,13 @@ export function getBlockCategory(blockType: string): string {
     'delay': 'basic',
     'digital_write': 'led',
     'digital_read': 'sensors',
+    'button_servo': 'sensors',
     'if': 'control',
     'for': 'control',
     'tone': 'sound',
     'motor_on': 'motor',
     'motor_off': 'motor',
+    'servo_write': 'motor',
   };
 
   return categories[blockType] || 'unknown';

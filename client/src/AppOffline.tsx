@@ -3,6 +3,16 @@ import AdminProjetosAvancados from "@/pages/admin/projetos-avancados";
 import AdminAssociarRotasClientes from "@/pages/admin/associar-rotas-clientes";
 import AdminProjetoView from "@/pages/admin/projeto";
 import AdminVisualizarComoAluno from "@/pages/admin/projeto-aluno";
+import LoginProfessor from "@/pages/login-professor";
+import DashboardProfessor from "@/pages/professor/dashboard";
+import CadastrarAluno from "@/pages/professor/cadastrar-aluno";
+import ProjetosProfessor from "@/pages/professor/projetos";
+import LoginAluno from "@/pages/login-aluno";
+import DashboardAluno from "@/pages/aluno/dashboard";
+import GerenciarClientes from "@/pages/admin/gerenciar-clientes";
+import NovaRotaEstudo from "@/pages/admin/nova-rota-estudo";
+import DebugRotas from "@/pages/debug-rotas";
+import RotaDetalhes from "@/pages/professor/rota-detalhes";
         <Route path="/admin/associar-rotas-clientes" component={AdminAssociarRotasClientes} />
 import { Switch, Route } from "wouter";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -67,6 +77,8 @@ function Router() {
         <Route path="/criador-projeto-melhorado" component={CriadorProjetoMelhorado} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/cadastro" component={AdminCadastro} />
+        <Route path="/admin/gerenciar-clientes" component={GerenciarClientes} />
+        <Route path="/admin/cliente/:clienteId/nova-rota" component={NovaRotaEstudo} />
         <Route path="/admin/criador-projeto-melhorado" component={AdminCriadorProjetoMelhorado} />
         <Route path="/admin/criar-projeto" component={AdminCriarProjetoAvancado} />
         <Route path="/admin/dashboard" component={AdminDashboard} />
@@ -76,6 +88,23 @@ function Router() {
         <Route path="/admin/projeto/:id" component={AdminProjetoView} />
         <Route path="/admin/projeto-aluno/:id" component={AdminVisualizarComoAluno} />
         <Route path="/admin" component={AdminHome} />
+        
+        {/* Rotas de Login */}
+        <Route path="/login-professor" component={LoginProfessor} />
+        <Route path="/login-aluno" component={LoginAluno} />
+        
+        {/* Rotas do Professor */}
+        <Route path="/professor/dashboard" component={DashboardProfessor} />
+        <Route path="/professor/cadastrar-aluno/:codigoTurma" component={CadastrarAluno} />
+        <Route path="/professor/projetos" component={ProjetosProfessor} />
+        <Route path="/professor/rota/:rotaId" component={RotaDetalhes} />
+        
+        {/* Rotas do Aluno */}
+        <Route path="/aluno/dashboard" component={DashboardAluno} />
+        
+        {/* Debug */}
+        <Route path="/debug-rotas" component={DebugRotas} />
+        
         <Route component={NotFound} />
       </Switch>
     );
