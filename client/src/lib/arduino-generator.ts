@@ -64,6 +64,39 @@ void loop() {
         loopCode += `  digitalWrite(${pin}, ${state});   // ${block.label}\n`;
         break;
 
+      case 'blink_led':
+        // Piscar LED: HIGH -> delay -> LOW -> delay
+        let blinkPin = '13'; // Default pin
+        let blinkTime = '1000'; // Default 1 second in milliseconds
+        
+        if (block.inputs && block.inputs.length > 0) {
+          const pinInput = block.inputs.find((input: any) => input.name === 'pin');
+          if (pinInput) {
+            if (pinInput.value !== undefined && pinInput.value !== null && pinInput.value !== '') {
+              blinkPin = String(pinInput.value);
+            } else if (pinInput.default !== undefined) {
+              blinkPin = String(pinInput.default);
+            }
+          }
+          
+          const timeInput = block.inputs.find((input: any) => input.name === 'time');
+          if (timeInput) {
+            if (timeInput.value !== undefined && timeInput.value !== null && timeInput.value !== '') {
+              // Se o usuário colocou em segundos, converte para ms
+              blinkTime = String(Number(timeInput.value) * 1000);
+            } else if (timeInput.default !== undefined) {
+              blinkTime = String(Number(timeInput.default) * 1000);
+            }
+          }
+        }
+        
+        usedPins.add(blinkPin);
+        loopCode += `  digitalWrite(${blinkPin}, HIGH);   // Acender LED\n`;
+        loopCode += `  delay(${blinkTime});              // Esperar\n`;
+        loopCode += `  digitalWrite(${blinkPin}, LOW);    // Apagar LED\n`;
+        loopCode += `  delay(${blinkTime});              // Esperar\n`;
+        break;
+
       case 'delay':
         let time = '1000'; // Default 1 second in milliseconds
         if (block.inputs && block.inputs.length > 0) {
@@ -351,6 +384,7 @@ export function getBlockCategory(blockType: string): string {
     'loop': 'basic',
     'delay': 'basic',
     'digital_write': 'led',
+    'blink_led': 'led',
     'digital_read': 'sensors',
     'button_servo': 'sensors',
     'if': 'control',

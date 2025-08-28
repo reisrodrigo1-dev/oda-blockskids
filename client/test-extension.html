@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste da Extensão Arduino</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .success { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #logs {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Teste da Extensão Arduino</h1>
+    
+    <div id="extensionStatus" class="status info">
+        🔍 Verificando extensão...
+    </div>
+    
+    <div>
+        <button id="checkBtn">Verificar Extensão</button>
+        <button id="testUploadBtn" disabled>Testar Upload</button>
+        <button id="clearLogsBtn">Limpar Logs</button>
+    </div>
+    
+    <h3>📋 Logs:</h3>
+    <div id="logs"></div>
+    
+    <h3>🧪 Código de Teste:</h3>
+    <textarea id="codeArea" rows="10" cols="80">
+void setup() {
+  Serial.begin(9600);
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(13, HIGH);
+  delay(1000);
+  digitalWrite(13, LOW);
+  delay(1000);
+  Serial.println("LED blinked!");
+}
+    </textarea>
+
+    <script>
+        const statusDiv = document.getElementById('extensionStatus');
+        const checkBtn = document.getElementById('checkBtn');
+        const testUploadBtn = document.getElementById('testUploadBtn');
+        const clearLogsBtn = document.getElementById('clearLogsBtn');
+        const logsDiv = document.getElementById('logs');
+        const codeArea = document.getElementById('codeArea');
+        
+        function log(message) {
+            console.log(message);
+            const timestamp = new Date().toLocaleTimeString();
+            logsDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+        
+        function updateStatus(message, type) {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        async function checkExtension() {
+            log('🔍 Verificando se window.BlockuinoArduino existe...');
+            
+            if (typeof window.BlockuinoArduino === 'undefined') {
+                log('❌ window.BlockuinoArduino não encontrado');
+                updateStatus('❌ Extensão não detectada', 'error');
+                testUploadBtn.disabled = true;
+                return;
+            }
+            
+            log('✅ window.BlockuinoArduino encontrado!');
+            
+            try {
+                log('📡 Verificando status da extensão...');
+                const status = await window.BlockuinoArduino.checkExtension();
+                log(`📊 Status: ${JSON.stringify(status)}`);
+                
+                if (status.available && status.nativeConnected) {
+                    updateStatus('✅ Extensão e app nativo conectados!', 'success');
+                    testUploadBtn.disabled = false;
+                } else if (status.available) {
+                    updateStatus('⚠️ Extensão ok, mas app nativo desconectado', 'info');
+                    testUploadBtn.disabled = true;
+                } else {
+                    updateStatus('❌ Extensão não disponível', 'error');
+                    testUploadBtn.disabled = true;
+                }
+            } catch (error) {
+                log(`❌ Erro ao verificar: ${error.message}`);
+                updateStatus('❌ Erro na verificação', 'error');
+                testUploadBtn.disabled = true;
+            }
+        }
+        
+        async function testUpload() {
+            const code = codeArea.value;
+            log('🚀 Iniciando teste de upload...');
+            
+            try {
+                testUploadBtn.disabled = true;
+                testUploadBtn.textContent = 'Uploading...';
+                
+                const result = await window.BlockuinoArduino.uploadCode(code);
+                log(`✅ Upload concluído: ${JSON.stringify(result)}`);
+                updateStatus('✅ Upload realizado com sucesso!', 'success');
+                
+            } catch (error) {
+                log(`❌ Erro no upload: ${error.message}`);
+                updateStatus('❌ Erro no upload', 'error');
+            } finally {
+                testUploadBtn.disabled = false;
+                testUploadBtn.textContent = 'Testar Upload';
+            }
+        }
+        
+        // Event listeners
+        checkBtn.addEventListener('click', checkExtension);
+        testUploadBtn.addEventListener('click', testUpload);
+        clearLogsBtn.addEventListener('click', () => {
+            logsDiv.innerHTML = '';
+        });
+        
+        // Auto-verificar quando a página carrega
+        window.addEventListener('load', () => {
+            log('🌐 Página carregada');
+            setTimeout(checkExtension, 1000);
+        });
+        
+        // Verificar quando a extensão estiver pronta
+        window.addEventListener('blockuino-arduino-ready', () => {
+            log('🎉 Evento blockuino-arduino-ready recebido!');
+            checkExtension();
+        });
+        
+        // Log inicial
+        log('🔧 Página de teste iniciada');
+    </script>
+</body>
+</html>

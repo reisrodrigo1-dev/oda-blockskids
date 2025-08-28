@@ -19,6 +19,7 @@ const blockDefinitions: Block[] = [
   // LED Blocks
   { id: 'led_on', type: 'digital_write', category: 'led', label: 'Acender LED', icon: '💡', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
   { id: 'led_off', type: 'digital_write', category: 'led', label: 'Apagar LED', icon: '🌑', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
+  { id: 'blink_led', type: 'blink_led', category: 'led', label: 'Piscar LED', icon: '✨', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }, { name: 'time', type: 'number', default: 1 }] },
 
   // Motor Blocks
   { id: 'motor_on', type: 'motor_on', category: 'motor', label: 'Ligar motor', icon: '⚙️', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
