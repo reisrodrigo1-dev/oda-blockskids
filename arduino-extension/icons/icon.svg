@@ -1,0 +1,27 @@
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#00979C" rx="16"/>
+  
+  <!-- Arduino board outline -->
+  <rect x="20" y="30" width="88" height="68" fill="#00838F" rx="8"/>
+  
+  <!-- USB connector -->
+  <rect x="12" y="50" width="16" height="28" fill="#37474F" rx="2"/>
+  
+  <!-- Power connector -->
+  <circle cx="24" cy="45" r="4" fill="#FFC107"/>
+  <circle cx="32" cy="45" r="4" fill="#FFC107"/>
+  
+  <!-- Pin headers -->
+  <rect x="24" y="105" width="80" height="6" fill="#37474F"/>
+  <rect x="24" y="17" width="80" height="6" fill="#37474F"/>
+  
+  <!-- Microcontroller -->
+  <rect x="45" y="50" width="38" height="28" fill="#263238" rx="2"/>
+  
+  <!-- LED -->
+  <circle cx="90" cy="40" r="3" fill="#4CAF50"/>
+  
+  <!-- Arrow up (upload symbol) -->
+  <path d="M64 85 L59 90 L61.5 90 L61.5 100 L66.5 100 L66.5 90 L69 90 Z" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,21 @@
+{
+  "name": "arduino-uploader",
+  "version": "1.0.0",
+  "description": "App nativo para upload de código Arduino via browser extension",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "install-native": "node install-native.js",
+    "build": "pkg app.js --output arduino-uploader"
+  },
+  "dependencies": {
+    "serialport": "^12.0.0",
+    "tmp": "^0.2.3"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  },
+  "bin": {
+    "arduino-uploader": "./app.js"
+  }
+}

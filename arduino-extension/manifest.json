@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "BlockuinoEditor Arduino Upload",
+  "version": "1.0.0",
+  "description": "Upload código do BlockuinoEditor direto para Arduino Uno",
+  "permissions": [
+    "nativeMessaging",
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "http://localhost:*/*",
+    "https://*.blockuino.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:*/*",
+        "https://*.blockuino.com/*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Arduino Upload"
+  }
+}

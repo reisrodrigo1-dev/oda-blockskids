@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .connected {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .disconnected {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .primary {
+      background: #007bff;
+      color: white;
+    }
+    .primary:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h3>🤖 Arduino Upload</h3>
+  
+  <div id="status" class="status disconnected">
+    Verificando conexão...
+  </div>
+  
+  <button id="installBtn" class="primary" style="display: none;">
+    Instalar App Nativo
+  </button>
+  
+  <button id="testBtn" class="primary">
+    Testar Conexão
+  </button>
+  
+  <div style="margin-top: 15px; font-size: 12px; color: #666;">
+    <p><strong>Como usar:</strong></p>
+    <ul>
+      <li>1. Instale o app nativo</li>
+      <li>2. Conecte o Arduino via USB</li>
+      <li>3. Use o botão "Upload Arduino" no site</li>
+    </ul>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
