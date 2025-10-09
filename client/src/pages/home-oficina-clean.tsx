@@ -118,21 +118,18 @@ export default function HomeOficina() {
           <div className="grid md:grid-cols-3 gap-6">
             <Link href="/criador-projeto-melhorado">
               <div className="border border-gray-200 hover:border-[#00979D] rounded-lg p-8 text-center cursor-pointer transition-all hover:shadow-lg">
-                <div className="text-5xl mb-4">✨</div>
                 <h3 className="font-bold text-xl mb-2 text-gray-900">Criar Novo Projeto</h3>
                 <p className="text-gray-600">Desenvolva projetos personalizados</p>
               </div>
             </Link>
             <Link href="/projetos-avancados">
               <div className="border border-gray-200 hover:border-[#00979D] rounded-lg p-8 text-center cursor-pointer transition-all hover:shadow-lg">
-                <div className="text-5xl mb-4">👁️</div>
                 <h3 className="font-bold text-xl mb-2 text-gray-900">Ver Projetos Criados</h3>
                 <p className="text-gray-600">Explore projetos da comunidade</p>
               </div>
             </Link>
             <Link href="/projetos-pedagogicos">
               <div className="border border-gray-200 hover:border-[#00979D] rounded-lg p-8 text-center cursor-pointer transition-all hover:shadow-lg">
-                <div className="text-5xl mb-4">📋</div>
                 <h3 className="font-bold text-xl mb-2 text-gray-900">Projetos Básicos</h3>
                 <p className="text-gray-600">Templates prontos para usar</p>
               </div>
@@ -163,7 +160,6 @@ export default function HomeOficina() {
           {/* Missão, Visão, Valores */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <div className="bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-[#00979D] rounded-lg flex items-center justify-center text-white text-2xl mb-4">🎯</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Nossa Missão</h3>
               <p className="text-gray-600 leading-relaxed">
                 Empoderar e transformar crianças e jovens através de educação inovadora e disruptiva, promovendo pesquisa, criatividade, cidadania e empreendedorismo sustentável.
@@ -171,7 +167,6 @@ export default function HomeOficina() {
             </div>
 
             <div className="bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-[#00979D] rounded-lg flex items-center justify-center text-white text-2xl mb-4">👁️</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Nossa Visão</h3>
               <p className="text-gray-600 leading-relaxed">
                 Promover experiências enriquecedoras e transformadoras, capacitando nossos alunos como agentes de mudanças positivas e sustentáveis.
@@ -179,7 +174,6 @@ export default function HomeOficina() {
             </div>
 
             <div className="bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-[#00979D] rounded-lg flex items-center justify-center text-white text-2xl mb-4">💎</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Nossos Valores</h3>
               <p className="text-gray-600 leading-relaxed">
                 Dedicação, impacto, colaboração, criatividade, empatia, inclusão, integridade e sustentabilidade.
@@ -222,7 +216,6 @@ export default function HomeOficina() {
           {/* Pilares */}
           <div className="grid md:grid-cols-4 gap-6 mb-16">
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#00979D] rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">🎯</div>
               <h3 className="font-bold text-lg text-gray-900 mb-2">Aprendizagem Ativa</h3>
               <p className="text-gray-600 text-sm">
                 Metodologias hands-on onde os alunos são protagonistas do seu aprendizado através de projetos práticos e desafios reais.
@@ -230,7 +223,6 @@ export default function HomeOficina() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#00979D] rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">🔬</div>
               <h3 className="font-bold text-lg text-gray-900 mb-2">STEAM Integrado</h3>
               <p className="text-gray-600 text-sm">
                 Ciência, Tecnologia, Engenharia, Arte e Matemática trabalhadas de forma interdisciplinar e contextualizada.
@@ -238,7 +230,6 @@ export default function HomeOficina() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#00979D] rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">♻️</div>
               <h3 className="font-bold text-lg text-gray-900 mb-2">Sustentabilidade</h3>
               <p className="text-gray-600 text-sm">
                 Uso de materiais reutilizáveis e consciência ambiental integrada em todos os projetos e atividades.
@@ -246,7 +237,6 @@ export default function HomeOficina() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#00979D] rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">🚀</div>
               <h3 className="font-bold text-lg text-gray-900 mb-2">Empreendedorismo</h3>
               <p className="text-gray-600 text-sm">
                 Desenvolvimento do pensamento empreendedor, criatividade e capacidade de inovação desde cedo.
@@ -292,23 +282,18 @@ export default function HomeOficina() {
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Competências Técnicas</h3>
               <ul className="space-y-3">
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">✓</div>
                   <span>Programação e Pensamento Computacional</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">✓</div>
                   <span>Robótica e Automação</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">✓</div>
                   <span>Design Digital e Criatividade</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">✓</div>
                   <span>Marketing Digital e Comunicação</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">✓</div>
                   <span>Desenvolvimento Web</span>
                 </li>
               </ul>
@@ -318,23 +303,18 @@ export default function HomeOficina() {
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Competências Socioemocionais</h3>
               <ul className="space-y-3">
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">💡</div>
                   <span>Pensamento Crítico e Criativo</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">🤝</div>
                   <span>Colaboração e Trabalho em Equipe</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">🎯</div>
                   <span>Liderança e Protagonismo</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">🌱</div>
                   <span>Consciência Ambiental</span>
                 </li>
                 <li className="flex items-center text-gray-700">
-                  <div className="w-6 h-6 bg-[#00979D] rounded-full flex items-center justify-center text-white text-xs mr-3">🚀</div>
                   <span>Empreendedorismo e Inovação</span>
                 </li>
               </ul>
@@ -409,7 +389,6 @@ export default function HomeOficina() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Robótica */}
             <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center text-2xl mb-4">🤖</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Robótica Sustentável e Programação</h3>
               <p className="text-gray-600 mb-4">
                 Projeto interdisciplinar STEAM usando materiais reutilizáveis. Mecânica, elétrica e programação alinhados à BNCC.
@@ -421,7 +400,6 @@ export default function HomeOficina() {
 
             {/* Blocks Kids */}
             <div className="border border-[#00979D] rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-[#00979D] rounded-lg flex items-center justify-center text-2xl mb-4">🧩</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Blocks Kids</h3>
               <p className="text-gray-600 mb-4">
                 Editor visual de programação por blocos para Arduino. Interface lúdica para aprender programação brincando.
@@ -435,7 +413,6 @@ export default function HomeOficina() {
 
             {/* Design */}
             <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center text-2xl mb-4">🎨</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Design Gráfico</h3>
               <p className="text-gray-600 mb-4">
                 Criação de posts e conteúdos para redes sociais, UX Design, Copywriting e teoria das cores.
@@ -448,7 +425,6 @@ export default function HomeOficina() {
 
             {/* Marketing */}
             <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center text-2xl mb-4">📱</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Marketing Digital</h3>
               <p className="text-gray-600 mb-4">
                 Estratégias eficazes de marketing: Copywriting, email-marketing, Google ADS e SEO.
@@ -461,7 +437,6 @@ export default function HomeOficina() {
 
             {/* Social Media */}
             <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center text-2xl mb-4">📲</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Social Media</h3>
               <p className="text-gray-600 mb-4">
                 Gestão estratégica de redes sociais, postagem eficaz e geração de leads.
@@ -474,7 +449,6 @@ export default function HomeOficina() {
 
             {/* Web Design */}
             <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center text-2xl mb-4">💻</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Web Design</h3>
               <p className="text-gray-600 mb-4">
                 Desenvolvimento de sistemas e aplicativos com HTML5, CSS3 e Github em ambiente corporativo real.
@@ -511,7 +485,6 @@ export default function HomeOficina() {
 
           {/* Parceria CODEL */}
           <div className="mt-16 bg-gray-50 rounded-lg p-12 text-center">
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6">♻️</div>
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Sustentabilidade em Ação</h3>
             <p className="text-gray-700 max-w-3xl mx-auto text-lg">
               Em parceria com a <strong>CODEL (Coleta e Descarte de Eletrônicos)</strong>, incorporamos materiais reutilizáveis, 
@@ -531,25 +504,21 @@ export default function HomeOficina() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <a href="mailto:contato@oficinadoamanha.com.br" className="bg-white border border-gray-200 hover:border-[#00979D] rounded-lg p-8 text-center transition-all hover:shadow-lg">
-              <div className="w-12 h-12 bg-[#00979D] rounded-lg flex items-center justify-center text-white text-xl mx-auto mb-4">📧</div>
               <div className="font-bold text-gray-900 mb-2">E-mail</div>
               <div className="text-sm text-gray-600">contato@oficinadoamanha.com.br</div>
             </a>
             
             <a href="https://api.whatsapp.com/send/?phone=5534997337087" target="_blank" rel="noopener" className="bg-white border border-gray-200 hover:border-[#00979D] rounded-lg p-8 text-center transition-all hover:shadow-lg">
-              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center text-white text-xl mx-auto mb-4">📱</div>
               <div className="font-bold text-gray-900 mb-2">WhatsApp</div>
               <div className="text-sm text-gray-600">(34) 99733-7087</div>
             </a>
             
             <a href="https://www.instagram.com/oficinadoamanha.udi/" target="_blank" rel="noopener" className="bg-white border border-gray-200 hover:border-[#00979D] rounded-lg p-8 text-center transition-all hover:shadow-lg">
-              <div className="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center text-white text-xl mx-auto mb-4">📸</div>
               <div className="font-bold text-gray-900 mb-2">Instagram</div>
               <div className="text-sm text-gray-600">@oficinadoamanha.udi</div>
             </a>
             
             <a href="https://www.linkedin.com/company/oficina-do-amanh%C3%A3" target="_blank" rel="noopener" className="bg-white border border-gray-200 hover:border-[#00979D] rounded-lg p-8 text-center transition-all hover:shadow-lg">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl mx-auto mb-4">💼</div>
               <div className="font-bold text-gray-900 mb-2">LinkedIn</div>
               <div className="text-sm text-gray-600">Oficina do Amanhã</div>
             </a>
@@ -557,7 +526,6 @@ export default function HomeOficina() {
           
           <div className="text-center">
             <div className="bg-white border border-gray-200 rounded-lg p-8 max-w-sm mx-auto mb-8">
-              <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center text-white text-xl mx-auto mb-4">📍</div>
               <div className="font-bold text-gray-900 mb-2">Localização</div>
               <div className="text-gray-600">Uberlândia - MG</div>
             </div>
