@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "../components/ui/button";
 import logoOdA from "../assets/logo-OdA.png";
+import logoTopoRemovebg from "../assets/logo-topo-removebg-preview.png";
 import imagemAula1 from "../assets/imagem_aula_1.jpg";
 import imagemAula2 from "../assets/imagem_aula_2.jpg";
 import imagemAula3 from "../assets/imagem_aula_3.jpg";
@@ -61,7 +62,7 @@ export default function HomeOficina() {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logoOdA} alt="Oficina do Amanhã" className="w-12 h-12 object-contain" />
+            <img src={logoTopoRemovebg} alt="Oficina do Amanhã" className="w-16 h-16 object-contain" />
             <span className="text-2xl font-bold text-gray-900">Oficina do Amanhã</span>
           </div>
           <nav className="hidden md:flex items-center gap-8">
@@ -104,7 +105,7 @@ export default function HomeOficina() {
               </div>
             </div>
             <div>
-              <img src={logoOdA} alt="Oficina do Amanhã Logo" className="w-full max-w-md mx-auto drop-shadow-2xl" />
+              <img src={logoTopoRemovebg} alt="Oficina do Amanhã Logo" className="w-full max-w-md mx-auto drop-shadow-2xl" />
             </div>
           </div>
         </div>
