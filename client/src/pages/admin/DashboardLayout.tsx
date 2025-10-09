@@ -14,9 +14,17 @@ const menuSections = [
   {
     title: "Gestão",
     items: [
+      { label: "Cadastrar Cliente", icon: "🏢", href: "/admin/cadastrar-cliente-novo" },
       { label: "Gerenciar Clientes", icon: "👥", href: "/admin/gerenciar-clientes" },
       { label: "Rotas de Estudos", icon: "🗺️", href: "/admin/rotas-estudos" },
       { label: "Associar Rotas", icon: "🔗", href: "/admin/associar-rotas-clientes" },
+    ],
+  },
+  {
+    title: "Geral",
+    items: [
+      { label: "Links Importantes", icon: "🌐", href: "/admin/links-importantes" },
+      { label: "Documentos Importantes", icon: "📄", href: "/admin/documentos-importantes" },
     ],
   },
   {
@@ -24,6 +32,8 @@ const menuSections = [
     items: [
       { label: "Criar Projeto", icon: "✨", href: "/admin/criador-projeto-melhorado" },
       { label: "Projetos Pedagógicos", icon: "📚", href: "/admin/projetos-pedagogicos" },
+      { label: "Cadastro de Aulas", icon: "🎓", href: "/admin/cadastro-aulas" },
+      { label: "Criar Curso (Professor)", icon: "📖", href: "/admin/criar-curso" },
     ],
   },
 ];

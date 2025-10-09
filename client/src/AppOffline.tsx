@@ -13,9 +13,16 @@ import GerenciarClientes from "@/pages/admin/gerenciar-clientes";
 import NovaRotaEstudo from "@/pages/admin/nova-rota-estudo";
 import DebugRotas from "@/pages/debug-rotas";
 import RotaDetalhes from "@/pages/professor/rota-detalhes";
-        <Route path="/admin/associar-rotas-clientes" component={AdminAssociarRotasClientes} />
+import ProfessorLogin from "@/pages/professor/login";
+import ProfessorCursos from "@/pages/professor/cursos";
+import ProfessorPerfil from "@/pages/professor/perfil";
+import AssistirAula from "@/pages/professor/assistir-aula";
+import ProfessorDocumentos from "@/pages/professor/documentos";
 import { Switch, Route } from "wouter";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
+import { ProfessorAuthProvider } from "@/contexts/ProfessorAuthContext";
+import { ClienteAuthProvider } from "@/contexts/ClienteAuthContext";
 import Home from "@/pages/home";
 import HomeOficina from "@/pages/home-oficina-clean";
 import EditorOffline from "@/pages/editor-offline";
@@ -47,6 +54,18 @@ import AdminCadastrarCliente from "@/pages/admin/cadastrar-cliente";
 import AdminRotasEstudos from "@/pages/admin/rotas-estudos";
 import AdminClientes from "@/pages/admin/clientes";
 import AdminEditarCliente from "@/pages/admin/editar-cliente";
+import CadastroAulas from "@/pages/admin/cadastro-aulas";
+import CriarCurso from "@/pages/admin/criar-curso";
+import DocumentosImportantes from "@/pages/admin/documentos-importantes";
+import LinksImportantes from "@/pages/admin/links-importantes";
+import CadastrarClienteNovo from "@/pages/admin/cadastrar-cliente-novo";
+
+// Cliente Pages
+import ClienteLogin from "@/pages/cliente/login";
+import ClienteDashboard from "@/pages/cliente/dashboard";
+import ClienteConta from "@/pages/cliente/conta";
+import ClienteProfessores from "@/pages/cliente/professores";
+import ClienteProjetosAulas from "@/pages/cliente/projetos-aulas";
 
 function Router() {
     return (
@@ -83,7 +102,12 @@ function Router() {
         <Route path="/admin/criar-projeto" component={AdminCriarProjetoAvancado} />
         <Route path="/admin/dashboard" component={AdminDashboard} />
         <Route path="/admin/cadastrar-cliente" component={AdminCadastrarCliente} />
+        <Route path="/admin/cadastrar-cliente-novo" component={CadastrarClienteNovo} />
         <Route path="/admin/rotas-estudos" component={AdminRotasEstudos} />
+        <Route path="/admin/cadastro-aulas" component={CadastroAulas} />
+        <Route path="/admin/criar-curso" component={CriarCurso} />
+        <Route path="/admin/documentos-importantes" component={DocumentosImportantes} />
+        <Route path="/admin/links-importantes" component={LinksImportantes} />
         <Route path="/admin/associar-rotas-clientes" component={AdminAssociarRotasClientes} />
         <Route path="/admin/projeto/:id" component={AdminProjetoView} />
         <Route path="/admin/projeto-aluno/:id" component={AdminVisualizarComoAluno} />
@@ -93,14 +117,28 @@ function Router() {
         <Route path="/login-professor" component={LoginProfessor} />
         <Route path="/login-aluno" component={LoginAluno} />
         
-        {/* Rotas do Professor */}
+        {/* Novo Sistema de Professor (Área de Cursos e Aulas) */}
+        <Route path="/professor/login" component={ProfessorLogin} />
         <Route path="/professor/dashboard" component={DashboardProfessor} />
+        <Route path="/professor/cursos" component={ProfessorCursos} />
+        <Route path="/professor/documentos" component={ProfessorDocumentos} />
+        <Route path="/professor/perfil" component={ProfessorPerfil} />
+        <Route path="/professor/assistir/:cursoId/:aulaId?" component={AssistirAula} />
+        
+        {/* Rotas do Professor (Sistema Antigo) */}
         <Route path="/professor/cadastrar-aluno/:codigoTurma" component={CadastrarAluno} />
         <Route path="/professor/projetos" component={ProjetosProfessor} />
         <Route path="/professor/rota/:rotaId" component={RotaDetalhes} />
         
         {/* Rotas do Aluno */}
         <Route path="/aluno/dashboard" component={DashboardAluno} />
+        
+        {/* Rotas do Cliente (Responsável) */}
+        <Route path="/cliente/login" component={ClienteLogin} />
+        <Route path="/cliente/dashboard" component={ClienteDashboard} />
+        <Route path="/cliente/conta" component={ClienteConta} />
+        <Route path="/cliente/professores" component={ClienteProfessores} />
+        <Route path="/cliente/projetos-aulas" component={ClienteProjetosAulas} />
         
         {/* Debug */}
         <Route path="/debug-rotas" component={DebugRotas} />
@@ -112,9 +150,14 @@ function Router() {
 
 function App() {
   return (
-    <TooltipProvider>
-      <Router />
-    </TooltipProvider>
+    <ProfessorAuthProvider>
+      <ClienteAuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </ClienteAuthProvider>
+    </ProfessorAuthProvider>
   );
 }
 

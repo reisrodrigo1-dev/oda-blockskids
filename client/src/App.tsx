@@ -31,6 +31,8 @@ import GerenciarClientes from "@/pages/admin/gerenciar-clientes";
 import NovaRotaEstudo from "@/pages/admin/nova-rota-estudo";
 import DebugRotas from "@/pages/debug-rotas";
 import RotaDetalhes from "@/pages/professor/rota-detalhes";
+import LinksImportantes from "@/pages/admin/links-importantes";
+import DocumentosImportantes from "@/pages/admin/documentos-importantes";
 
 function Router() {
   return (
@@ -62,6 +64,8 @@ function Router() {
       <Route path="/admin/cadastro" component={AdminCadastro} />
       <Route path="/admin/gerenciar-clientes" component={GerenciarClientes} />
       <Route path="/admin/cliente/:clienteId/nova-rota" component={NovaRotaEstudo} />
+      <Route path="/admin/links-importantes" component={LinksImportantes} />
+      <Route path="/admin/documentos-importantes" component={DocumentosImportantes} />
       <Route path="/admin/criador-projeto-melhorado" component={CriadorProjetoMelhorado} />
       <Route path="/admin/criar-projeto" component={CriarProjeto} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
