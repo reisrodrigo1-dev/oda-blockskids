@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "wouter";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
-import logoOdA from "../../assets/logo-OdA.png";
+import logoTopoRemovebg from "../../assets/logo-topo-removebg-preview.png";
 
 const AdminHome = () => {
   return (
@@ -11,7 +11,7 @@ const AdminHome = () => {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <img src={logoOdA} alt="Oficina do Amanhã" className="w-32 h-32 object-contain" />
+            <img src={logoTopoRemovebg} alt="Oficina do Amanhã" className="w-32 h-32 object-contain" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Bem-vindo ao Painel Administrativo</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">

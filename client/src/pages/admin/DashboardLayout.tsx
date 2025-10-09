@@ -2,7 +2,7 @@ import React from "react";
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { cn } from "../../lib/utils";
-import logoOdA from "../../assets/logo-OdA.png";
+import logoTopoRemovebg from "../../assets/logo-topo-removebg-preview.png";
 
 const menuSections = [
   {
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         {/* Header com Logo */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-3 mb-2">
-            <img src={logoOdA} alt="ODA Logo" className="w-12 h-12 object-contain" />
+            <img src={logoTopoRemovebg} alt="ODA Logo" className="w-12 h-12 object-contain" />
             <div>
               <span className="text-xl font-bold text-gray-900 block">ODA Admin</span>
               <span className="text-xs text-gray-500">Painel Administrativo</span>
