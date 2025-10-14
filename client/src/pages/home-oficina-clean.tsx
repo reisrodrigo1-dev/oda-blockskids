@@ -205,79 +205,61 @@ export default function HomeOficina() {
       {/* Metodologia */}
       <section id="metodologia" className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Nossa Metodologia</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Aplicamos metodologias ativas e inovadoras, integrando STEAM, sustentabilidade e empreendedorismo 
-              para formar cidadãos preparados para os desafios do século XXI
-            </p>
-          </div>
-
-          {/* Pilares */}
-          <div className="grid md:grid-cols-4 gap-6 mb-16">
-            <div className="text-center">
-              <h3 className="font-bold text-lg text-gray-900 mb-2">Aprendizagem Ativa</h3>
-              <p className="text-gray-600 text-sm">
-                Metodologias hands-on onde os alunos são protagonistas do seu aprendizado através de projetos práticos e desafios reais.
-              </p>
+          <div className="grid md:grid-cols-[1fr,1.2fr] gap-12 items-start">
+            {/* Coluna Esquerda - Título e Texto Descritivo */}
+            <div>
+              <h2 className="text-5xl font-bold text-gray-900 mb-8">NOSSA<br/>METODOLOGIA</h2>
+              
+              <div className="space-y-6">
+                <p className="text-gray-700 leading-relaxed">
+                  A <strong>Metodologia OdA – Observar, Desenvolver e Avançar</strong> é uma abordagem 
+                  inovadora que coloca a criança no centro do processo de aprendizagem. Mais do que ensinar 
+                  a montar e programar robôs, promovemos <strong>vivências práticas</strong> que estimulam 
+                  a curiosidade, o apelo e fazer bem propósito, e o conhecimento ganha sentido.
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed">
+                  Nossos projetos são estruturados com base nos <strong>três pilares da robótica: mecânica, 
+                  programação e eletrônica</strong>, articulados de forma integrada para que cada construção 
+                  seja também uma oportunidade de desenvolvimento do pensamento crítico, criatividade e 
+                  compreensão profunda dos temas abordados.
+                </p>
+              </div>
             </div>
 
-            <div className="text-center">
-              <h3 className="font-bold text-lg text-gray-900 mb-2">STEAM Integrado</h3>
-              <p className="text-gray-600 text-sm">
-                Ciência, Tecnologia, Engenharia, Arte e Matemática trabalhadas de forma interdisciplinar e contextualizada.
-              </p>
-            </div>
+            {/* Coluna Direita - Cards OdA */}
+            <div className="space-y-4">
+              {/* Card Observar */}
+              <div className="bg-[#F4C542] p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Observar</h3>
+                <p className="text-gray-800 text-sm leading-relaxed">
+                  É o momento de despertar a curiosidade. Os alunos observam o mundo ao redor, identificam <strong>problemas reais</strong> e 
+                  fazem conexões com o mundo ao redor. Observar é o ponto de partida para uma <strong>aprendizagem com sentido</strong>.
+                </p>
+              </div>
 
-            <div className="text-center">
-              <h3 className="font-bold text-lg text-gray-900 mb-2">Sustentabilidade</h3>
-              <p className="text-gray-600 text-sm">
-                Uso de materiais reutilizáveis e consciência ambiental integrada em todos os projetos e atividades.
-              </p>
-            </div>
+              {/* Card Desenvolver */}
+              <div className="bg-[#00B4A8] p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-white mb-3">Desenvolver</h3>
+                <p className="text-white text-sm leading-relaxed">
+                  Os estudantes conhecem os <strong>componentes eletrônicos, mecânicos e os fundamentos de programação</strong> envolvidos no 
+                  projeto. Planejam, testam ideias e constroem soluções com <strong>criatividade e funcionalidade</strong>.
+                </p>
+              </div>
 
-            <div className="text-center">
-              <h3 className="font-bold text-lg text-gray-900 mb-2">Empreendedorismo</h3>
-              <p className="text-gray-600 text-sm">
-                Desenvolvimento do pensamento empreendedor, criatividade e capacidade de inovação desde cedo.
-              </p>
-            </div>
-          </div>
-
-          {/* Processo */}
-          <div className="bg-gray-50 rounded-lg p-12 mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Nosso Processo de Aprendizagem</h3>
-            <div className="grid md:grid-cols-5 gap-8">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-[#00979D] rounded-full flex items-center justify-center text-white font-bold mx-auto mb-3">1</div>
-                <h4 className="font-bold text-gray-900 mb-2">Descobrir</h4>
-                <p className="text-sm text-gray-600">Identificação de problemas e oportunidades reais</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-[#00979D] rounded-full flex items-center justify-center text-white font-bold mx-auto mb-3">2</div>
-                <h4 className="font-bold text-gray-900 mb-2">Idealizar</h4>
-                <p className="text-sm text-gray-600">Brainstorming e desenvolvimento de soluções criativas</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-[#00979D] rounded-full flex items-center justify-center text-white font-bold mx-auto mb-3">3</div>
-                <h4 className="font-bold text-gray-900 mb-2">Prototipar</h4>
-                <p className="text-sm text-gray-600">Construção de protótipos funcionais com materiais sustentáveis</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-[#00979D] rounded-full flex items-center justify-center text-white font-bold mx-auto mb-3">4</div>
-                <h4 className="font-bold text-gray-900 mb-2">Testar</h4>
-                <p className="text-sm text-gray-600">Validação das soluções através de experimentação</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-[#00979D] rounded-full flex items-center justify-center text-white font-bold mx-auto mb-3">5</div>
-                <h4 className="font-bold text-gray-900 mb-2">Implementar</h4>
-                <p className="text-sm text-gray-600">Aplicação prática e compartilhamento dos resultados</p>
+              {/* Card Avançar */}
+              <div className="bg-[#00979D] p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-white mb-3">Avançar</h3>
+                <p className="text-white text-sm leading-relaxed">
+                  Hora de colocar a mão na massa! Os alunos <strong>aprimoram seus projetos</strong>, desenvolvendo <strong>autonomia, 
+                  pensamento crítico</strong> e protagonismo com base em <strong>desafios reais</strong>.
+                </p>
               </div>
             </div>
           </div>
 
           {/* Competências */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 mt-16">
             <div className="border border-gray-200 rounded-lg p-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Competências Técnicas</h3>
               <ul className="space-y-3">
@@ -376,120 +358,70 @@ export default function HomeOficina() {
         </div>
       </section>
 
-      {/* Oficinas */}
+      {/* Soluções */}
       <section id="oficinas" className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Nossas Oficinas</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Desenvolvemos habilidades essenciais para o futuro através de metodologias inovadoras
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Robótica */}
-            <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Robótica Sustentável e Programação</h3>
-              <p className="text-gray-600 mb-4">
-                Projeto interdisciplinar STEAM usando materiais reutilizáveis. Mecânica, elétrica e programação alinhados à BNCC.
-              </p>
-              <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
-                <strong>Idade:</strong> A partir de 11 anos
-              </div>
-            </div>
+          <div className="mb-16">
+            <h2 className="text-5xl font-bold text-gray-900 mb-12">NOSSAS<br/>SOLUÇÕES</h2>
+            
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Coluna Esquerda - Lista de Soluções */}
+              <div className="space-y-8">
+                {/* Currículo Completo */}
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Currículo Completo de Programação e Robótica</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Entregamos a matriz curricular pronta e totalmente alinhada à BNCC e às novas diretrizes da LDB/PNED, 
+                    garantindo a tranquilidade pedagógica da sua escola.
+                  </p>
+                </div>
 
-            {/* Blocks Kids */}
-            <div className="border border-[#00979D] rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Blocks Kids</h3>
-              <p className="text-gray-600 mb-4">
-                Editor visual de programação por blocos para Arduino. Interface lúdica para aprender programação brincando.
-              </p>
-              <Link href="/home">
-                <button className="bg-[#00979D] hover:bg-[#007A7E] text-white font-semibold px-6 py-2 rounded w-full transition-colors">
-                  Acessar Plataforma
-                </button>
-              </Link>
-            </div>
+                {/* Plataforma OdA */}
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Plataforma OdA de Ensino</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Oferecemos um ambiente tecnológico próprio e completo, onde os alunos aprendem a programar 
+                    de forma prática e intuitiva, transformando conceitos em realidade.
+                  </p>
+                </div>
 
-            {/* Design */}
-            <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Design Gráfico</h3>
-              <p className="text-gray-600 mb-4">
-                Criação de posts e conteúdos para redes sociais, UX Design, Copywriting e teoria das cores.
-              </p>
-              <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
-                <strong>Idade:</strong> A partir de 14 anos<br/>
-                <strong>Requisito:</strong> Informática Básica
-              </div>
-            </div>
+                {/* Kits Pedagógicos */}
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Kits pedagógicos</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Kits de robótica com componentes eletrônicos e projetos alinhados à BNCC.
+                  </p>
+                </div>
 
-            {/* Marketing */}
-            <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Marketing Digital</h3>
-              <p className="text-gray-600 mb-4">
-                Estratégias eficazes de marketing: Copywriting, email-marketing, Google ADS e SEO.
-              </p>
-              <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
-                <strong>Idade:</strong> A partir de 14 anos<br/>
-                <strong>Requisito:</strong> Informática Básica
-              </div>
-            </div>
+                {/* Formação 360º */}
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Formação 360º para Professores</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Garantimos a capacitação completa do seu corpo docente com formação contínua e apoio pedagógico 
+                    dedicado durante todo o projeto, preparando sua equipe para ministrar aulas de alto impacto 
+                    com total segurança.
+                  </p>
+                </div>
 
-            {/* Social Media */}
-            <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Social Media</h3>
-              <p className="text-gray-600 mb-4">
-                Gestão estratégica de redes sociais, postagem eficaz e geração de leads.
-              </p>
-              <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
-                <strong>Idade:</strong> A partir de 14 anos<br/>
-                <strong>Requisito:</strong> Informática Básica
-              </div>
-            </div>
-
-            {/* Web Design */}
-            <div className="border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-shadow">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Web Design</h3>
-              <p className="text-gray-600 mb-4">
-                Desenvolvimento de sistemas e aplicativos com HTML5, CSS3 e Github em ambiente corporativo real.
-              </p>
-              <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
-                <strong>Idade:</strong> A partir de 14 anos<br/>
-                <strong>Requisito:</strong> Informática Básica
-              </div>
-            </div>
-          </div>
-
-          {/* Experiências */}
-          <div className="mt-20">
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Nossos Alunos em Ação</h3>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="relative rounded-lg overflow-hidden">
-                <img src={imagemAula1} alt="Alunos trabalhando" className="w-full h-80 object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h4 className="text-2xl font-bold mb-2">Aprendizado Prático</h4>
-                  <p>Nossos alunos desenvolvem projetos reais, aplicando conhecimentos de forma prática e colaborativa.</p>
+                {/* Instrumentos de Avaliação */}
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Instrumentos de avaliação</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Ferramentas para mapear o desenvolvimento de competências técnicas (como lógica, algoritmos e 
+                    prototipagem) e socioemocionais (como colaboração, criatividade e empatia).
+                  </p>
                 </div>
               </div>
-              <div className="relative rounded-lg overflow-hidden">
-                <img src={imagemAula3} alt="Ambiente colaborativo" className="w-full h-80 object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h4 className="text-2xl font-bold mb-2">Ambiente Inspirador</h4>
-                  <p>Espaços modernos e equipados para estimular a criatividade e o pensamento inovador.</p>
-                </div>
+
+              {/* Coluna Direita - Imagem */}
+              <div className="relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=700&fit=crop" 
+                  alt="Professora com tablet ensinando programação"
+                  className="rounded-lg shadow-lg w-full object-cover"
+                />
               </div>
             </div>
-          </div>
-
-          {/* Parceria CODEL */}
-          <div className="mt-16 bg-gray-50 rounded-lg p-12 text-center">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Sustentabilidade em Ação</h3>
-            <p className="text-gray-700 max-w-3xl mx-auto text-lg">
-              Em parceria com a <strong>CODEL (Coleta e Descarte de Eletrônicos)</strong>, incorporamos materiais reutilizáveis, 
-              incluindo eletrônicos, promovendo sustentabilidade e inovação em todas as nossas oficinas.
-            </p>
           </div>
         </div>
       </section>

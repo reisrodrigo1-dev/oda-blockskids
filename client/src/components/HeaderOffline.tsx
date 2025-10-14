@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import logoOdA from "@/assets/logo-OdA.png";
+import logoTopoRemovebg from "@/assets/logo-topo-removebg-preview.png";
 
 interface HeaderProps {
   onShowTutorial: () => void;
@@ -66,9 +66,9 @@ export default function Header({ onShowTutorial, generatedCode = "" }: HeaderPro
         <div className="flex items-center justify-between">
           {/* Logo and Title */}
           <div className="flex items-center space-x-4">
-            <div className="bg-white p-3 rounded-xl shadow-playful">
+            <div className="bg-white p-2 rounded-xl">
               <img
-                src={logoOdA}
+                src={logoTopoRemovebg}
                 alt="Oficina do Amanhã"
                 className="h-16 w-auto object-contain"
               />

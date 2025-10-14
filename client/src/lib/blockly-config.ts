@@ -87,7 +87,7 @@ export const customBlocks: Record<string, BlockDefinition> = {
       { type: 'input_dummy' },
       { type: 'input_statement', name: 'DO' }
     ],
-    colour: 270,
+    colour: 230,
     tooltip: 'Executar ações condicionalmente',
     helpUrl: '',
     previousStatement: true,
@@ -102,7 +102,7 @@ export const customBlocks: Record<string, BlockDefinition> = {
       { type: 'input_dummy' },
       { type: 'input_statement', name: 'DO' }
     ],
-    colour: 270,
+    colour: 230,
     tooltip: 'Repetir ações um número específico de vezes',
     helpUrl: '',
     previousStatement: true,
@@ -156,7 +156,7 @@ export const toolboxConfig = {
     {
       kind: 'category',
       name: 'Controle',
-      colour: '270',
+      colour: '230',
       contents: [
         { kind: 'block', type: 'arduino_if' },
         { kind: 'block', type: 'arduino_for' },

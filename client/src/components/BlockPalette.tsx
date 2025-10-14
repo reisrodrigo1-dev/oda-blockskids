@@ -12,40 +12,40 @@ interface Block {
 
 const blockDefinitions: Block[] = [
   // Basic Blocks
-  { id: 'setup', type: 'setup', category: 'basic', label: 'Iniciar programa', icon: '▶️', color: 'kid-blue' },
-  { id: 'loop', type: 'loop', category: 'basic', label: 'Repetir sempre', icon: '🔄', color: 'kid-blue' },
-  { id: 'delay', type: 'delay', category: 'basic', label: 'Esperar', icon: '⏰', color: 'kid-blue', inputs: [{ name: 'time', type: 'number', default: 1 }] },
+  { id: 'setup', type: 'setup', category: 'basic', label: 'Iniciar programa', icon: '▶️', color: 'bg-blue-500' },
+  { id: 'loop', type: 'loop', category: 'basic', label: 'Repetir sempre', icon: '🔄', color: 'bg-blue-500' },
+  { id: 'delay', type: 'delay', category: 'basic', label: 'Esperar', icon: '⏰', color: 'bg-blue-500', inputs: [{ name: 'time', type: 'number', default: 1 }] },
 
   // LED Blocks
-  { id: 'led_on', type: 'digital_write', category: 'led', label: 'Acender LED', icon: '💡', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
-  { id: 'led_off', type: 'digital_write', category: 'led', label: 'Apagar LED', icon: '🌑', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
-  { id: 'blink_led', type: 'blink_led', category: 'led', label: 'Piscar LED', icon: '✨', color: 'kid-orange', inputs: [{ name: 'pin', type: 'select', default: 13 }, { name: 'time', type: 'number', default: 1 }] },
+  { id: 'led_on', type: 'digital_write', category: 'led', label: 'Acender LED', icon: '💡', color: 'bg-orange-500', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
+  { id: 'led_off', type: 'digital_write', category: 'led', label: 'Apagar LED', icon: '🌑', color: 'bg-orange-500', inputs: [{ name: 'pin', type: 'select', default: 13 }] },
+  { id: 'blink_led', type: 'blink_led', category: 'led', label: 'Piscar LED', icon: '✨', color: 'bg-orange-500', inputs: [{ name: 'pin', type: 'select', default: 13 }, { name: 'time', type: 'number', default: 1 }] },
 
   // Motor Blocks
-  { id: 'motor_on', type: 'motor_on', category: 'motor', label: 'Ligar motor', icon: '⚙️', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
-  { id: 'motor_off', type: 'motor_off', category: 'motor', label: 'Desligar motor', icon: '⚙️', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
-  { id: 'servo_move', type: 'servo_write', category: 'motor', label: 'Mover servo', icon: '🔄', color: 'kid-red', inputs: [{ name: 'pin', type: 'select', default: 9 }, { name: 'angle', type: 'number', default: 90 }] },
+  { id: 'motor_on', type: 'motor_on', category: 'motor', label: 'Ligar motor', icon: '⚙️', color: 'bg-red-500', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
+  { id: 'motor_off', type: 'motor_off', category: 'motor', label: 'Desligar motor', icon: '⚙️', color: 'bg-red-500', inputs: [{ name: 'pin', type: 'select', default: 9 }] },
+  { id: 'servo_move', type: 'servo_write', category: 'motor', label: 'Mover servo', icon: '🔄', color: 'bg-red-500', inputs: [{ name: 'pin', type: 'select', default: 9 }, { name: 'angle', type: 'number', default: 90 }] },
 
   // Sensor Blocks
-  { id: 'button_pressed', type: 'digital_read', category: 'sensors', label: 'Se botão pressionado', icon: '👆', color: 'kid-green', inputs: [{ name: 'pin', type: 'select', default: 2 }] },
-  { id: 'button_servo', type: 'button_servo', category: 'sensors', label: 'Botão controla servo', icon: '🎛️', color: 'kid-green', inputs: [{ name: 'button_pin', type: 'select', default: 2 }, { name: 'servo_pin', type: 'select', default: 9 }, { name: 'angle', type: 'number', default: 90 }] },
-  { id: 'read_temperature', type: 'analog_read', category: 'sensors', label: 'Ler temperatura', icon: '🌡️', color: 'kid-green', inputs: [{ name: 'pin', type: 'select', default: 'A0' }] },
+  { id: 'button_pressed', type: 'digital_read', category: 'sensors', label: 'Se botão pressionado', icon: '👆', color: 'bg-green-500', inputs: [{ name: 'pin', type: 'select', default: 2 }] },
+  { id: 'button_servo', type: 'button_servo', category: 'sensors', label: 'Botão controla servo', icon: '🎛️', color: 'bg-green-500', inputs: [{ name: 'button_pin', type: 'select', default: 2 }, { name: 'servo_pin', type: 'select', default: 9 }, { name: 'angle', type: 'number', default: 90 }] },
+  { id: 'read_temperature', type: 'analog_read', category: 'sensors', label: 'Ler temperatura', icon: '🌡️', color: 'bg-green-500', inputs: [{ name: 'pin', type: 'select', default: 'A0' }] },
 
   // Control Blocks
-  { id: 'if_then', type: 'if', category: 'control', label: 'Se... então...', icon: '❓', color: 'kid-purple' },
-  { id: 'repeat_times', type: 'for', category: 'control', label: 'Repetir', icon: '🔁', color: 'kid-purple', inputs: [{ name: 'times', type: 'number', default: 10 }] },
+  { id: 'if_then', type: 'if', category: 'control', label: 'Se... então...', icon: '❓', color: 'bg-purple-500' },
+  { id: 'repeat_times', type: 'for', category: 'control', label: 'Repetir', icon: '🔁', color: 'bg-purple-500', inputs: [{ name: 'times', type: 'number', default: 10 }] },
 
   // Sound Blocks
-  { id: 'play_tone', type: 'tone', category: 'sound', label: 'Tocar som', icon: '🔊', color: 'kid-pink', inputs: [{ name: 'note', type: 'select', default: 'C4' }] },
+  { id: 'play_tone', type: 'tone', category: 'sound', label: 'Tocar som', icon: '🔊', color: 'bg-pink-500', inputs: [{ name: 'note', type: 'select', default: 'C4' }] },
 ];
 
 const categories = [
-  { id: 'basic', name: 'BÁSICO', color: 'kid-blue' },
-  { id: 'led', name: 'LEDS', color: 'kid-orange' },
-  { id: 'motor', name: 'MOTORES', color: 'kid-red' },
-  { id: 'sensors', name: 'SENSORES', color: 'kid-green' },
-  { id: 'control', name: 'CONTROLE', color: 'kid-purple' },
-  { id: 'sound', name: 'SOM', color: 'kid-pink' },
+  { id: 'basic', name: 'BÁSICO', color: 'bg-blue-500' },
+  { id: 'led', name: 'LEDS', color: 'bg-orange-500' },
+  { id: 'motor', name: 'MOTORES', color: 'bg-red-500' },
+  { id: 'sensors', name: 'SENSORES', color: 'bg-green-500' },
+  { id: 'control', name: 'CONTROLE', color: 'bg-purple-500' },
+  { id: 'sound', name: 'SOM', color: 'bg-pink-500' },
 ];
 
 export default function BlockPalette() {
@@ -166,7 +166,7 @@ export default function BlockPalette() {
             return (
               <div key={category.id} className="block-category">
                 <h3 className="font-bold text-sm text-gray-700 mb-2 flex items-center">
-                  <div className={`w-4 h-4 rounded mr-2 bg-${category.color}`}></div>
+                  <div className={`w-4 h-4 rounded mr-2 ${category.color}`}></div>
                   {category.name}
                 </h3>
                 <div className="space-y-2">
@@ -176,7 +176,7 @@ export default function BlockPalette() {
                       draggable
                       onDragStart={(e) => handleDragStart(block, e)}
                       onDragEnd={handleDragEnd}
-                      className={`drag-block bg-${block.color} text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 select-none min-w-0`}
+                      className={`drag-block ${block.color} text-white p-3 rounded-lg shadow-block cursor-grab hover:shadow-lg transition-all duration-200 select-none min-w-0`}
                     >
                       <div className="flex items-center mb-1">
                         <span className="mr-2">{block.icon}</span>
