@@ -217,8 +217,8 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
         {blocks.map((block) => (
           <div
             key={block.id}
-            className={`absolute bg-${block.color} text-white p-3 rounded-lg shadow-block cursor-move hover:shadow-lg transition-all duration-200 flex items-center group select-none min-w-[160px] ${
-              draggedBlock === block.id ? 'z-20' : 'z-10'
+            className={`absolute ${block.color} text-white p-3 rounded-lg shadow-block cursor-move hover:shadow-lg transition-all duration-200 flex items-center group select-none min-w-[160px] ${
+              draggedBlock === block.id ? 'z-20 opacity-80' : 'z-10 opacity-100'
             }`}
             style={{ left: block.x, top: block.y }}
             onMouseDown={(e) => handleBlockDrag(block.id, e)}
