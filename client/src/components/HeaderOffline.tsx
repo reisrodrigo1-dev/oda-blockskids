@@ -88,8 +88,8 @@ export default function Header({ onShowTutorial, generatedCode = "" }: HeaderPro
 
           {/* Main Actions */}
           <div className="flex items-center space-x-3">
-            {/* Arduino Connection - Modo Offline */}
-            <div className="flex items-center bg-yellow-100 rounded-xl px-4 py-2 shadow-block">
+            {/* Arduino Connection - Modo Offline - COMENTADO TEMPORARIAMENTE */}
+            {/* <div className="flex items-center bg-yellow-100 rounded-xl px-4 py-2 shadow-block">
               <div className="w-3 h-3 rounded-full mr-2 bg-yellow-500"></div>
               <span className="text-sm font-semibold text-gray-700">
                 Modo Offline
@@ -109,10 +109,10 @@ export default function Header({ onShowTutorial, generatedCode = "" }: HeaderPro
                   </SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
-            {/* Download Button */}
-            <Button
+            {/* Download Button - COMENTADO TEMPORARIAMENTE */}
+            {/* <Button
               onClick={handleDownloadCode}
               className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-playful transform hover:scale-105 transition-all duration-200"
             >
@@ -130,10 +130,10 @@ export default function Header({ onShowTutorial, generatedCode = "" }: HeaderPro
                 />
               </svg>
               Baixar Código
-            </Button>
+            </Button> */}
 
-            {/* Simulate Upload Button */}
-            <Button
+            {/* Simulate Upload Button - COMENTADO TEMPORARIAMENTE */}
+            {/* <Button
               onClick={handleSimulateUpload}
               disabled={uploadStatus === "uploading"}
               className="bg-gradient-to-r from-kid-green to-green-400 hover:from-kid-green hover:to-green-500 text-white font-bold py-3 px-6 rounded-xl shadow-playful transform hover:scale-105 transition-all duration-200"
@@ -196,7 +196,7 @@ export default function Header({ onShowTutorial, generatedCode = "" }: HeaderPro
                   Simular Upload
                 </>
               )}
-            </Button>
+            </Button> */}
 
             {/* Menu */}
             <Button

@@ -449,7 +449,8 @@ pause
           >
             🖥️ Abrir no Arduino IDE
           </button>
-          <button
+          {/* BOTÕES COMENTADOS TEMPORARIAMENTE */}
+          {/* <button
             onClick={() => setShowArduinoPanel(!showArduinoPanel)}
             className={`text-sm px-3 py-1 rounded-lg transition-colors ${
               showArduinoPanel 
@@ -470,7 +471,7 @@ pause
             className="text-sm bg-gray-500 text-white px-3 py-1 rounded-lg hover:bg-gray-600 transition-colors"
           >
             Meus Projetos
-          </button>
+          </button> */}
         </div>
       </div>
 
