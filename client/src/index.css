@@ -164,3 +164,55 @@
   transform: scale(1.02);
   transition: all 0.2s ease;
 }
+
+/* Workspace block drag improvements */
+.workspace-block {
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.workspace-block:not(.dragging) {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.workspace-block.dragging {
+  transition: none !important;
+  transform: rotate(1deg) scale(1.08);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 
+              0 5px 15px rgba(0, 0, 0, 0.1),
+              0 0 0 1px rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  filter: brightness(1.1);
+}
+
+.workspace-block:hover:not(.dragging) {
+  transform: scale(1.03) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.05);
+}
+
+.workspace-block:active:not(.dragging) {
+  transform: scale(1.01);
+}
+
+/* Smooth scrolling for workspace */
+.workspace-area {
+  scroll-behavior: smooth;
+  overflow: hidden;
+}
+
+/* Cursor improvements */
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grabbing {
+  cursor: grabbing;
+}

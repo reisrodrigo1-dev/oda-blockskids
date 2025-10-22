@@ -123,6 +123,7 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
 
   const handleBlockDrag = (blockId: string, e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setDraggedBlock(blockId);
     
     const startX = e.clientX;
@@ -133,27 +134,68 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
     
     const startBlockX = block.x;
     const startBlockY = block.y;
+    const workspaceRect = workspaceRef.current?.getBoundingClientRect();
+    
+    if (!workspaceRect) return;
+
+    let animationFrameId: number;
+    let lastUpdateTime = 0;
+    const throttleMs = 16; // ~60fps
 
     const handleMouseMove = (e: MouseEvent) => {
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-      const newX = startBlockX + deltaX;
-      const newY = startBlockY + deltaY;
+      const currentTime = performance.now();
       
-      setBlocks(prev => prev.map(b => 
-        b.id === blockId 
-          ? { ...b, x: newX, y: newY }
-          : b
-      ));
+      // Throttle para melhor performance
+      if (currentTime - lastUpdateTime < throttleMs) {
+        return;
+      }
+      
+      lastUpdateTime = currentTime;
+
+      // Cancelar animação anterior se existir
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+
+      // Usar requestAnimationFrame para movimento mais suave
+      animationFrameId = requestAnimationFrame(() => {
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+        
+        // Calcular nova posição com limites mais generosos do workspace
+        const margin = 20;
+        const newX = Math.max(-margin, Math.min(workspaceRect.width - 160 + margin, startBlockX + deltaX));
+        const newY = Math.max(-margin, Math.min(workspaceRect.height - 80 + margin, startBlockY + deltaY));
+        
+        setBlocks(prev => prev.map(b => 
+          b.id === blockId 
+            ? { ...b, x: newX, y: newY }
+            : b
+        ));
+      });
     };
 
     const handleMouseUp = () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       setDraggedBlock(null);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      
+      // Feedback tátil leve ao soltar
+      if (navigator.vibrate) {
+        navigator.vibrate([30]);
+      }
+      
+      // Cursor volta ao normal
+      document.body.style.cursor = 'default';
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
+    // Cursor de drag global
+    document.body.style.cursor = 'grabbing';
+    
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.addEventListener('mouseup', handleMouseUp);
   };
 
@@ -169,7 +211,7 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
     <div className="flex-1 overflow-hidden">
       <div
         ref={workspaceRef}
-        className={`h-full relative bg-gradient-to-br from-kid-blue/10 to-kid-purple/10 transition-colors duration-300 ${
+        className={`workspace-area h-full relative bg-gradient-to-br from-kid-blue/10 to-kid-purple/10 transition-colors duration-300 ${
           dragOver ? 'bg-kid-blue/20' : ''
         }`}
         onDragOver={handleDragOver}
@@ -217,8 +259,10 @@ export default function WorkspaceArea({ onCodeChange }: WorkspaceAreaProps) {
         {blocks.map((block) => (
           <div
             key={block.id}
-            className={`absolute ${block.color} text-white p-3 rounded-lg shadow-block cursor-move hover:shadow-lg transition-all duration-200 flex items-center group select-none min-w-[160px] ${
-              draggedBlock === block.id ? 'z-20 opacity-80' : 'z-10 opacity-100'
+            className={`workspace-block absolute ${block.color} text-white p-3 rounded-lg shadow-block flex items-center group select-none min-w-[160px] ${
+              draggedBlock === block.id 
+                ? 'dragging z-20 opacity-95 cursor-grabbing' 
+                : 'z-10 opacity-100 cursor-grab hover:cursor-grab'
             }`}
             style={{ left: block.x, top: block.y }}
             onMouseDown={(e) => handleBlockDrag(block.id, e)}
