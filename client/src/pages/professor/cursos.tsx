@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Button } from '../../components/ui/button';
 import { BookOpen, Video, FileText, ExternalLink, Download, Play } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
+import AulaDocumentViewer from '../../components/AulaDocumentViewer';
 
 interface Curso {
   id?: string;
@@ -26,6 +27,7 @@ interface Aula {
   descricao: string;
   pdfUrl?: string;
   pdfName?: string;
+  htmlContent?: string;
   createdAt?: Date;
 }
 
@@ -162,6 +164,10 @@ export default function ProfessorCursos() {
                           <FileText className="w-4 h-4" />
                           <span>{aulas.filter(a => a.pdfUrl).length} PDFs</span>
                         </div>
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="w-4 h-4" />
+                          <span>{aulas.filter(a => a.htmlContent).length} Documentos</span>
+                        </div>
                       </div>
                     </CardHeader>
                     
@@ -204,6 +210,12 @@ export default function ProfessorCursos() {
                                         <span className="text-xs flex items-center gap-1 text-blue-600">
                                           <FileText className="w-3 h-3" />
                                           PDF
+                                        </span>
+                                      )}
+                                      {aula.htmlContent && (
+                                        <span className="text-xs flex items-center gap-1 text-green-600">
+                                          <BookOpen className="w-3 h-3" />
+                                          Documento
                                         </span>
                                       )}
                                     </div>
@@ -295,6 +307,12 @@ export default function ProfessorCursos() {
                               <Download className="w-4 h-4 mr-2" />
                               Baixar PDF
                             </Button>
+                          )}
+                          {aula.htmlContent && (
+                            <AulaDocumentViewer
+                              htmlContent={aula.htmlContent}
+                              aulaNome={aula.nome}
+                            />
                           )}
                         </div>
                       </div>

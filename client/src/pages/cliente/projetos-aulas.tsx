@@ -22,6 +22,7 @@ interface Aula {
   descricao: string;
   pdfUrl?: string;
   pdfName?: string;
+  htmlContent?: string;
 }
 
 export default function ClienteProjetosAulas() {

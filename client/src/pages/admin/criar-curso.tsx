@@ -38,6 +38,7 @@ interface Aula {
   descricao: string;
   pdfUrl?: string;
   pdfName?: string;
+  htmlContent?: string;
   createdAt?: Date;
 }
 

@@ -17,6 +17,7 @@ import {
   Menu,
   X
 } from 'lucide-react';
+import AulaDocumentViewer from '../../components/AulaDocumentViewer';
 
 interface Curso {
   id?: string;
@@ -34,6 +35,7 @@ interface Aula {
   descricao: string;
   pdfUrl?: string;
   pdfName?: string;
+  htmlContent?: string;
   createdAt?: Date;
 }
 
@@ -262,12 +264,28 @@ export default function AssistirAula() {
                   </Button>
                 </div>
 
-                {aulaAtual.pdfUrl && (
+                {(aulaAtual.pdfUrl || aulaAtual.htmlContent) && (
                   <div className="mb-4">
                     <h3 className="text-white font-semibold mb-2 flex items-center gap-2"><FileText className="w-4 h-4" />Material de Apoio</h3>
-                    <Button onClick={() => window.open(aulaAtual.pdfUrl, '_blank')} className="bg-blue-600 hover:bg-blue-700">
-                      <Download className="w-4 h-4 mr-2" />Baixar PDF - {aulaAtual.pdfName || 'Material da Aula'}
-                    </Button>
+                    <div className="flex gap-2 flex-wrap">
+                      {aulaAtual.pdfUrl && (
+                        <Button onClick={() => window.open(aulaAtual.pdfUrl, '_blank')} className="bg-blue-600 hover:bg-blue-700">
+                          <Download className="w-4 h-4 mr-2" />Baixar PDF - {aulaAtual.pdfName || 'Material da Aula'}
+                        </Button>
+                      )}
+                      {aulaAtual.htmlContent && (
+                        <AulaDocumentViewer
+                          htmlContent={aulaAtual.htmlContent}
+                          aulaNome={aulaAtual.nome}
+                          trigger={
+                            <Button className="bg-green-600 hover:bg-green-700">
+                              <FileText className="w-4 h-4 mr-2" />
+                              Ver Documento da Aula
+                            </Button>
+                          }
+                        />
+                      )}
+                    </div>
                   </div>
                 )}
 

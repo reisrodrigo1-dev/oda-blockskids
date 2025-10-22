@@ -21,6 +21,7 @@ interface Aula {
   descricao: string;
   pdfUrl?: string;
   pdfName?: string;
+  htmlContent?: string;
   createdAt?: Date;
 }
 
@@ -33,6 +34,7 @@ export default function CadastroAulas() {
     nome: '',
     linkYoutube: '',
     descricao: '',
+    htmlContent: '',
   });
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -155,7 +157,7 @@ export default function CadastroAulas() {
       }
 
       // Reset form and reload data
-      setFormData({ nome: '', linkYoutube: '', descricao: '' });
+      setFormData({ nome: '', linkYoutube: '', descricao: '', htmlContent: '' });
       setPdfFile(null);
       setIsDialogOpen(false);
       setEditingAula(null);
@@ -179,6 +181,7 @@ export default function CadastroAulas() {
       nome: aula.nome,
       linkYoutube: aula.linkYoutube,
       descricao: aula.descricao,
+      htmlContent: aula.htmlContent || '',
     });
     setPdfFile(null); // Clear file input when editing
     setIsDialogOpen(true);
@@ -216,7 +219,7 @@ export default function CadastroAulas() {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     setEditingAula(null);
-    setFormData({ nome: '', linkYoutube: '', descricao: '' });
+    setFormData({ nome: '', linkYoutube: '', descricao: '', htmlContent: '' });
     setPdfFile(null);
   };
 
@@ -260,7 +263,7 @@ export default function CadastroAulas() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12">
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">📚</div>
             <div className="text-3xl font-bold text-gray-900 mb-1">{aulas.length}</div>
@@ -275,6 +278,11 @@ export default function CadastroAulas() {
             <div className="text-4xl mb-3">🎥</div>
             <div className="text-3xl font-bold text-gray-900 mb-1">{aulas.filter(aula => aula.linkYoutube).length}</div>
             <div className="text-sm text-gray-600">Com Vídeo</div>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
+            <div className="text-4xl mb-3">📝</div>
+            <div className="text-3xl font-bold text-gray-900 mb-1">{aulas.filter(aula => aula.htmlContent).length}</div>
+            <div className="text-sm text-gray-600">Com Documento</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">➕</div>
@@ -323,6 +331,7 @@ export default function CadastroAulas() {
                       <TableHead>Link YouTube</TableHead>
                       <TableHead>Descrição</TableHead>
                       <TableHead>PDF</TableHead>
+                      <TableHead>Documento</TableHead>
                       <TableHead>Ações</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -352,6 +361,16 @@ export default function CadastroAulas() {
                               <FileText className="w-4 h-4" />
                               {aula.pdfName}
                             </a>
+                          ) : (
+                            <span className="text-gray-400">Nenhum</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {aula.htmlContent ? (
+                            <span className="text-green-600 flex items-center gap-1">
+                              <FileText className="w-4 h-4" />
+                              Sim
+                            </span>
                           ) : (
                             <span className="text-gray-400">Nenhum</span>
                           )}
@@ -522,6 +541,40 @@ export default function CadastroAulas() {
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* HTML Document Section */}
+              <div className="space-y-4 bg-white">
+                <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+                  <FileText className="w-4 h-4 text-green-500" />
+                  <h3 className="font-semibold text-gray-900">Documento da Aula (HTML - Opcional)</h3>
+                </div>
+
+                <div>
+                  <Label htmlFor="htmlContent" className="text-sm font-medium text-gray-700">
+                    Conteúdo HTML da Aula
+                  </Label>
+                  <Textarea
+                    id="htmlContent"
+                    value={formData.htmlContent || ''}
+                    onChange={(e) => setFormData({ ...formData, htmlContent: e.target.value })}
+                    placeholder="Cole ou digite o HTML do documento da aula aqui..."
+                    rows={8}
+                    className="mt-1 bg-white font-mono text-sm"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Este documento aparecerá como material de apoio para o professor durante a aula.
+                  </p>
+                  {formData.htmlContent && (
+                    <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">Preview do Documento:</h4>
+                      <div 
+                        className="prose prose-sm max-w-none bg-white p-3 border rounded overflow-auto max-h-40"
+                        dangerouslySetInnerHTML={{ __html: formData.htmlContent }}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* PDF Material Section */}
