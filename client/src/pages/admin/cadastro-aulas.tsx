@@ -97,22 +97,16 @@ export default function CadastroAulas() {
       return;
     }
 
-    if (!formData.linkYoutube.trim()) {
-      toast({
-        title: 'Erro de validação',
-        description: 'O link do YouTube é obrigatório',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (!isValidYouTubeUrl(formData.linkYoutube)) {
-      toast({
-        title: 'Erro de validação',
-        description: 'O link do YouTube não é válido',
-        variant: 'destructive',
-      });
-      return;
+    // YouTube link is optional. If provided, validate format.
+    if (formData.linkYoutube && formData.linkYoutube.trim()) {
+      if (!isValidYouTubeUrl(formData.linkYoutube)) {
+        toast({
+          title: 'Erro de validação',
+          description: 'O link do YouTube não é válido',
+          variant: 'destructive',
+        });
+        return;
+      }
     }
 
     if (pdfFile && pdfFile.size > 10 * 1024 * 1024) { // 10MB limit
@@ -496,7 +490,6 @@ export default function CadastroAulas() {
                     onChange={(e) => setFormData({ ...formData, linkYoutube: e.target.value })}
                     placeholder="https://www.youtube.com/watch?v=..."
                     className="mt-1 bg-white"
-                    required
                   />
                   {formData.linkYoutube && (
                     <div className="mt-2 flex items-center gap-2">
@@ -661,7 +654,12 @@ export default function CadastroAulas() {
                 </Button>
                 <Button
                   type="submit"
-                  disabled={uploading || !formData.nome || !formData.linkYoutube || !formData.descricao || !isValidYouTubeUrl(formData.linkYoutube)}
+                  disabled={Boolean(
+                    uploading ||
+                    !formData.nome ||
+                    !formData.descricao ||
+                    (formData.linkYoutube && formData.linkYoutube.trim() && !isValidYouTubeUrl(formData.linkYoutube))
+                  )}
                   className="bg-[#00979D] hover:bg-[#007a85]"
                 >
                   {uploading ? (
