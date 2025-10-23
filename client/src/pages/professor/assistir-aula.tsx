@@ -51,6 +51,23 @@ export default function AssistirAula() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [aulasCompletas, setAulasCompletas] = useState<Set<string>>(new Set());
 
+  // Função para abrir PDF (Base64 ou URL)
+  const handleOpenPdf = (pdfUrl: string, pdfName: string) => {
+    if (pdfUrl.startsWith('data:')) {
+      // É um arquivo Base64, criar um blob e abrir
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = pdfName;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // É uma URL normal do Firebase Storage
+      window.open(pdfUrl, '_blank');
+    }
+  };
+
   useEffect(() => {
     loadCursoEAulas();
   }, [params?.cursoId]);
@@ -240,17 +257,68 @@ export default function AssistirAula() {
 
         <div className="flex max-w-screen-2xl mx-auto">
           <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'md:mr-96' : ''}`}>
-            <div className="bg-black">
-              {videoId ? (
+            {videoId ? (
+              <div className="bg-black">
                 <div className="aspect-video w-full">
                   <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`} title={aulaAtual.nome} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="w-full h-full"></iframe>
                 </div>
-              ) : (
-                <div className="aspect-video w-full flex items-center justify-center bg-gray-800">
-                  <p className="text-white">Vídeo não disponível</p>
+              </div>
+            ) : aulaAtual.htmlContent ? (
+              <div className="bg-white min-h-[60vh]">
+                <div className="max-w-4xl mx-auto p-8">
+                  <div className="mb-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-2">{aulaAtual.nome}</h1>
+                        <p className="text-gray-600">{aulaAtual.descricao}</p>
+                      </div>
+                      {aulaAtual.pdfUrl && (
+                        <Button 
+                          onClick={() => handleOpenPdf(aulaAtual.pdfUrl!, aulaAtual.pdfName || 'Material da Aula')} 
+                          className="bg-blue-600 hover:bg-blue-700 ml-4"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Baixar PDF - {aulaAtual.pdfName || 'Material'}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <div 
+                    className="prose prose-lg max-w-none"
+                    dangerouslySetInnerHTML={{ __html: aulaAtual.htmlContent }}
+                    style={{
+                      fontFamily: 'system-ui, -apple-system, sans-serif',
+                      lineHeight: '1.7',
+                      color: '#374151'
+                    }}
+                  />
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="bg-gray-50 min-h-[60vh] flex items-center justify-center">
+                <div className="text-center">
+                  <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                    {aulaAtual.pdfUrl ? 'Sem vídeo ou documento' : 'Conteúdo não disponível'}
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    {aulaAtual.pdfUrl 
+                      ? 'Esta aula não possui vídeo nem documento HTML, mas há material em PDF disponível.'
+                      : 'Esta aula não possui vídeo nem documento disponível.'
+                    }
+                  </p>
+                  {aulaAtual.pdfUrl && (
+                    <Button 
+                      onClick={() => handleOpenPdf(aulaAtual.pdfUrl!, aulaAtual.pdfName || 'Material da Aula')} 
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Baixar PDF - {aulaAtual.pdfName || 'Material da Aula'}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="bg-gray-800 p-6">
               <div className="max-w-4xl">
@@ -269,7 +337,7 @@ export default function AssistirAula() {
                     <h3 className="text-white font-semibold mb-2 flex items-center gap-2"><FileText className="w-4 h-4" />Material de Apoio</h3>
                     <div className="flex gap-2 flex-wrap">
                       {aulaAtual.pdfUrl && (
-                        <Button onClick={() => window.open(aulaAtual.pdfUrl, '_blank')} className="bg-blue-600 hover:bg-blue-700">
+                        <Button onClick={() => handleOpenPdf(aulaAtual.pdfUrl!, aulaAtual.pdfName || 'Material da Aula')} className="bg-blue-600 hover:bg-blue-700">
                           <Download className="w-4 h-4 mr-2" />Baixar PDF - {aulaAtual.pdfName || 'Material da Aula'}
                         </Button>
                       )}
@@ -316,7 +384,7 @@ export default function AssistirAula() {
               </div>
 
               <div className="p-4">
-                <h3 className="text-white font-semibold mb-3 flex items-center gap-2"><BookOpen className="w-4 h-4" />Conteúdo do Curso</h3>
+                <h3 className="text-white font-semibold mb-3 flex items-center gap-2"><BookOpen className="w-4 h-4" />Conteúdo do Projeto</h3>
                 <div className="space-y-2">
                   {aulas.map((aula, index) => {
                     const isAtual = index === aulaIndex;

@@ -84,7 +84,7 @@ export default function ProfessorDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="border-l-4 border-l-[#00979D]">
               <CardHeader>
-                <CardTitle className="text-sm font-medium text-gray-600">Meus Cursos</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-600">Meus Projetos</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-gray-900">{cursos.length}</div>
@@ -93,7 +93,7 @@ export default function ProfessorDashboard() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Meus Cursos</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Meus Projetos</h2>
             {loading ? (
               <div className="text-center py-12">Carregando...</div>
             ) : cursos.length === 0 ? (

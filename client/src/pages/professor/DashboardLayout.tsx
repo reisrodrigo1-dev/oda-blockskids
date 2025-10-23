@@ -29,7 +29,7 @@ export default function ProfessorDashboardLayout({ children }: DashboardLayoutPr
 
   const menuItems = [
     { icon: GraduationCap, label: 'Dashboard', path: '/professor/dashboard' },
-    { icon: BookOpen, label: 'Meus Cursos', path: '/professor/cursos' },
+    { icon: BookOpen, label: 'Meus Projetos', path: '/professor/cursos' },
     { icon: FileText, label: 'Documentos', path: '/professor/documentos' },
     { icon: User, label: 'Meu Perfil', path: '/professor/perfil' },
   ];

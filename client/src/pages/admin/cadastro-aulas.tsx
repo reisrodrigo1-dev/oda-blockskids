@@ -68,10 +68,51 @@ export default function CadastroAulas() {
 
   // Handle PDF upload
   const handlePdfUpload = async (file: File): Promise<{ url: string; name: string }> => {
-    const storageRef = ref(storage, `aulas/${Date.now()}_${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    return { url, name: file.name };
+    try {
+      console.log('Convertendo arquivo para Base64:', file.name);
+      
+      // Converter o arquivo para Base64
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            resolve(reader.result);
+          } else {
+            reject(new Error('Erro ao converter arquivo para Base64'));
+          }
+        };
+        reader.onerror = () => reject(new Error('Erro ao ler o arquivo'));
+        reader.readAsDataURL(file);
+      });
+      
+      console.log('Arquivo convertido para Base64 com sucesso');
+      
+      // Retornar o Base64 como "URL" e o nome do arquivo
+      return { 
+        url: base64, 
+        name: file.name 
+      };
+    } catch (error) {
+      console.error('Erro ao converter arquivo para Base64:', error);
+      throw new Error(`Erro no upload do arquivo: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+    }
+  };
+
+  // Função para abrir PDF em Base64
+  const handleOpenPdf = (pdfUrl: string, pdfName: string) => {
+    if (pdfUrl.startsWith('data:')) {
+      // É um arquivo Base64, criar um blob e abrir
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = pdfName;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // É uma URL normal do Firebase Storage
+      window.open(pdfUrl, '_blank');
+    }
   };
 
   // Handle form submission
@@ -158,9 +199,12 @@ export default function CadastroAulas() {
       loadAulas();
     } catch (error) {
       console.error('Error saving aula:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido ao salvar aula';
       toast({
-        title: 'Erro',
-        description: 'Erro ao salvar aula',
+        title: 'Erro no Upload',
+        description: errorMessage.includes('upload') ? 
+          'Erro ao fazer upload do PDF. Verifique a configuração do Firebase Storage.' : 
+          'Erro ao salvar aula',
         variant: 'destructive',
       });
     } finally {
@@ -346,15 +390,13 @@ export default function CadastroAulas() {
                         <TableCell className="max-w-xs truncate">{aula.descricao}</TableCell>
                         <TableCell>
                           {aula.pdfUrl ? (
-                            <a
-                              href={aula.pdfUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline flex items-center gap-1"
+                            <button
+                              onClick={() => handleOpenPdf(aula.pdfUrl!, aula.pdfName || 'documento.pdf')}
+                              className="text-blue-600 hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer"
                             >
                               <FileText className="w-4 h-4" />
                               {aula.pdfName}
-                            </a>
+                            </button>
                           ) : (
                             <span className="text-gray-400">Nenhum</span>
                           )}

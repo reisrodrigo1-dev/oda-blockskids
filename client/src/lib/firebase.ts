@@ -4,13 +4,13 @@ import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  // TODO: Add your Firebase config here
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+  apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
+  authDomain: "oda-blockskids.firebaseapp.com",
+  projectId: "oda-blockskids",
+  storageBucket: "oda-blockskids.appspot.com",
+  messagingSenderId: "567014936342",
+  appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
+  measurementId: "G-TCMP1KJK0H"
 };
 
 // Initialize Firebase only if it hasn't been initialized already

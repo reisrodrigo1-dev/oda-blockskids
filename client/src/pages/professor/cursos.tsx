@@ -40,6 +40,23 @@ export default function ProfessorCursos() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  // Função para abrir PDF (Base64 ou URL)
+  const handleOpenPdf = (pdfUrl: string, pdfName: string) => {
+    if (pdfUrl.startsWith('data:')) {
+      // É um arquivo Base64, criar um blob e abrir
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = pdfName;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // É uma URL normal do Firebase Storage
+      window.open(pdfUrl, '_blank');
+    }
+  };
+
   useEffect(() => {
     loadData();
   }, [professor]);
@@ -115,16 +132,16 @@ export default function ProfessorCursos() {
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Meus Cursos</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Meus Projetos</h1>
             <p className="text-gray-600">
-              Acesse as aulas e materiais dos cursos que você ministra
+              Acesse as aulas e materiais dos projetos que você ministra
             </p>
           </div>
 
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00979D] mx-auto"></div>
-              <p className="text-gray-600 mt-4">Carregando cursos...</p>
+              <p className="text-gray-600 mt-4">Carregando projetos...</p>
             </div>
           ) : cursos.length === 0 ? (
             <Card>
@@ -174,12 +191,12 @@ export default function ProfessorCursos() {
                     <CardContent className="p-6">
                       <div className="space-y-4">
                         <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-lg font-semibold text-gray-900">Aulas do Curso</h3>
+                          <h3 className="text-lg font-semibold text-gray-900">Aulas do Projeto</h3>
                           <Button
                             onClick={() => setLocation(`/professor/assistir/${curso.id}`)}
                             className="bg-[#00979D] hover:bg-[#007a85]"
                           >
-                            Assistir Curso
+                            Acessar Projeto
                           </Button>
                         </div>
 
@@ -302,7 +319,7 @@ export default function ProfessorCursos() {
                             <Button
                               size="sm"
                               className="bg-blue-600 hover:bg-blue-700"
-                              onClick={() => window.open(aula.pdfUrl, '_blank')}
+                              onClick={() => handleOpenPdf(aula.pdfUrl!, aula.pdfName || 'material.pdf')}
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Baixar PDF
