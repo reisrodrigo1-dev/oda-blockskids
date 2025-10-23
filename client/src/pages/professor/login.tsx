@@ -52,22 +52,22 @@ export default function ProfessorLogin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#00979D] to-[#007a85] flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-2xl">
+      <Card className="w-full max-w-md shadow-2xl bg-gray-800/90 border-gray-600">
         <CardHeader className="space-y-2 text-center">
           <div className="mx-auto w-16 h-16 bg-[#00979D] rounded-full flex items-center justify-center mb-2">
             <GraduationCap className="w-10 h-10 text-white" />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardTitle className="text-2xl font-bold text-white">
             Portal do Professor
           </CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardDescription className="text-white">
             Acesse sua área de ensino
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700">
+              <Label htmlFor="email" className="text-white">
                 E-mail
               </Label>
               <div className="relative">
@@ -86,7 +86,7 @@ export default function ProfessorLogin() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="senha" className="text-gray-700">
+              <Label htmlFor="senha" className="text-white">
                 Senha
               </Label>
               <div className="relative">
@@ -119,7 +119,7 @@ export default function ProfessorLogin() {
               {loading ? 'Entrando...' : 'Entrar'}
             </Button>
 
-            <div className="text-center text-sm text-gray-600 mt-4">
+            <div className="text-center text-sm text-white mt-4">
               <p>Esqueceu sua senha?</p>
               <p className="text-xs mt-1">Entre em contato com o administrador</p>
             </div>

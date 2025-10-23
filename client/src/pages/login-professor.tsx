@@ -278,7 +278,7 @@ export default function LoginProfessor() {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Código(s) da Turma
-                  <span className="text-xs text-gray-400 block mt-1">
+                  <span className="text-xs text-gray-200 block mt-1">
                     Informe o(s) código(s) fornecido(s) pela instituição. Para múltiplos códigos, separe por vírgula.
                   </span>
                 </label>
@@ -335,7 +335,7 @@ export default function LoginProfessor() {
           <div className="text-center pt-4 border-t border-gray-600">
             <button
               onClick={() => setLocation('/')}
-              className="text-gray-400 hover:text-white text-sm"
+              className="text-white hover:text-gray-200 text-sm"
             >
               ← Voltar ao início
             </button>
