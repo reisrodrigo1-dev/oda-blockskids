@@ -117,7 +117,7 @@ export default function ProfessorDashboard() {
                         onClick={() => setLocation(`/professor/assistir/${curso.id}`)}
                         className="inline-flex items-center justify-center w-full px-4 py-2 bg-[#00979D] text-white rounded-md hover:bg-[#007a85] transition-colors"
                       >
-                        Assistir Curso
+                        Acessar Projeto
                       </button>
                     </CardContent>
                   </Card>
