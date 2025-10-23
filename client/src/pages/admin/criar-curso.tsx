@@ -377,9 +377,9 @@ export default function CriarCurso() {
           <div className="flex justify-center mb-6">
             <div className="w-16 h-16 bg-[#00979D] rounded-full flex items-center justify-center text-3xl">📖</div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Criar Curso (Professor)</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Criar Projeto (Professor)</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Crie e gerencie cursos compostos por aulas da plataforma
+            Crie e gerencie projetos compostos por aulas da plataforma
           </p>
         </div>
 
@@ -388,7 +388,7 @@ export default function CriarCurso() {
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">📖</div>
             <div className="text-3xl font-bold text-gray-900 mb-1">{cursos.length}</div>
-            <div className="text-sm text-gray-600">Total de Cursos</div>
+            <div className="text-sm text-gray-600">Total de Projetos</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">🎓</div>
@@ -400,7 +400,7 @@ export default function CriarCurso() {
             <div className="text-3xl font-bold text-gray-900 mb-1">
               {cursos.reduce((acc, curso) => acc + (curso.aulasIds?.length || 0), 0)}
             </div>
-            <div className="text-sm text-gray-600">Aulas em Cursos</div>
+            <div className="text-sm text-gray-600">Aulas em Projetos</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">➕</div>
@@ -422,17 +422,17 @@ export default function CriarCurso() {
           {/* Cursos Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Cursos Cadastrados</CardTitle>
+              <CardTitle>Projetos Cadastrados</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                  <p className="mt-4 text-gray-600">Carregando cursos...</p>
+                  <p className="mt-4 text-gray-600">Carregando projetos...</p>
                 </div>
               ) : cursos.length === 0 ? (
                 <div className="text-center py-8">
-                  <p className="text-gray-500">Nenhum curso cadastrado ainda.</p>
+                  <p className="text-gray-500">Nenhum projeto cadastrado ainda.</p>
                   <Button
                     className="mt-4"
                     onClick={() => setIsDialogOpen(true)}
@@ -508,9 +508,9 @@ export default function CriarCurso() {
 
         {/* Info Box */}
         <div className="mt-12 bg-[#00979D] text-white rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold mb-3">Sistema de Gestão de Cursos</h3>
+          <h3 className="text-2xl font-bold mb-3">Sistema de Gestão de Projetos</h3>
           <p className="max-w-2xl mx-auto">
-            Crie cursos personalizados para professores combinando múltiplas aulas em sequências de aprendizado estruturadas.
+            Crie projetos personalizados para professores combinando múltiplas aulas em sequências de aprendizado estruturadas.
           </p>
         </div>
 
