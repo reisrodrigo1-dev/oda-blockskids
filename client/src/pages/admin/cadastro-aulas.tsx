@@ -481,7 +481,7 @@ export default function CadastroAulas() {
 
                 <div>
                   <Label htmlFor="linkYoutube" className="text-sm font-medium text-gray-700">
-                    Link do YouTube *
+                    Link do YouTube
                   </Label>
                   <Input
                     id="linkYoutube"
