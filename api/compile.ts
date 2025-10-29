@@ -1,12 +1,12 @@
-const { exec } = require('child_process');
-const { promisify } = require('util');
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 
 const execAsync = promisify(exec);
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   // Configurar headers CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing code or boardType' });
   }
 
-  let tempDir = null;
+  let tempDir: string | null = null;
 
   try {
     // Criar diretório temporário
@@ -74,7 +74,7 @@ export default async function handler(req, res) {
       await execAsync('arduino-cli core install arduino:avr');
       console.log('✅ Core Arduino AVR instalado');
     } catch (configError) {
-      console.log('⚠️ Erro na configuração (pode já estar configurado):', configError.message);
+      console.log('⚠️ Erro na configuração (pode já estar configurado):', (configError as Error).message);
     }
 
     // Compilar usando Arduino CLI
@@ -152,8 +152,8 @@ export default async function handler(req, res) {
     res.status(500).json({
       success: false,
       message: 'Erro na compilação online',
-      error: error.message,
-      details: error.stderr || error.stdout || 'Erro desconhecido'
+      error: (error as Error).message,
+      details: (error as any).stderr || (error as any).stdout || 'Erro desconhecido'
     });
   }
 }
