@@ -1,5 +1,13 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "functions": {
+    "api/compile.ts": {
+      "runtime": "@vercel/node",
+      "maxDuration": 60
+    }
+  },
+  "build": {
+    "env": {
+      "ARDUINO_CLI_VERSION": "0.34.0"
+    }
+  }
 }

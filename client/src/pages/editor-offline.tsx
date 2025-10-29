@@ -15,6 +15,13 @@ export default function EditorOffline() {
   const [showArduinoPanel, setShowArduinoPanel] = useState(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [savedProjects, setSavedProjects] = useState<Project[]>([]);
+
+  // Detectar se estamos rodando localmente ou online
+  const isLocalEnvironment = typeof window !== 'undefined' && 
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname === '127.0.0.1' ||
+     window.location.hostname.includes('oda-blockskids'));
+
   const [generatedCode, setGeneratedCode] = useState(`// Código Arduino gerado pelos blocos\n// 🎨 Criado com Arduino Blocks Kids\n\nvoid setup() {\n  // Inicializar comunicação serial\n  Serial.begin(9600);\n  Serial.println(\"🚀 Arduino iniciado!\");\n  \n  // Configurar pinos\n  pinMode(13, OUTPUT);  // LED no pino 13\n}\n\nvoid loop() {\n  // Seu código aparecerá aqui quando você\n  // arrastar os blocos para o workspace!\n  \n  // Exemplo: Piscar LED\n  digitalWrite(13, HIGH);   // Acender LED\n  delay(1000);              // Esperar 1 segundo\n  digitalWrite(13, LOW);    // Apagar LED\n  delay(1000);              // Esperar 1 segundo\n}`);
 
   // Estado para upload
@@ -146,6 +153,9 @@ export default function EditorOffline() {
       setUploadProgress(30);
       console.log('✅ Validação do código OK');
 
+      // Detectar se estamos em localhost ou online
+      const isLocalEnvironment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
       // Passo 2: Compilar código usando API do servidor
       setUploadProgress(50);
       console.log('⚙️ Compilando código...');
@@ -155,19 +165,40 @@ export default function EditorOffline() {
       let boardType = 'arduino:avr:uno'; // Sempre usar Uno por padrão
       console.log('🎯 Usando Arduino Uno como padrão');
 
-      // Fazer chamada para API de compilação
-      const compileResponse = await fetch('http://localhost:5000/api/compile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          code: generatedCode,
-          boardType: boardType
-        })
-      });
+      let compileResponse;
+      let compileResult;
 
-      const compileResult = await compileResponse.json();
+      if (isLocalEnvironment) {
+        // Usar API local
+        console.log('🏠 Ambiente local detectado - usando servidor local');
+        compileResponse = await fetch('http://localhost:5000/api/compile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            code: generatedCode,
+            boardType: boardType
+          })
+        });
+      } else {
+        // Usar API da Vercel
+        console.log('🌐 Ambiente online detectado - usando API da Vercel');
+        const apiUrl = `${window.location.origin}/api/compile`;
+        console.log('📡 Fazendo chamada para:', apiUrl);
+        compileResponse = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            code: generatedCode,
+            boardType: boardType
+          })
+        });
+      }
+
+      compileResult = await compileResponse.json();
 
       if (!compileResult.success) {
         throw new Error(`Erro na compilação: ${compileResult.message}\n${compileResult.error || ''}`);
@@ -181,6 +212,17 @@ export default function EditorOffline() {
       // Passo 3: Fazer upload direto usando Web Serial API
       setUploadProgress(80);
       console.log('🚀 Fazendo upload para Arduino...');
+
+      // Verificar se a porta já está aberta e fechá-la se necessário
+      if (selectedPort.readable || selectedPort.writable) {
+        console.log('🔌 Porta já está aberta, fechando antes de reabrir...');
+        try {
+          await selectedPort.close();
+          await new Promise(resolve => setTimeout(resolve, 500)); // Aguardar um pouco
+        } catch (e) {
+          console.log('⚠️ Erro ao fechar porta anterior:', e);
+        }
+      }
 
       // Abrir a porta serial
       await selectedPort.open({ baudRate: 115200 });
@@ -329,16 +371,60 @@ export default function EditorOffline() {
       const uploadToUno = async (hexData: string) => {
         console.log('🎯 Fazendo upload para Arduino Uno usando STK500...');
 
-        // Reset do Arduino
+        // Reset do Arduino com múltiplas tentativas para re-uploads
         console.log('🔄 Fazendo reset do Arduino...');
-        await selectedPort.setSignals({ dataTerminalReady: false });
-        await new Promise(resolve => setTimeout(resolve, 250));
-        await selectedPort.setSignals({ dataTerminalReady: true });
-        await new Promise(resolve => setTimeout(resolve, 50));
 
-        // Aguardar bootloader inicializar (Optiboot leva cerca de 1 segundo)
-        console.log('⏳ Aguardando bootloader Optiboot...');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        let bootloaderReady = false;
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        while (!bootloaderReady && attempts < maxAttempts) {
+          attempts++;
+          console.log(`🔄 Tentativa ${attempts}/${maxAttempts} de ativar bootloader...`);
+
+          try {
+            // Sequência de reset mais agressiva para Arduino já executando código
+            console.log('📡 Enviando sinal DTR LOW (500ms)...');
+            await selectedPort.setSignals({ dataTerminalReady: false });
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            console.log('📡 Enviando sinal DTR HIGH (100ms)...');
+            await selectedPort.setSignals({ dataTerminalReady: true });
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Aguardar bootloader inicializar (tempo aumentado para re-uploads)
+            console.log('⏳ Aguardando bootloader Optiboot inicializar...');
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Testar se bootloader está respondendo
+            console.log('🔍 Testando comunicação com bootloader...');
+            const testCmd = new Uint8Array([0x41]); // STK_GET_SYNC
+            await sendSTKCommand(testCmd);
+            const response = await receiveSTKResponse();
+
+            if (response && response.length > 0) {
+              console.log('✅ Bootloader respondeu - pronto para upload!');
+              bootloaderReady = true;
+            } else {
+              console.log('⚠️ Bootloader não respondeu nesta tentativa');
+              if (attempts < maxAttempts) {
+                console.log('⏳ Aguardando antes da próxima tentativa...');
+                await new Promise(resolve => setTimeout(resolve, 2000));
+              }
+            }
+
+          } catch (error) {
+            console.log(`❌ Erro na tentativa ${attempts}:`, error);
+            if (attempts < maxAttempts) {
+              console.log('⏳ Aguardando antes da próxima tentativa...');
+              await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+          }
+        }
+
+        if (!bootloaderReady) {
+          throw new Error(`Não foi possível ativar o bootloader Optiboot após ${maxAttempts} tentativas. Verifique se o Arduino está conectado corretamente.`);
+        }
 
         // Obter dados do programa
         const programData = parseIntelHex(hexData);
@@ -419,10 +505,48 @@ export default function EditorOffline() {
 
     } catch (error) {
       console.error('❌ Erro no upload:', error);
-      alert(`❌ Erro ao enviar código para Arduino:\n${(error as Error).message}\n\nDicas:\n• Verifique se o Arduino está conectado\n• Certifique-se de que a porta correta foi selecionada\n• Feche o Arduino IDE se estiver aberto`);
+      
+      // Oferecer fallback: download do código quando compilação falhar
+      const shouldDownload = confirm(`❌ Erro na compilação/upload online: ${(error as Error).message}
+
+💡 Alternativa: Deseja baixar o código Arduino para compilar localmente no Arduino IDE?
+
+✅ O download incluirá:
+• Arquivo .ino pronto para Arduino IDE
+• Script automático para abrir o Arduino IDE
+• Configurações pré-definidas para Arduino Uno
+
+📝 Instruções:
+1. Execute o arquivo .bat baixado
+2. O Arduino IDE abrirá automaticamente
+3. Clique em Upload (→) no Arduino IDE`);
+
+      if (shouldDownload) {
+        // Usar a função existente para abrir no Arduino IDE (que faz download)
+        openInArduinoIDE();
+        alert('✅ Arquivos de download criados!\n\nExecute o arquivo .bat para abrir o Arduino IDE com configurações automáticas.');
+      } else {
+        alert(`❌ Upload cancelado.
+
+💡 Para tentar novamente:
+• Verifique sua conexão com a internet
+• Certifique-se de que o Arduino está conectado
+• Selecione a porta correta
+• Tente o botão "🖥️ Abrir no Arduino IDE" para compilação local`);
+      }
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
+      
+      // Garantir que a porta serial seja fechada
+      try {
+        if (selectedPort && (selectedPort.readable || selectedPort.writable)) {
+          await selectedPort.close();
+          console.log('🔌 Porta serial fechada com sucesso');
+        }
+      } catch (e) {
+        console.log('⚠️ Erro ao fechar porta no finally:', e);
+      }
     }
   };
 
