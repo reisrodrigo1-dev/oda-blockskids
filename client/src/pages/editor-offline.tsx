@@ -184,8 +184,10 @@ export default function EditorOffline() {
       } else {
         // Usar API da Vercel
         console.log('🌐 Ambiente online detectado - usando API da Vercel');
-        const apiUrl = `${window.location.origin}/api/compile`;
+        setUploadProgress(55);
+        const apiUrl = `${window.location.origin}/compile`;
         console.log('📡 Fazendo chamada para:', apiUrl);
+        console.log('⏳ Enviando código para compilação online...');
         compileResponse = await fetch(apiUrl, {
           method: 'POST',
           headers: {

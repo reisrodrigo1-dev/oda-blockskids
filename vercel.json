@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/compile.js": {
+    "compile.js": {
       "runtime": "@vercel/node",
       "maxDuration": 60
     }
