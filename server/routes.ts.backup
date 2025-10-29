@@ -1,0 +1,273 @@
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from "ws";
+import { storage } from "./storage";
+import { insertProjectSchema, insertArduinoBoardSchema } from "@shared/schema";
+import { z } from "zod";
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  const httpServer = createServer(app);
+
+  // WebSocket server for real-time communication
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+
+  // Store connected WebSocket clients
+  const clients = new Set<WebSocket>();
+
+  wss.on('connection', (ws) => {
+    clients.add(ws);
+    console.log('Client connected to WebSocket');
+
+    ws.on('message', async (message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        
+        switch (data.type) {
+          case 'upload_code':
+            // Simulate Arduino code upload
+            const { code, port, boardType } = data;
+            console.log(`Uploading code to ${boardType} on ${port}`);
+            
+            // Broadcast upload status
+            broadcastToClients({
+              type: 'upload_status',
+              status: 'uploading',
+              message: 'Uploading code to Arduino...'
+            });
+
+            // Simulate upload delay
+            setTimeout(() => {
+              broadcastToClients({
+                type: 'upload_status',
+                status: 'success',
+                message: 'Code uploaded successfully!'
+              });
+            }, 2000);
+            break;
+
+          case 'scan_ports':
+            // Simulate port scanning
+            const mockPorts = [
+              { port: 'COM3', boardType: 'Arduino Uno', name: 'Arduino Uno' },
+              { port: 'COM4', boardType: 'Arduino Nano', name: 'Arduino Nano' },
+            ];
+
+            ws.send(JSON.stringify({
+              type: 'ports_found',
+              ports: mockPorts
+            }));
+            break;
+        }
+      } catch (error) {
+        console.error('WebSocket message error:', error);
+      }
+    });
+
+    ws.on('close', () => {
+      clients.delete(ws);
+      console.log('Client disconnected from WebSocket');
+    });
+  });
+
+  function broadcastToClients(message: any) {
+    const messageStr = JSON.stringify(message);
+    clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(messageStr);
+      }
+    });
+  }
+
+  // Projects API
+  app.get("/api/projects", async (req, res) => {
+    try {
+      const projects = await storage.getAllProjects();
+      res.json(projects);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch projects" });
+    }
+  });
+
+  app.get("/api/projects/:id", async (req, res) => {
+    try {
+      const project = await storage.getProject(req.params.id);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      res.json(project);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch project" });
+    }
+  });
+
+  app.post("/api/projects", async (req, res) => {
+    try {
+      const validated = insertProjectSchema.parse(req.body);
+      const project = await storage.createProject(validated);
+      res.status(201).json(project);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid project data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create project" });
+    }
+  });
+
+  app.put("/api/projects/:id", async (req, res) => {
+    try {
+      const validated = insertProjectSchema.partial().parse(req.body);
+      const project = await storage.updateProject(req.params.id, validated);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      res.json(project);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid project data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+
+  app.delete("/api/projects/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteProject(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete project" });
+    }
+  });
+
+  // Arduino Boards API
+  app.get("/api/arduino-boards", async (req, res) => {
+    try {
+      const boards = await storage.getAllArduinoBoards();
+      res.json(boards);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch Arduino boards" });
+    }
+  });
+
+  app.post("/api/arduino-boards", async (req, res) => {
+    try {
+      const validated = insertArduinoBoardSchema.parse(req.body);
+      const board = await storage.createArduinoBoard(validated);
+      res.status(201).json(board);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid board data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create Arduino board" });
+    }
+  });
+
+  // Test endpoint
+  app.post("/api/test", (req, res) => {
+    console.log('Test endpoint called');
+    res.json({ success: true, message: 'Test successful' });
+  });
+
+  // Arduino Compilation API
+  app.post("/api/compile", async (req, res) => {
+    try {
+      console.log('=== INÍCIO DA COMPILAÇÃO ===');
+      console.log('Headers:', req.headers);
+      console.log('Body type:', typeof req.body);
+      console.log('Body keys:', Object.keys(req.body));
+
+      const { code, boardType = 'arduino:avr:uno' } = req.body;
+
+      console.log('Code exists:', !!code);
+      console.log('Code type:', typeof code);
+      console.log('Code length:', code ? code.length : 'N/A');
+
+      if (!code) {
+        console.log('Retornando erro: Code is required');
+        return res.status(400).json({ message: "Code is required" });
+      }
+
+      console.log('Código recebido (primeiros 200 chars):', code.substring(0, 200));
+
+      // TEMPORÁRIO: Retornar hex hardcoded maior para testar upload
+      const mockHex = `:100000000C945C000C946E000C946E000C946E00CA
+:100010000C946E000C946E000C946E000C946E00A8
+:100020000C946E000C946E000C946E000C946E0098
+:100030000C946E000C946E000C946E000C946E0088
+:100040000C9413010C946E000C946E000C946E00D2
+:100050000C946E000C946E000C946E000C946E0068
+:100060000C946E000C946E00000000002400270029
+:100070002A0000000000250028002B0004040404CE
+:100080000404040402020202020203030303030342
+:10009000010204081020408001020408102001021F
+:1000A00010200102040810200102040810200102E7
+:1000B00004081020010204081020010204081020AF
+:1000C00001020408102001020408102001020408DF
+:1000D00010200102040810200102040810200102CF
+:1000E00004081020010204081020010204081020BF
+:1000F00001020408102001020408102001020408EF
+:100100000C9400000C9400000C9400000C9400008F
+:100110000C9400000C9400000C9400000C9400007F
+:100120000C9400000C9400000C9400000C9400006F
+:100130000C9400000C9400000C9400000C9400005F
+:100140000C9400000C9400000C9400000C9400004F
+:100150000C9400000C9400000C9400000C9400003F
+:100160000C9400000C9400000C9400000C9400002F
+:100170000C9400000C9400000C9400000C9400001F
+:100180000C9400000C9400000C9400000C9400000F
+:100190000C9400000C9400000C9400000C940000FF
+:1001A0000C9400000C9400000C9400000C940000EF
+:1001B0000C9400000C9400000C9400000C940000DF
+:1001C0000C9400000C9400000C9400000C940000CF
+:1001D0000C9400000C9400000C9400000C940000BF
+:1001E0000C9400000C9400000C9400000C940000AF
+:1001F0000C9400000C9400000C9400000C9400009F
+:100200000C9400000C9400000C9400000C9400008F
+:100210000C9400000C9400000C9400000C9400007F
+:100220000C9400000C9400000C9400000C9400006F
+:100230000C9400000C9400000C9400000C9400005F
+:100240000C9400000C9400000C9400000C9400004F
+:100250000C9400000C9400000C9400000C9400003F
+:100260000C9400000C9400000C9400000C9400002F
+:100270000C9400000C9400000C9400000C9400001F
+:100280000C9400000C9400000C9400000C9400000F
+:100290000C9400000C9400000C9400000C940000FF
+:1002A0000C9400000C9400000C9400000C940000EF
+:1002B0000C9400000C9400000C9400000C940000DF
+:1002C0000C9400000C9400000C9400000C940000CF
+:1002D0000C9400000C9400000C9400000C940000BF
+:1002E0000C9400000C9400000C9400000C940000AF
+:1002F0000C9400000C9400000C9400000C9400009F
+:100300000C9400000C9400000C9400000C9400008F
+:100310000C9400000C9400000C9400000C9400007F
+:100320000C9400000C9400000C9400000C9400006F
+:100330000C9400000C9400000C9400000C9400005F
+:100340000C9400000C9400000C9400000C9400004F
+:100350000C9400000C9400000C9400000C9400003F
+:100360000C9400000C9400000C9400000C9400002F
+:100370000C9400000C9400000C9400000C9400001F
+:100380000C9400000C9400000C9400000C9400000F
+:100390000C9400000C9400000C9400000C940000FF
+:00000001FF`;
+
+      console.log('Retornando hex mock com', mockHex.split('\n').length, 'linhas');
+      res.json({
+        success: true,
+        hex: mockHex,
+        message: 'Compilação simulada bem-sucedida (teste)'
+      });
+
+    } catch (error) {
+      console.error('Erro na compilação:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erro interno do servidor',
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
+      });
+    }
+  });
+
+  return httpServer;
+}

@@ -4,6 +4,9 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { insertProjectSchema, insertArduinoBoardSchema } from "@shared/schema";
 import { z } from "zod";
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -161,6 +164,162 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid board data", errors: error.errors });
       }
       res.status(500).json({ message: "Failed to create Arduino board" });
+    }
+  });
+
+  // Test endpoint
+  app.post("/api/test", (req, res) => {
+    console.log('Test endpoint called');
+    res.json({ success: true, message: 'Test successful' });
+  });
+
+  // Arduino Compilation API
+  app.post("/api/compile", async (req, res) => {
+    try {
+      const { code, boardType = 'arduino:avr:uno' } = req.body;
+
+      if (!code) {
+        return res.status(400).json({ message: "Code is required" });
+      }
+
+      console.log('Recebido código para compilação:', code.substring(0, 100) + '...');
+
+      // Compilar diretamente usando arduino-cli
+      const { spawn } = await import('child_process');
+
+      // Criar diretório temporário para o sketch
+      const sketchName = `sketch_${Date.now()}`;
+      const sketchTempDir = path.join(os.tmpdir(), sketchName);
+      fs.mkdirSync(sketchTempDir, { recursive: true });
+
+      // Escrever código no arquivo sketch.ino
+      const sketchFile = path.join(sketchTempDir, `${sketchName}.ino`);
+      fs.writeFileSync(sketchFile, code);
+
+      console.log('Sketch criado em:', sketchFile);
+      console.log('Conteúdo do sketch (primeiras 200 chars):', code.substring(0, 200));
+
+      // Executar arduino-cli compile diretamente
+      const arduinoCliPath = path.join(process.cwd(), 'arduino-cli.exe');
+      console.log('Caminho do arduino-cli:', arduinoCliPath);
+      console.log('Diretório de trabalho:', process.cwd());
+
+      const compileProcess = spawn(arduinoCliPath, [
+        'compile',
+        '--fqbn', 'arduino:avr:uno',
+        sketchTempDir,
+        '--output-dir', path.join(sketchTempDir, 'build')
+      ], {
+        cwd: process.cwd(),
+        stdio: ['pipe', 'pipe', 'pipe']
+      });
+
+      let stdout = '';
+      let stderr = '';
+
+      compileProcess.stdout.on('data', (data) => {
+        stdout += data.toString();
+        console.log('STDOUT:', data.toString());
+      });
+
+      compileProcess.stderr.on('data', (data) => {
+        stderr += data.toString();
+        console.log('STDERR:', data.toString());
+      });
+
+      compileProcess.on('close', (code) => {
+        console.log('Processo de compilação finalizado com código:', code);
+
+        if (code === 0) {
+          console.log('Compilação bem-sucedida, procurando arquivo hex...');
+
+          // Leitura do arquivo hex gerado
+          try {
+            console.log('Conteúdo do diretório sketch:', fs.readdirSync(sketchTempDir));
+
+            // Procurar por qualquer diretório que contenha arquivos hex
+            const dirs = fs.readdirSync(sketchTempDir).filter(item => {
+              const itemPath = path.join(sketchTempDir, item);
+              return fs.statSync(itemPath).isDirectory();
+            });
+
+            console.log('Diretórios encontrados:', dirs);
+
+            let hexFile = null;
+            for (const dir of dirs) {
+              const dirPath = path.join(sketchTempDir, dir);
+              try {
+                const files = fs.readdirSync(dirPath).filter((file: string) => file.endsWith('.hex'));
+                if (files.length > 0) {
+                  hexFile = path.join(dirPath, files[0]);
+                  break;
+                }
+              } catch (error) {
+                console.log(`Erro ao verificar diretório ${dir}:`, (error as Error).message);
+              }
+            }
+
+            if (hexFile) {
+              const hexContent = fs.readFileSync(hexFile, 'utf8');
+              console.log(`Compilação bem-sucedida! Arquivo hex: ${path.basename(hexFile)}, tamanho: ${hexContent.split('\n').length} linhas`);
+
+              res.json({
+                success: true,
+                hex: hexContent,
+                message: 'Compilação bem-sucedida'
+              });
+            } else {
+              console.log('Nenhum arquivo hex encontrado em nenhum diretório');
+              res.status(500).json({
+                success: false,
+                message: 'Arquivo hex não encontrado após compilação'
+              });
+            }
+          } catch (error) {
+            console.error('Erro ao ler arquivo hex:', error);
+            res.status(500).json({
+              success: false,
+              message: 'Erro ao ler arquivo hex',
+              error: error instanceof Error ? error.message : 'Erro desconhecido'
+            });
+          }
+        } else {
+          console.log('Compilação falhou com stderr:', stderr);
+          res.status(500).json({
+            success: false,
+            message: 'Erro na compilação',
+            error: stderr || 'Erro desconhecido na compilação'
+          });
+        }
+
+        // Limpar arquivos temporários após resposta
+        setTimeout(() => {
+          try {
+            if (fs.existsSync(sketchTempDir)) {
+              fs.rmSync(sketchTempDir, { recursive: true, force: true });
+            }
+          } catch (error) {
+            console.error('Erro ao limpar arquivos temporários:', error);
+          }
+        }, 2000);
+      });
+
+      compileProcess.on('error', (error) => {
+        console.error('Erro ao iniciar processo de compilação:', error);
+        res.status(500).json({
+          success: false,
+          message: 'Erro ao iniciar compilação',
+          error: error.message
+        });
+      });
+
+    } catch (error) {
+      console.error('Erro na compilação:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erro interno do servidor',
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
+      });
     }
   });
 
