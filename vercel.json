@@ -1,6 +1,6 @@
 {
   "functions": {
-    "compile.ts": {
+    "api/compile.ts": {
       "runtime": "@vercel/node",
       "maxDuration": 60
     }
