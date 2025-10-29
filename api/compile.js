@@ -6,7 +6,7 @@ const os = require('os');
 
 const execAsync = promisify(exec);
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // Configurar headers CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -156,4 +156,4 @@ module.exports = async (req, res) => {
       details: error.stderr || error.stdout || 'Erro desconhecido'
     });
   }
-};
+}
