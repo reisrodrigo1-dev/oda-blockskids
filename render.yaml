@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: oda-blockskids
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false # Configure no dashboard
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ARDUINO_CLI_VERSION
+        value: 0.37.0
+    healthCheckPath: /api/health
+    autoDeploy: true

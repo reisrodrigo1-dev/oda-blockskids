@@ -1,0 +1,147 @@
+# 🚀 Deploy na Render - Guia Completo
+
+## 📋 Pré-requisitos
+
+1. **Conta na Render** (gratuita): [render.com](https://render.com)
+2. **Conta no Neon** (banco PostgreSQL): [neon.tech](https://neon.tech)
+3. **Repositório no GitHub** com seu código
+
+## 🗄️ Passo 1: Configurar Banco de Dados (Neon)
+
+1. Acesse [neon.tech](https://neon.tech) e crie conta gratuita
+2. Crie um novo projeto
+3. Copie a **connection string** (DATABASE_URL)
+
+## 🌐 Passo 2: Deploy na Render
+
+### Opção A: Deploy Automático (Recomendado)
+
+1. **Fork este repositório** no seu GitHub
+2. **Acesse [render.com](https://render.com)**
+3. Clique **"New +"** → **"Web Service"**
+4. Conecte sua conta do **GitHub**
+5. Selecione o repositório **oda-blockskids**
+6. Configure o serviço:
+
+#### Configurações Básicas:
+- **Name**: `oda-blockskids` (ou nome que preferir)
+- **Runtime**: `Node`
+- **Build Command**: `npm run build`
+- **Start Command**: `npm start`
+
+#### Variáveis de Ambiente (Environment Variables):
+```
+NODE_ENV=production
+PORT=10000
+DATABASE_URL=postgresql://[seu-database-url-do-neon]
+SESSION_SECRET=[gere-uma-chave-segura]
+ARDUINO_CLI_VERSION=0.37.0
+```
+
+#### Configurações Avançadas:
+- **Instance Type**: `Starter` (gratuito)
+- **Region**: `Frankfurt` (EU) ou `Oregon` (US-West)
+- **Health Check Path**: `/api/health`
+
+7. Clique **"Create Web Service"**
+8. Aguarde o deploy (5-10 minutos)
+
+### Opção B: Usando render.yaml
+
+1. **Commit o arquivo `render.yaml`** neste repositório
+2. No Render Dashboard, clique **"New +"** → **"Blueprint"**
+3. Conecte seu repositório GitHub
+4. Render detectará automaticamente o `render.yaml`
+5. Configure apenas a `DATABASE_URL` no dashboard
+
+## 🔧 Passo 3: Configurar Banco de Dados
+
+Após o deploy, execute as migrações:
+
+### Opção A: Via Render Shell
+1. No dashboard do Render, vá para seu serviço
+2. Clique na aba **"Shell"**
+3. Execute: `npm run db:push`
+
+### Opção B: Via Terminal Local
+```bash
+# Instalar Render CLI
+npm install -g render-cli
+
+# Login
+render login
+
+# Executar migrações
+render run --service-id [seu-service-id] "npm run db:push"
+```
+
+## 🌍 Passo 4: Configurar Domínio (Opcional)
+
+1. No Render Dashboard, vá para seu serviço
+2. Aba **"Settings"** → **"Custom Domain"**
+3. Adicione seu domínio personalizado
+4. Configure os registros DNS conforme instruído
+
+## 🔍 Passo 5: Verificar Deploy
+
+1. Acesse a URL do seu serviço Render
+2. Teste a aplicação Blockly
+3. Verifique se a compilação Arduino funciona
+
+### URLs Importantes:
+- **Aplicação**: `https://[seu-serviço].onrender.com`
+- **API Health**: `https://[seu-serviço].onrender.com/api/health`
+- **Compilação**: `https://[seu-serviço].onrender.com/api/compile`
+
+## 🐛 Troubleshooting
+
+### Erro: "arduino-cli not found"
+- Verifique se `ARDUINO_CLI_VERSION=0.37.0` está configurado
+- Render instala automaticamente durante o build
+
+### Erro: "Database connection failed"
+- Verifique se `DATABASE_URL` está correta
+- Certifique-se que o Neon permite conexões externas
+
+### Erro: "Build timeout"
+- Builds podem demorar 5-10 minutos na primeira vez
+- Render tem timeout de 15 minutos para builds
+
+### Erro: "Port already in use"
+- Render usa automaticamente a porta da variável `PORT`
+- Não mude a configuração de porta
+
+## 💰 Custos
+
+### Plano Gratuito (Starter):
+- **500 horas/mês** de uptime
+- **750 horas build** /mês
+- **Auto-sleep** após 15 minutos de inatividade
+
+### Upgrade para Paid ($7/mês):
+- **Uptime 24/7** (sempre ligado)
+- **Mais recursos** (CPU/RAM)
+- **Sem auto-sleep**
+
+## 🔄 Atualizações
+
+1. **Push para GitHub** → Render detecta automaticamente
+2. **Deploy automático** em 2-5 minutos
+3. **Rollback** possível se algo der errado
+
+## 📞 Suporte
+
+- **Render Docs**: [docs.render.com](https://docs.render.com)
+- **Neon Docs**: [neon.tech/docs](https://neon.tech/docs)
+- **GitHub Issues**: Para bugs específicos
+
+---
+
+## 🎉 Pronto!
+
+Sua aplicação Blockly + Arduino estará rodando na nuvem! 🚀
+
+**Próximos passos:**
+1. Teste a compilação Arduino
+2. Configure WebSerial no frontend
+3. Adicione seu domínio personalizado
