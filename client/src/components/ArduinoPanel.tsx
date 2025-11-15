@@ -14,6 +14,10 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
       nativeConnected: boolean;
       checking: boolean;
     }>({ available: false, nativeConnected: false, checking: true });
+  const [arduinoCliStatus, setArduinoCliStatus] = useState<{
+      installed: boolean;
+      checking: boolean;
+    }>({ installed: false, checking: true });
   
   const { 
     isConnected, 
@@ -81,6 +85,38 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
     }
   };
 
+  // Verificar se Arduino CLI está instalado
+  const checkArduinoCli = async () => {
+    console.log('🔍 Verificando Arduino CLI...');
+    setArduinoCliStatus(prev => ({ ...prev, checking: true }));
+
+    try {
+      // Tentar fazer uma chamada de teste para o Arduino CLI
+      const response = await fetch('/api/check-arduino-cli', {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setArduinoCliStatus({
+          installed: result.installed,
+          checking: false
+        });
+      } else {
+        setArduinoCliStatus({
+          installed: false,
+          checking: false
+        });
+      }
+    } catch (error) {
+      console.error('❌ Erro ao verificar Arduino CLI:', error);
+      setArduinoCliStatus({
+        installed: false,
+        checking: false
+      });
+    }
+  };
+
   // Upload via extensão
   const handleExtensionUpload = async () => {
     try {
@@ -102,7 +138,7 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
 
   // Verificar extensão ao montar componente
   React.useEffect(() => {
-    console.log('🔧 ArduinoPanel montado, verificando extensão...');
+    console.log('🔧 ArduinoPanel montado, verificando extensão e Arduino CLI...');
     
     // Aguardar a API da extensão carregar
     const handleExtensionReady = () => {
@@ -128,6 +164,9 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
         }, 2000);
       }
     }
+
+    // Verificar Arduino CLI
+    checkArduinoCli();
     
     return () => {
       if (typeof window !== 'undefined') {
@@ -627,6 +666,72 @@ ${code}
                     >
                       Baixar Extensão
                     </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Status do Arduino CLI */}
+          {!arduinoCliStatus.checking && (
+            <div className={`border rounded-lg p-3 mb-4 text-sm ${
+              arduinoCliStatus.installed
+                ? 'bg-green-50 border-green-200'
+                : 'bg-red-50 border-red-200'
+            }`}>
+              <div className="flex items-start gap-2">
+                <span className={
+                  arduinoCliStatus.installed
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }>
+                  {arduinoCliStatus.installed ? '✅' : '❌'}
+                </span>
+                <div>
+                  <p className={`font-medium ${
+                    arduinoCliStatus.installed
+                      ? 'text-green-800'
+                      : 'text-red-800'
+                  }`}>
+                    {arduinoCliStatus.installed
+                      ? 'Arduino CLI Instalado'
+                      : 'Arduino CLI Não Encontrado'
+                    }
+                  </p>
+                  <ul className={`mt-1 space-y-1 ${
+                    arduinoCliStatus.installed
+                      ? 'text-green-700'
+                      : 'text-red-700'
+                  }`}>
+                    {arduinoCliStatus.installed ? (
+                      <>
+                        <li>• <strong>Status:</strong> Pronto para compilar</li>
+                        <li>• <strong>Localização:</strong> C:\arduino-cli\arduino-cli.exe</li>
+                        <li>• <strong>Compatível:</strong> Arduino Uno e compatíveis</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>• <strong>Problema:</strong> Arduino CLI não encontrado</li>
+                        <li>• <strong>Local esperado:</strong> C:\arduino-cli\arduino-cli.exe</li>
+                        <li>• <strong>Solução:</strong> Instale o Arduino CLI</li>
+                      </>
+                    )}
+                  </ul>
+                  {!arduinoCliStatus.installed && (
+                    <div className="mt-2 space-y-2">
+                      <button
+                        onClick={() => window.open('https://arduino.github.io/arduino-cli/0.35/installation/', '_blank')}
+                        className="text-xs bg-red-200 hover:bg-red-300 px-2 py-1 rounded mr-2"
+                      >
+                        📥 Baixar Arduino CLI
+                      </button>
+                      <button
+                        onClick={() => window.open('https://github.com/reisrodrigo1-dev/oda-blockskids/blob/main/INSTALL_ARDUINO_CLI.md', '_blank')}
+                        className="text-xs bg-blue-200 hover:bg-blue-300 px-2 py-1 rounded"
+                      >
+                        📖 Guia de Instalação
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
