@@ -9,11 +9,11 @@ services:
         value: production
       - key: PORT
         value: 10000
-      - key: DATABASE_URL
-        sync: false # Configure no dashboard
       - key: SESSION_SECRET
         generateValue: true
       - key: ARDUINO_CLI_VERSION
         value: 0.37.0
+      # Firebase já está configurado no código
+      # Não precisa de DATABASE_URL pois usa Firebase + MemStorage
     healthCheckPath: /api/health
     autoDeploy: true

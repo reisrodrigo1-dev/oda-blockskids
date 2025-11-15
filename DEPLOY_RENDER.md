@@ -1,16 +1,20 @@
-# 🚀 Deploy na Render - Guia Completo
+# 🚀 Deploy na Render - Guia Completo (Firebase)
 
 ## 📋 Pré-requisitos
 
 1. **Conta na Render** (gratuita): [render.com](https://render.com)
-2. **Conta no Neon** (banco PostgreSQL): [neon.tech](https://neon.tech)
+2. **Projeto Firebase** já configurado (você já tem!)
 3. **Repositório no GitHub** com seu código
 
-## 🗄️ Passo 1: Configurar Banco de Dados (Neon)
+## � Seu Firebase já está configurado!
 
-1. Acesse [neon.tech](https://neon.tech) e crie conta gratuita
-2. Crie um novo projeto
-3. Copie a **connection string** (DATABASE_URL)
+Seu projeto já usa **Firebase** para:
+- ✅ **Autenticação** (login/logout)
+- ✅ **Firestore** (dados do usuário)
+- ✅ **Storage** (uploads de arquivos)
+- ✅ **MemStorage** (projetos Arduino - armazenamento temporário)
+
+**Não precisa configurar banco adicional!**
 
 ## 🌐 Passo 2: Deploy na Render
 
@@ -33,10 +37,10 @@
 ```
 NODE_ENV=production
 PORT=10000
-DATABASE_URL=postgresql://[seu-database-url-do-neon]
 SESSION_SECRET=[gere-uma-chave-segura]
 ARDUINO_CLI_VERSION=0.37.0
 ```
+**Nota:** Firebase já está configurado no código, não precisa de DATABASE_URL!
 
 #### Configurações Avançadas:
 - **Instance Type**: `Starter` (gratuito)
@@ -54,35 +58,14 @@ ARDUINO_CLI_VERSION=0.37.0
 4. Render detectará automaticamente o `render.yaml`
 5. Configure apenas a `DATABASE_URL` no dashboard
 
-## 🔧 Passo 3: Configurar Banco de Dados
-
-Após o deploy, execute as migrações:
-
-### Opção A: Via Render Shell
-1. No dashboard do Render, vá para seu serviço
-2. Clique na aba **"Shell"**
-3. Execute: `npm run db:push`
-
-### Opção B: Via Terminal Local
-```bash
-# Instalar Render CLI
-npm install -g render-cli
-
-# Login
-render login
-
-# Executar migrações
-render run --service-id [seu-service-id] "npm run db:push"
-```
-
-## 🌍 Passo 4: Configurar Domínio (Opcional)
+## 🌍 Passo 3: Configurar Domínio (Opcional)
 
 1. No Render Dashboard, vá para seu serviço
 2. Aba **"Settings"** → **"Custom Domain"**
 3. Adicione seu domínio personalizado
 4. Configure os registros DNS conforme instruído
 
-## 🔍 Passo 5: Verificar Deploy
+## 🔍 Passo 4: Verificar Deploy
 
 1. Acesse a URL do seu serviço Render
 2. Teste a aplicação Blockly
@@ -100,8 +83,8 @@ render run --service-id [seu-service-id] "npm run db:push"
 - Render instala automaticamente durante o build
 
 ### Erro: "Database connection failed"
-- Verifique se `DATABASE_URL` está correta
-- Certifique-se que o Neon permite conexões externas
+- Firebase já está configurado no código
+- Verifique se as credenciais do Firebase estão corretas no código
 
 ### Erro: "Build timeout"
 - Builds podem demorar 5-10 minutos na primeira vez
@@ -132,14 +115,14 @@ render run --service-id [seu-service-id] "npm run db:push"
 ## 📞 Suporte
 
 - **Render Docs**: [docs.render.com](https://docs.render.com)
-- **Neon Docs**: [neon.tech/docs](https://neon.tech/docs)
+- **Firebase Docs**: [firebase.google.com/docs](https://firebase.google.com/docs)
 - **GitHub Issues**: Para bugs específicos
 
 ---
 
 ## 🎉 Pronto!
 
-Sua aplicação Blockly + Arduino estará rodando na nuvem! 🚀
+Sua aplicação Blockly + Arduino + Firebase estará rodando na nuvem! 🚀
 
 **Próximos passos:**
 1. Teste a compilação Arduino
