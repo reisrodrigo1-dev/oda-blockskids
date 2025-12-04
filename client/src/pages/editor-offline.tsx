@@ -168,10 +168,12 @@ export default function EditorOffline() {
       let compileResponse;
       let compileResult;
 
-      if (isLocalEnvironment) {
-        // Usar API local
-        console.log('🏠 Ambiente local detectado - usando servidor local');
-        compileResponse = await fetch('http://localhost:5000/api/compile', {
+      // Usar variável de ambiente para determinar a URL da API
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      console.log('� Usando API URL:', apiUrl);
+
+      try {
+        compileResponse = await fetch(`${apiUrl}/api/compile`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -181,23 +183,9 @@ export default function EditorOffline() {
             boardType: boardType
           })
         });
-      } else {
-        // Usar API da Vercel
-        console.log('🌐 Ambiente online detectado - usando API da Vercel');
-        setUploadProgress(55);
-        const apiUrl = `${window.location.origin}/compile`;
-        console.log('📡 Fazendo chamada para:', apiUrl);
-        console.log('⏳ Enviando código para compilação online...');
-        compileResponse = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            code: generatedCode,
-            boardType: boardType
-          })
-        });
+      } catch (fetchError) {
+        console.error('❌ Erro na chamada da API:', fetchError);
+        throw new Error(`Não foi possível conectar ao servidor de compilação em ${apiUrl}. Verifique se o servidor está rodando.`);
       }
 
       compileResult = await compileResponse.json();
@@ -863,11 +851,11 @@ pause
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 font-nunito">
-      <HeaderOffline 
-        onShowTutorial={() => setShowTutorial(true)} 
+      <HeaderOffline
+        onShowTutorial={() => setShowTutorial(true)}
         generatedCode={generatedCode}
       />
-      
+
       {/* Project Bar */}
       <div className="bg-white border-b-2 border-gray-200 px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -885,8 +873,9 @@ pause
             </span>
           )}
         </div>
+        {/* REMOVIDO: Funcionalidades de upload para Arduino */}
+        {/*
         <div className="flex items-center space-x-2">
-          {/* Arduino Port Selection */}
           <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-lg">
             <span className="text-xs text-gray-600">Porta:</span>
             {selectedPort ? (
@@ -914,6 +903,8 @@ pause
           >
             🖥️ Abrir no Arduino IDE
           </button>
+        */}
+     
           {/* BOTÕES COMENTADOS TEMPORARIAMENTE */}
           {/* <button
             onClick={() => setShowArduinoPanel(!showArduinoPanel)}
@@ -937,47 +928,19 @@ pause
           >
             Meus Projetos
           </button> */}
-        </div>
-      </div>
 
-      {/* Upload Instructions */}
-      {!selectedPort && (
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mx-4 my-2">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-blue-700">
-                <strong>Como fazer upload para Arduino:</strong>
-              </p>
-              <ul className="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
-                <li>Conecte seu Arduino Uno ao computador via USB</li>
-                <li>Clique em "🔍 Escanear Portas" para selecionar a porta serial</li>
-                <li>Permita o acesso quando o navegador pedir</li>
-                <li>Clique no botão "Upload" no painel de código</li>
-                <li>Aguarde a compilação e upload automáticos</li>
-              </ul>
-              <p className="mt-2 text-xs text-blue-600">
-                💡 <strong>Dica:</strong> Use Chrome ou Edge para melhor compatibilidade com Web Serial API
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
 
       <div className="flex h-screen pt-2">
         <BlockPalette />
         <WorkspaceArea onCodeChange={setGeneratedCode} />
-        <CodePanel code={generatedCode} onUploadToArduino={uploadToArduino} />
+        <CodePanel code={generatedCode} />
         {showArduinoPanel && (
           <ArduinoPanel code={generatedCode} />
         )}
       </div>
-      
-      <TutorialModal 
+
+      <TutorialModal
         isOpen={showTutorial}
         onClose={() => setShowTutorial(false)}
       />
@@ -1080,18 +1043,7 @@ pause
           </div>
         </div>
       )}
-
-      {/* Floating Help Button */}
-      <div className="fixed bottom-6 right-6 z-40">
-        <button 
-          onClick={() => setShowTutorial(true)}
-          className="bg-gradient-to-r from-kid-orange to-yellow-400 text-white p-4 rounded-full shadow-playful hover:shadow-lg transform hover:scale-110 transition-all duration-200"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </button>
       </div>
-    </div>
+
   );
 }

@@ -59,6 +59,7 @@ import CriarCurso from "@/pages/admin/criar-curso";
 import DocumentosImportantes from "@/pages/admin/documentos-importantes";
 import LinksImportantes from "@/pages/admin/links-importantes";
 import CadastrarClienteNovo from "@/pages/admin/cadastrar-cliente-novo";
+import GestaoAlunosTurmas from "@/pages/admin/gestao-alunos-turmas";
 
 // Cliente Pages
 import ClienteLogin from "@/pages/cliente/login";
@@ -103,6 +104,7 @@ function Router() {
         <Route path="/admin/dashboard" component={AdminDashboard} />
         <Route path="/admin/cadastrar-cliente" component={AdminCadastrarCliente} />
         <Route path="/admin/cadastrar-cliente-novo" component={CadastrarClienteNovo} />
+        <Route path="/admin/gestao-alunos-turmas" component={GestaoAlunosTurmas} />
         <Route path="/admin/rotas-estudos" component={AdminRotasEstudos} />
         <Route path="/admin/cadastro-aulas" component={CadastroAulas} />
         <Route path="/admin/criar-curso" component={CriarCurso} />

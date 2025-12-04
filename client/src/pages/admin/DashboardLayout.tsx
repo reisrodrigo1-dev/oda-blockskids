@@ -16,6 +16,7 @@ const menuSections = [
     items: [
       { label: "Cadastrar Cliente", icon: "🏢", href: "/admin/cadastrar-cliente-novo" },
       { label: "Gerenciar Clientes", icon: "👥", href: "/admin/gerenciar-clientes" },
+      { label: "Gestão Alunos/Turmas", icon: "👨‍🎓", href: "/admin/gestao-alunos-turmas" },
       { label: "Rotas de Estudos", icon: "🗺️", href: "/admin/rotas-estudos" },
       { label: "Associar Rotas", icon: "🔗", href: "/admin/associar-rotas-clientes" },
     ],
@@ -67,7 +68,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   return (
                     <li key={item.href}>
                       <Link href={item.href}>
-                        <a
+                        <div
                           className={cn(
                             "flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer",
                             active
@@ -77,7 +78,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         >
                           <span className="text-lg">{item.icon}</span>
                           <span>{item.label}</span>
-                        </a>
+                        </div>
                       </Link>
                     </li>
                   );
@@ -88,20 +89,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           
           {/* Links adicionais */}
           <div className="mt-8 pt-8 border-t border-gray-200">
-            <a
-              href="/home-oficina-clean"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-sm text-gray-700 hover:bg-gray-100 hover:text-[#00979D] transition-all duration-200"
-            >
-              <span className="text-lg">🌐</span>
-              <span>Voltar ao Site</span>
-            </a>
-            <a
-              href="/admin/login"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-sm text-gray-700 hover:bg-gray-100 hover:text-red-600 transition-all duration-200 mt-1"
-            >
-              <span className="text-lg">🚪</span>
-              <span>Sair</span>
-            </a>
+            <Link href="/home-oficina-clean">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-sm text-gray-700 hover:bg-gray-100 hover:text-[#00979D] transition-all duration-200 cursor-pointer">
+                <span className="text-lg">🌐</span>
+                <span>Voltar ao Site</span>
+              </div>
+            </Link>
+            <Link href="/admin/login">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-sm text-gray-700 hover:bg-gray-100 hover:text-red-600 transition-all duration-200 mt-1 cursor-pointer">
+                <span className="text-lg">🚪</span>
+                <span>Sair</span>
+              </div>
+            </Link>
           </div>
         </nav>
         {/* Footer */}

@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button";
 
 interface CodePanelProps {
   code: string;
-  onUploadToArduino?: () => void;
 }
 
-export default function CodePanel({ code, onUploadToArduino }: CodePanelProps) {
+export default function CodePanel({ code }: CodePanelProps) {
   const [activeTab, setActiveTab] = useState<'code' | 'serial'>('code');
   const [serialMessages, setSerialMessages] = useState([
     '[14:32:15] 🚀 Arduino iniciado!',
@@ -28,13 +27,22 @@ export default function CodePanel({ code, onUploadToArduino }: CodePanelProps) {
   };
 
   const saveCode = () => {
+    // Generate a simple numeric timestamp for unique filename
+    const timestamp = Date.now().toString().slice(-8);
+    const filename = `arduino_blocks_${timestamp}`;
+    
     const blob = new Blob([code], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'arduino_blocks_code.ino';
+    a.download = `${filename}.ino`;
     a.click();
     URL.revokeObjectURL(url);
+    
+    // Show info to user about Arduino folder requirement
+    setTimeout(() => {
+      alert(`Arquivo baixado: ${filename}.ino\n\nQuando abrir no Arduino IDE, ele criará automaticamente a pasta necessária.`);
+    }, 100);
   };
 
   const clearSerial = () => {
@@ -102,25 +110,17 @@ export default function CodePanel({ code, onUploadToArduino }: CodePanelProps) {
 
           {/* Code Actions */}
           <div className="p-4 bg-gray-100 border-t border-gray-200 flex space-x-2">
-            {onUploadToArduino && (
-              <button
-                onClick={() => {
-                  console.log('Botão Upload clicado!');
-                  onUploadToArduino();
-                }}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-2 rounded text-sm font-semibold flex items-center"
-              >
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
-                Upload
-              </button>
-            )}
-            {!onUploadToArduino && (
-              <div className="text-xs text-gray-500 p-2 bg-yellow-50 rounded">
-                Função upload não disponível
-              </div>
-            )}
+            <Button
+              onClick={saveCode}
+              variant="outline"
+              size="sm"
+              className="bg-green-500 hover:bg-green-600 text-white border-none font-semibold"
+            >
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Baixar Código
+            </Button>
             <Button
               onClick={copyCode}
               variant="outline"
@@ -131,17 +131,6 @@ export default function CodePanel({ code, onUploadToArduino }: CodePanelProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
               Copiar
-            </Button>
-            <Button
-              onClick={saveCode}
-              variant="outline"
-              size="sm"
-              className="bg-gray-400 hover:bg-gray-500 text-white border-none font-semibold"
-            >
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              Salvar
             </Button>
           </div>
         </div>

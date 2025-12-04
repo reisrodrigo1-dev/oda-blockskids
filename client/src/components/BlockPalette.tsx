@@ -105,7 +105,7 @@ export default function BlockPalette() {
     if (input.type === 'select' && (input.name === 'pin' || input.name === 'button_pin' || input.name === 'servo_pin')) {
       return (
         <select 
-          className="ml-1 px-1 py-1 rounded text-black text-xs w-16" 
+          className="ml-1 px-1 py-1 rounded text-black text-xs w-24" 
           defaultValue={input.default}
           data-input={input.name}
           onClick={(e) => e.stopPropagation()}
@@ -133,7 +133,7 @@ export default function BlockPalette() {
     
     if (input.type === 'select' && input.name === 'note') {
       return (
-        <select className="ml-1 px-1 py-1 rounded text-black text-xs w-20" data-input={input.name} onClick={(e) => e.stopPropagation()}>
+        <select className="ml-1 px-1 py-1 rounded text-black text-xs w-32" data-input={input.name} onClick={(e) => e.stopPropagation()}>
           <option value="C4">Dó (C4)</option>
           <option value="D4">Ré (D4)</option>
           <option value="E4">Mi (E4)</option>
@@ -150,7 +150,7 @@ export default function BlockPalette() {
   };
 
   return (
-    <div className="w-80 bg-white shadow-lg border-r-2 border-gray-200 overflow-y-auto">
+    <div className="w-96 bg-white shadow-lg border-r-2 border-gray-200 overflow-y-auto">
       <div className="p-4">
         <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
           <svg className="w-5 h-5 text-kid-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

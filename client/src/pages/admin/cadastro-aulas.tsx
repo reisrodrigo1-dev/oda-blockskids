@@ -14,6 +14,13 @@ import { Label } from '../../components/ui/label';
 import { Trash2, Edit, Plus, Upload, FileText, BookOpen, Youtube, File, X, CheckCircle, AlertCircle, Eye } from 'lucide-react';
 import { toast } from '../../hooks/use-toast';
 
+interface ProjetoPedagogico {
+  id: string;
+  titulo: string;
+  descricao?: string;
+  criadoEm?: string;
+}
+
 interface Aula {
   id?: string;
   nome: string;
@@ -23,6 +30,7 @@ interface Aula {
   pdfName?: string;
   htmlContent?: string;
   createdAt?: Date;
+  projetoId?: string; // Novo campo para associação com projeto pedagógico
 }
 
 export default function CadastroAulas() {
@@ -38,6 +46,11 @@ export default function CadastroAulas() {
   });
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+
+  // Novos estados para associação de projetos
+  const [projetos, setProjetos] = useState<ProjetoPedagogico[]>([]);
+  const [selectedAula, setSelectedAula] = useState<Aula | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   // Load aulas from Firebase
   const loadAulas = async () => {
@@ -62,8 +75,28 @@ export default function CadastroAulas() {
     }
   };
 
+  // Load projetos pedagógicos
+  const loadProjetos = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'projetos-pedagogicos-avancados'));
+      const projetosData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as ProjetoPedagogico[];
+      setProjetos(projetosData);
+    } catch (error) {
+      console.error('Error loading projetos:', error);
+      toast({
+        title: 'Erro',
+        description: 'Erro ao carregar projetos pedagógicos',
+        variant: 'destructive',
+      });
+    }
+  };
+
   useEffect(() => {
     loadAulas();
+    loadProjetos();
   }, []);
 
   // Handle PDF upload
@@ -253,6 +286,32 @@ export default function CadastroAulas() {
     }
   };
 
+  // Função para associar projeto pedagógico à aula
+  const associarProjeto = async (aulaId: string, projetoId: string) => {
+    try {
+      const aulaRef = doc(db, 'aulas', aulaId);
+      await updateDoc(aulaRef, { projetoId });
+
+      // Atualizar estado local
+      setAulas(aulas.map(aula =>
+        aula.id === aulaId ? { ...aula, projetoId } : aula
+      ));
+
+      setShowModal(false);
+      toast({
+        title: 'Sucesso',
+        description: 'Projeto associado com sucesso!',
+      });
+    } catch (error) {
+      console.error('Erro ao associar projeto:', error);
+      toast({
+        title: 'Erro',
+        description: 'Erro ao associar projeto',
+        variant: 'destructive',
+      });
+    }
+  };
+
   // Reset form when dialog closes
   const handleDialogClose = () => {
     setIsDialogOpen(false);
@@ -301,7 +360,7 @@ export default function CadastroAulas() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-12">
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">📚</div>
             <div className="text-3xl font-bold text-gray-900 mb-1">{aulas.length}</div>
@@ -321,6 +380,11 @@ export default function CadastroAulas() {
             <div className="text-4xl mb-3">📝</div>
             <div className="text-3xl font-bold text-gray-900 mb-1">{aulas.filter(aula => aula.htmlContent).length}</div>
             <div className="text-sm text-gray-600">Com Documento</div>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
+            <div className="text-4xl mb-3">🎓</div>
+            <div className="text-3xl font-bold text-gray-900 mb-1">{aulas.filter(aula => aula.projetoId).length}</div>
+            <div className="text-sm text-gray-600">Com Projeto</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">➕</div>
@@ -370,6 +434,7 @@ export default function CadastroAulas() {
                       <TableHead>Descrição</TableHead>
                       <TableHead>PDF</TableHead>
                       <TableHead>Documento</TableHead>
+                      <TableHead>Projeto Pedagógico</TableHead>
                       <TableHead>Ações</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -412,6 +477,27 @@ export default function CadastroAulas() {
                           )}
                         </TableCell>
                         <TableCell>
+                          {aula.projetoId ? (
+                            <span className="text-green-600 flex items-center gap-1">
+                              <BookOpen className="w-4 h-4" />
+                              {projetos.find(p => p.id === aula.projetoId)?.titulo || 'Projeto'}
+                            </span>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedAula(aula);
+                                setShowModal(true);
+                              }}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              <BookOpen className="w-4 h-4 mr-1" />
+                              Associar
+                            </Button>
+                          )}
+                        </TableCell>
+                        <TableCell>
                           <div className="flex gap-2">
                             <Button
                               size="sm"
@@ -445,6 +531,69 @@ export default function CadastroAulas() {
             Cadastre e gerencie aulas com vídeos do YouTube e materiais em PDF para enriquecer o aprendizado dos alunos.
           </p>
         </div>
+
+        {/* Modal para associação de projeto */}
+        {showModal && selectedAula && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+              <h2 className="text-xl font-bold mb-4 text-gray-900">
+                Associar Projeto à Aula: {selectedAula.nome}
+              </h2>
+
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="projetoSelect" className="text-sm font-medium text-gray-700">
+                    Selecione um projeto pedagógico:
+                  </Label>
+                  <select
+                    id="projetoSelect"
+                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-[#00979D] focus:border-[#00979D]"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Escolha um projeto...</option>
+                    {projetos.map(projeto => (
+                      <option key={projeto.id} value={projeto.id}>
+                        {projeto.titulo}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {projetos.length === 0 && (
+                  <div className="text-center py-4 text-gray-500">
+                    <BookOpen className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p>Nenhum projeto pedagógico encontrado.</p>
+                    <p className="text-sm">Crie projetos em "Criar Projeto" primeiro.</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <Button
+                  onClick={() => {
+                    const select = document.getElementById('projetoSelect') as HTMLSelectElement;
+                    const projetoId = select?.value;
+                    if (projetoId && selectedAula?.id) {
+                      associarProjeto(selectedAula.id, projetoId);
+                    }
+                  }}
+                  className="flex-1 bg-[#00979D] hover:bg-[#007a85] text-white"
+                  disabled={projetos.length === 0}
+                >
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Associar Projeto
+                </Button>
+                <Button
+                  onClick={() => setShowModal(false)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Dialog for Create/Edit */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
