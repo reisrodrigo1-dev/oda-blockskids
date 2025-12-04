@@ -1,0 +1,57 @@
+# 📋 CONFIGURAÇÃO DO SISTEMA BLOCKUINO
+# Arquivo: blockuino-config.txt
+# Modifique apenas se souber o que está fazendo!
+
+# ================================================
+# CAMINHOS IMPORTANTES (não altere a menos que necessário)
+# ================================================
+
+ARDUINO_CLI_PATH=C:\arduino-cli\arduino-cli.exe
+EXTENSIONS_FOLDER=arduino-extension
+NATIVE_APP_FOLDER=arduino-native-app
+PROJECT_FOLDER=%~dp0
+
+# ================================================
+# CONFIGURAÇÕES DE REDE (para servidor local)
+# ================================================
+
+SERVER_HOST=localhost
+SERVER_PORT=5000
+CLIENT_URL=http://localhost:5000
+
+# ================================================
+# CONFIGURAÇÕES DO ARDUINO
+# ================================================
+
+DEFAULT_BOARD=arduino:avr:uno
+DEFAULT_PORT=auto
+UPLOAD_TIMEOUT=30000
+
+# ================================================
+# CONFIGURAÇÕES DE DEBUG (para suporte técnico)
+# ================================================
+
+DEBUG_MODE=false
+LOG_LEVEL=info
+SAVE_LOGS=true
+
+# ================================================
+# INSTRUÇÕES PARA MODIFICAÇÃO
+# ================================================
+#
+# ARDUINO_CLI_PATH:
+# - Caminho completo para o arduino-cli.exe
+# - Padrão: C:\arduino-cli\arduino-cli.exe
+# - Altere apenas se instalou em local diferente
+#
+# SERVER_PORT:
+# - Porta do servidor web local
+# - Padrão: 5000
+# - Altere apenas se porta 5000 estiver ocupada
+#
+# DEBUG_MODE:
+# - Ative para ver mais informações técnicas
+# - Padrão: false
+# - Mude para true apenas se solicitado pelo suporte
+#
+# ================================================

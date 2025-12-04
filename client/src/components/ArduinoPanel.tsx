@@ -14,6 +14,10 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
       nativeConnected: boolean;
       checking: boolean;
     }>({ available: false, nativeConnected: false, checking: true });
+  const [arduinoCliStatus, setArduinoCliStatus] = useState<{
+      installed: boolean;
+      checking: boolean;
+    }>({ installed: false, checking: true });
   
   const { 
     isConnected, 
@@ -81,6 +85,38 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
     }
   };
 
+  // Verificar se Arduino CLI está instalado
+  const checkArduinoCli = async () => {
+    console.log('🔍 Verificando Arduino CLI...');
+    setArduinoCliStatus(prev => ({ ...prev, checking: true }));
+
+    try {
+      // Tentar fazer uma chamada de teste para o Arduino CLI
+      const response = await fetch('/api/check-arduino-cli', {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setArduinoCliStatus({
+          installed: result.installed,
+          checking: false
+        });
+      } else {
+        setArduinoCliStatus({
+          installed: false,
+          checking: false
+        });
+      }
+    } catch (error) {
+      console.error('❌ Erro ao verificar Arduino CLI:', error);
+      setArduinoCliStatus({
+        installed: false,
+        checking: false
+      });
+    }
+  };
+
   // Upload via extensão
   const handleExtensionUpload = async () => {
     try {
@@ -102,7 +138,7 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
 
   // Verificar extensão ao montar componente
   React.useEffect(() => {
-    console.log('🔧 ArduinoPanel montado, verificando extensão...');
+    console.log('🔧 ArduinoPanel montado, verificando extensão e Arduino CLI...');
     
     // Aguardar a API da extensão carregar
     const handleExtensionReady = () => {
@@ -128,6 +164,9 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
         }, 2000);
       }
     }
+
+    // Verificar Arduino CLI
+    checkArduinoCli();
     
     return () => {
       if (typeof window !== 'undefined') {
@@ -176,6 +215,217 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
     } catch (err) {
       console.error('Erro no envio:', err);
       setSerialData(prev => [...prev, `❌ Erro no envio: ${err}`]);
+    }
+  };
+
+  // NOVO: Compilar Online + Upload Direto
+  const handleOnlineCompileAndUpload = async () => {
+    if (!isSupported) {
+      alert('❌ Web Serial API não suportada neste navegador. Use Chrome ou Edge.');
+      return;
+    }
+
+    try {
+      setSerialData(prev => [...prev, '🌐 Iniciando compilação online...']);
+
+      // Passo 1: Conectar ao Arduino se não estiver conectado
+      if (!isConnected) {
+        setSerialData(prev => [...prev, '🔌 Conectando ao Arduino...']);
+        const connected = await connect();
+        if (!connected) {
+          setSerialData(prev => [...prev, '❌ Falha ao conectar ao Arduino']);
+          return;
+        }
+        setSerialData(prev => [...prev, '✅ Arduino conectado!']);
+      }
+
+      // Passo 2: Compilar online
+      setSerialData(prev => [...prev, '🔨 Enviando código para compilação online...']);
+
+      const compileResponse = await fetch('/api/compile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: code,
+          boardType: 'arduino:avr:uno'
+        })
+      });
+
+      if (!compileResponse.ok) {
+        const errorData = await compileResponse.json();
+        throw new Error(errorData.error || 'Erro na compilação online');
+      }
+
+      const compileResult = await compileResponse.json();
+
+      if (!compileResult.success) {
+        throw new Error(compileResult.error || 'Compilação falhou');
+      }
+
+      setSerialData(prev => [...prev, '✅ Compilação online concluída!']);
+      setSerialData(prev => [...prev, `📦 Recebido arquivo hex (${compileResult.hex.length} caracteres)`]);
+
+      // Passo 3: Upload via WebSerial
+      setSerialData(prev => [...prev, '🚀 Iniciando upload via WebSerial...']);
+
+      if (!port || !isConnected) {
+        throw new Error('Conexão com Arduino perdida');
+      }
+
+      // Usar a mesma lógica de upload do editor-offline.tsx
+      const hexData = compileResult.hex;
+
+      // Função auxiliar para parse Intel HEX
+      const parseIntelHex = (hexString: string) => {
+        const lines = hexString.trim().split('\n');
+        const data: number[] = [];
+
+        for (const line of lines) {
+          if (line.startsWith(':') && line.length >= 11) {
+            const byteCount = parseInt(line.substr(1, 2), 16);
+            const address = parseInt(line.substr(3, 4), 16);
+            const recordType = parseInt(line.substr(7, 2), 16);
+
+            if (recordType === 0) { // Data record
+              for (let i = 0; i < byteCount; i++) {
+                const byteStr = line.substr(9 + i * 2, 2);
+                const byte = parseInt(byteStr, 16);
+                data.push(byte);
+              }
+            }
+          }
+        }
+
+        return new Uint8Array(data);
+      };
+
+      // Funções auxiliares para STK500
+      const sendData = async (data: Uint8Array) => {
+        const writer = port!.writable?.getWriter();
+        if (!writer) throw new Error('Não foi possível obter writer da porta');
+        await writer.write(data);
+        writer.releaseLock();
+      };
+
+      const receiveData = async (timeout: number = 1000): Promise<Uint8Array> => {
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            reject(new Error('Timeout ao receber dados'));
+          }, timeout);
+
+          const reader = port!.readable?.getReader();
+          if (!reader) {
+            clearTimeout(timer);
+            reject(new Error('Não foi possível obter reader da porta'));
+            return;
+          }
+
+          reader.read().then(({ value }) => {
+            clearTimeout(timer);
+            reader.releaseLock();
+            resolve(value || new Uint8Array(0));
+          }).catch(reject);
+        });
+      };
+
+      const sendSTKCommand = async (command: Uint8Array) => {
+        const messageSize = command.length + 1;
+        const frame = new Uint8Array(5 + messageSize);
+        frame[0] = 0x1B; // MESSAGE_START
+        frame[1] = 0x01; // SEQUENCE_NUMBER
+        frame[2] = messageSize & 0xFF;
+        frame[3] = (messageSize >> 8) & 0xFF;
+        frame[4] = 0x0E; // TOKEN
+        frame.set(command, 5);
+
+        // Calcular checksum
+        let sum = 0;
+        for (let i = 4; i < frame.length - 1; i++) {
+          sum ^= frame[i];
+        }
+        frame[frame.length - 1] = sum;
+
+        await sendData(frame);
+      };
+
+      const receiveSTKResponse = async (): Promise<Uint8Array> => {
+        const response = await receiveData(300);
+        return response;
+      };
+
+      // Reset do Arduino
+      setSerialData(prev => [...prev, '🔄 Fazendo reset do Arduino...']);
+      await port.setSignals({ dataTerminalReady: false });
+      await new Promise(resolve => setTimeout(resolve, 250));
+      await port.setSignals({ dataTerminalReady: true });
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // Aguardar bootloader
+      setSerialData(prev => [...prev, '⏳ Aguardando bootloader Optiboot...']);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Obter dados do programa
+      const programData = parseIntelHex(hexData);
+      setSerialData(prev => [...prev, `💾 Programa com ${programData.length} bytes`]);
+
+      // Upload em páginas de 128 bytes
+      const pageSize = 128;
+      let address = 0;
+
+      for (let offset = 0; offset < programData.length; offset += pageSize) {
+        const pageData = programData.slice(offset, offset + pageSize);
+        const wordAddress = Math.floor(address / 2);
+
+        // STK_LOAD_ADDRESS
+        const loadAddrCmd = new Uint8Array([
+          0x55, // STK_LOAD_ADDRESS
+          wordAddress & 0xFF,
+          (wordAddress >> 8) & 0xFF
+        ]);
+        await sendSTKCommand(loadAddrCmd);
+        await receiveSTKResponse();
+
+        // STK_PROG_PAGE
+        const progPageCmd = new Uint8Array(4 + pageData.length);
+        progPageCmd[0] = 0x64; // STK_PROG_PAGE
+        progPageCmd[1] = (pageData.length >> 8) & 0xFF;
+        progPageCmd[2] = pageData.length & 0xFF;
+        progPageCmd[3] = 0x46; // 'F' para flash
+        progPageCmd.set(pageData, 4);
+        await sendSTKCommand(progPageCmd);
+        await receiveSTKResponse();
+
+        address += pageData.length;
+
+        // Atualizar progresso
+        const progress = 80 + Math.floor((offset / programData.length) * 15);
+        // Note: Não temos acesso direto aos setters de progresso aqui
+        setSerialData(prev => [...prev, `📤 Enviado ${offset + pageData.length}/${programData.length} bytes`]);
+      }
+
+      // STK_LEAVE_PROGMODE
+      const leaveCmd = new Uint8Array([0x51]);
+      await sendSTKCommand(leaveCmd);
+      await receiveSTKResponse();
+
+      // Reset final
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      await port.setSignals({ dataTerminalReady: false });
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await port.setSignals({ dataTerminalReady: true });
+
+      setSerialData(prev => [...prev, '✅ Upload concluído com sucesso!']);
+      setSerialData(prev => [...prev, '🎉 Código enviado para Arduino via WebSerial!']);
+
+      alert('🎉 Código compilado online e enviado para Arduino com sucesso!');
+
+    } catch (error) {
+      console.error('❌ Erro na compilação/upload online:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      setSerialData(prev => [...prev, `❌ Erro: ${errorMessage}`]);
+      alert(`❌ Erro na compilação/upload online: ${errorMessage}`);
     }
   };
 
@@ -422,6 +672,72 @@ ${code}
             </div>
           )}
 
+          {/* Status do Arduino CLI */}
+          {!arduinoCliStatus.checking && (
+            <div className={`border rounded-lg p-3 mb-4 text-sm ${
+              arduinoCliStatus.installed
+                ? 'bg-green-50 border-green-200'
+                : 'bg-red-50 border-red-200'
+            }`}>
+              <div className="flex items-start gap-2">
+                <span className={
+                  arduinoCliStatus.installed
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }>
+                  {arduinoCliStatus.installed ? '✅' : '❌'}
+                </span>
+                <div>
+                  <p className={`font-medium ${
+                    arduinoCliStatus.installed
+                      ? 'text-green-800'
+                      : 'text-red-800'
+                  }`}>
+                    {arduinoCliStatus.installed
+                      ? 'Arduino CLI Instalado'
+                      : 'Arduino CLI Não Encontrado'
+                    }
+                  </p>
+                  <ul className={`mt-1 space-y-1 ${
+                    arduinoCliStatus.installed
+                      ? 'text-green-700'
+                      : 'text-red-700'
+                  }`}>
+                    {arduinoCliStatus.installed ? (
+                      <>
+                        <li>• <strong>Status:</strong> Pronto para compilar</li>
+                        <li>• <strong>Localização:</strong> C:\arduino-cli\arduino-cli.exe</li>
+                        <li>• <strong>Compatível:</strong> Arduino Uno e compatíveis</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>• <strong>Problema:</strong> Arduino CLI não encontrado</li>
+                        <li>• <strong>Local esperado:</strong> C:\arduino-cli\arduino-cli.exe</li>
+                        <li>• <strong>Solução:</strong> Instale o Arduino CLI</li>
+                      </>
+                    )}
+                  </ul>
+                  {!arduinoCliStatus.installed && (
+                    <div className="mt-2 space-y-2">
+                      <button
+                        onClick={() => window.open('https://arduino.github.io/arduino-cli/0.35/installation/', '_blank')}
+                        className="text-xs bg-red-200 hover:bg-red-300 px-2 py-1 rounded mr-2"
+                      >
+                        📥 Baixar Arduino CLI
+                      </button>
+                      <button
+                        onClick={() => window.open('https://github.com/reisrodrigo1-dev/oda-blockskids/blob/main/INSTALL_ARDUINO_CLI.md', '_blank')}
+                        className="text-xs bg-blue-200 hover:bg-blue-300 px-2 py-1 rounded"
+                      >
+                        📖 Guia de Instalação
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Aviso sobre Web Serial API e Upload Real */}
           {!isConnected && !isUploading && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm">
@@ -491,6 +807,22 @@ ${code}
 
           {/* Ações */}
           <div className="space-y-2 mb-4">
+            {/* NOVO: Compilar Online + Upload Direto */}
+            <Button
+              onClick={handleOnlineCompileAndUpload}
+              disabled={isUploading || isCompiling || isConnecting}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
+              variant="default"
+            >
+              {isCompiling ? (
+                <>🔨 Compilando Online... {compilationProgress}%</>
+              ) : isUploading ? (
+                <>🚀 Fazendo Upload... {uploadProgress}%</>
+              ) : (
+                <>🌐 Compilar Online + Upload Direto</>
+              )}
+            </Button>
+
             {/* Upload Direto via Extensão */}
             {extensionStatus.available && extensionStatus.nativeConnected && (
               <Button
