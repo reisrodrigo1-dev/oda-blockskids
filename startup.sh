@@ -6,6 +6,8 @@ ARDUINO_DATA_DIR="/home/.arduino15"
 export HOME="/home"
 export PATH="$PATH:/home"
 export ARDUINO_CLI_PATH="$ARDUINO_CLI_BIN"
+export ARDUINO_DIRECTORIES_DATA="$ARDUINO_DATA_DIR"
+export ARDUINO_DIRECTORIES_USER="/home/Arduino"
 
 # Instala Arduino CLI se não existe
 if [ ! -f "$ARDUINO_CLI_BIN" ]; then
@@ -17,12 +19,15 @@ if [ ! -f "$ARDUINO_CLI_BIN" ]; then
   echo "✅ Arduino CLI instalado em $ARDUINO_CLI_BIN"
 fi
 
-# Instala arduino:avr core se não existe
-if [ ! -d "$ARDUINO_DATA_DIR/packages/arduino" ]; then
+# Garante que a configuracao e o core arduino:avr existam de fato
+if [ ! -f "$ARDUINO_DATA_DIR/arduino-cli.yaml" ]; then
+  "$ARDUINO_CLI_BIN" config init --overwrite
+fi
+
+if ! "$ARDUINO_CLI_BIN" core list | grep -q "arduino:avr"; then
   echo "📦 Instalando arduino:avr core (pode demorar ~2 min)..."
-  $ARDUINO_CLI_BIN config init --overwrite
-  $ARDUINO_CLI_BIN core update-index
-  $ARDUINO_CLI_BIN core install arduino:avr
+  "$ARDUINO_CLI_BIN" core update-index
+  "$ARDUINO_CLI_BIN" core install arduino:avr
   echo "✅ arduino:avr core instalado"
 fi
 
