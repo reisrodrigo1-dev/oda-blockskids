@@ -3,6 +3,10 @@
 ARDUINO_CLI_BIN="/home/arduino-cli"
 ARDUINO_DATA_DIR="/home/.arduino15"
 
+export HOME="/home"
+export PATH="$PATH:/home"
+export ARDUINO_CLI_PATH="$ARDUINO_CLI_BIN"
+
 # Instala Arduino CLI se não existe
 if [ ! -f "$ARDUINO_CLI_BIN" ]; then
   echo "📦 Instalando Arduino CLI..."

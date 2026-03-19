@@ -30,6 +30,7 @@ function getArduinoCliCandidatePaths(): string[] {
     );
   } else {
     candidates.push(
+      '/home/arduino-cli',
       '/usr/local/bin/arduino-cli',
       '/usr/bin/arduino-cli',
       `${process.env.HOME}/.arduino15/bin/arduino-cli`,
