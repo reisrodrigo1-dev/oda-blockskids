@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { Button } from "../components/ui/button";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -73,12 +73,12 @@ export default function CriadorDeProjetosAI() {
         </CardHeader>
         <CardContent className="space-y-4">
           <Input
-            placeholder="Título do Projeto"
+            placeholder="TÃ­tulo do Projeto"
             value={titulo}
             onChange={e => setTitulo(e.target.value)}
           />
           <Textarea
-            placeholder="Descrição da Atividade"
+            placeholder="DescriÃ§Ã£o da Atividade"
             value={atividade}
             onChange={e => setAtividade(e.target.value)}
             rows={3}
@@ -89,7 +89,7 @@ export default function CriadorDeProjetosAI() {
             onChange={e => setHabilidade(e.target.value)}
           />
           <Input
-            placeholder="Público Alvo"
+            placeholder="PÃºblico Alvo"
             value={publico}
             onChange={e => setPublico(e.target.value)}
           />
@@ -112,3 +112,4 @@ export default function CriadorDeProjetosAI() {
     </div>
   );
 }
+

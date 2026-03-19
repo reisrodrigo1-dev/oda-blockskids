@@ -1,6 +1,15 @@
 {
   "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "**/*.test.ts",
+    "client/src/components/WorkspaceAreaOld.tsx",
+    "client/src/pages/editor-offline-backup.tsx",
+    "client/src/pages/editor-offline-broken.tsx",
+    "client/src/pages/editor-offline-temp.tsx"
+  ],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",

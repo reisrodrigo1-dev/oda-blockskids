@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -8,7 +8,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -36,7 +36,7 @@ export default function ProjetosPedagogicos() {
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center">Projetos Pedagógicos</h1>
+      <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center">Projetos PedagÃ³gicos</h1>
       {carregando && <div className="text-center text-gray-500">Carregando projetos...</div>}
       {!carregando && projetos.length === 0 && <div className="text-center text-gray-400">Nenhum projeto encontrado.</div>}
       <div className="space-y-8">
@@ -63,3 +63,4 @@ export default function ProjetosPedagogicos() {
     </div>
   );
 }
+

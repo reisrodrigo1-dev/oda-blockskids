@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
@@ -13,7 +13,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -23,28 +23,28 @@ const db = getFirestore(app);
 
 // Paleta de gradientes predefinidos
 const gradientes = [
-  { nome: "Vermelho Espacial", classe: "from-red-900 via-red-700 to-orange-600", preview: "🚀" },
-  { nome: "Azul Profundo", classe: "from-blue-900 via-purple-800 to-indigo-900", preview: "🌌" },
-  { nome: "Verde Tecnológico", classe: "from-green-800 via-teal-700 to-cyan-600", preview: "💻" },
-  { nome: "Cinza Industrial", classe: "from-gray-800 via-gray-600 to-blue-700", preview: "🔧" },
-  { nome: "Laranja Marciano", classe: "from-red-800 via-orange-700 to-yellow-600", preview: "🪐" },
-  { nome: "Roxo Galáxia", classe: "from-purple-900 via-pink-800 to-indigo-900", preview: "✨" },
-  { nome: "Verde Floresta", classe: "from-emerald-900 via-green-700 to-teal-600", preview: "🌲" },
-  { nome: "Azul Oceano", classe: "from-blue-800 via-cyan-700 to-teal-600", preview: "🌊" },
+  { nome: "Vermelho Espacial", classe: "from-red-900 via-red-700 to-orange-600", preview: "ðŸš€" },
+  { nome: "Azul Profundo", classe: "from-blue-900 via-purple-800 to-indigo-900", preview: "ðŸŒŒ" },
+  { nome: "Verde TecnolÃ³gico", classe: "from-green-800 via-teal-700 to-cyan-600", preview: "ðŸ’»" },
+  { nome: "Cinza Industrial", classe: "from-gray-800 via-gray-600 to-blue-700", preview: "ðŸ”§" },
+  { nome: "Laranja Marciano", classe: "from-red-800 via-orange-700 to-yellow-600", preview: "ðŸª" },
+  { nome: "Roxo GalÃ¡xia", classe: "from-purple-900 via-pink-800 to-indigo-900", preview: "âœ¨" },
+  { nome: "Verde Floresta", classe: "from-emerald-900 via-green-700 to-teal-600", preview: "ðŸŒ²" },
+  { nome: "Azul Oceano", classe: "from-blue-800 via-cyan-700 to-teal-600", preview: "ðŸŒŠ" },
 ];
 
-// Lista de ícones disponíveis para etapas
+// Lista de Ã­cones disponÃ­veis para etapas
 const icones = [
-  "🚀", "🛸", "🧑‍🚀", "👩‍🔬", "🤖", "👨‍💻", "🛰️", "🌟", "🔧", "💻", 
-  "📱", "🎯", "🧠", "🤝", "⚡", "🎨", "🔬", "🌍", "🌱", "💡",
-  "🏆", "📋", "🎪", "🎭", "🎲", "🎳", "🎮", "🎸", "🎹", "🎺",
-  "⚗️", "🔭", "🪐", "🌙", "☄️", "🌟", "✨", "💫", "🌈", "🔥"
+  "ðŸš€", "ðŸ›¸", "ðŸ§‘â€ðŸš€", "ðŸ‘©â€ðŸ”¬", "ðŸ¤–", "ðŸ‘¨â€ðŸ’»", "ðŸ›°ï¸", "ðŸŒŸ", "ðŸ”§", "ðŸ’»", 
+  "ðŸ“±", "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸŽ¨", "ðŸ”¬", "ðŸŒ", "ðŸŒ±", "ðŸ’¡",
+  "ðŸ†", "ðŸ“‹", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ³", "ðŸŽ®", "ðŸŽ¸", "ðŸŽ¹", "ðŸŽº",
+  "âš—ï¸", "ðŸ”­", "ðŸª", "ðŸŒ™", "â˜„ï¸", "ðŸŒŸ", "âœ¨", "ðŸ’«", "ðŸŒˆ", "ðŸ”¥"
 ];
 
-// Lista de ícones para objetivos
+// Lista de Ã­cones para objetivos
 const iconesObjetivos = [
-  "🎯", "🧠", "🤝", "⚡", "💡", "🔬", "🎨", "🚀", "📚", "🏆",
-  "⭐", "🔥", "💪", "🌟", "🎪", "🎭", "🎲", "🎮", "🔧", "💻"
+  "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸ’¡", "ðŸ”¬", "ðŸŽ¨", "ðŸš€", "ðŸ“š", "ðŸ†",
+  "â­", "ðŸ”¥", "ðŸ’ª", "ðŸŒŸ", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ®", "ðŸ”§", "ðŸ’»"
 ];
 
 interface Objetivo {
@@ -54,7 +54,7 @@ interface Objetivo {
 
 
 export default function CriadorProjetoMelhorado() {
-  // Estados para criação de projeto (já existentes)
+  // Estados para criaÃ§Ã£o de projeto (jÃ¡ existentes)
   // ...existing code...
 
   // Estados para gerenciamento de projetos
@@ -64,15 +64,15 @@ export default function CriadorProjetoMelhorado() {
   const [excluindo, setExcluindo] = useState(false);
   const [mensagem, setMensagem] = useState("");
 
-  // Estados para criação de novo projeto (página dedicada)
-  // (Os estados abaixo serão usados apenas na página de criação)
+  // Estados para criaÃ§Ã£o de novo projeto (pÃ¡gina dedicada)
+  // (Os estados abaixo serÃ£o usados apenas na pÃ¡gina de criaÃ§Ã£o)
 
   // Carregar projetos ao montar
   useEffect(() => {
     fetchProjetos();
   }, []);
 
-  // Redirecionar para página de criação de projeto
+  // Redirecionar para pÃ¡gina de criaÃ§Ã£o de projeto
   function irParaCriarProjeto() {
     window.location.href = "/admin/criar-projeto";
   }
@@ -88,7 +88,7 @@ export default function CriadorProjetoMelhorado() {
       lista.sort((a, b) => new Date(b.criadoEm).getTime() - new Date(a.criadoEm).getTime());
       setProjetos(lista);
     } catch (error) {
-      setMensagem("❌ Erro ao carregar projetos.");
+      setMensagem("âŒ Erro ao carregar projetos.");
     }
     setCarregando(false);
   }
@@ -118,12 +118,12 @@ export default function CriadorProjetoMelhorado() {
     setExcluindo(true);
     try {
       await deleteDoc(doc(db, "projetos-pedagogicos-avancados", projetoParaExcluir));
-      setMensagem("✅ Projeto excluído com sucesso!");
+      setMensagem("âœ… Projeto excluÃ­do com sucesso!");
       setProjetos(projetos.filter(p => p.id !== projetoParaExcluir));
       setProjetoParaExcluir(null);
       setTimeout(() => setMensagem(""), 3000);
     } catch (error) {
-      setMensagem("❌ Erro ao excluir projeto.");
+      setMensagem("âŒ Erro ao excluir projeto.");
       setTimeout(() => setMensagem(""), 3000);
     }
     setExcluindo(false);
@@ -136,27 +136,27 @@ export default function CriadorProjetoMelhorado() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-              ✨ Criador e Gerenciador de Projetos Avançados
+              âœ¨ Criador e Gerenciador de Projetos AvanÃ§ados
             </h1>
             <p className="text-xl text-gray-300">
-              Crie, edite, visualize e exclua projetos pedagógicos avançados
+              Crie, edite, visualize e exclua projetos pedagÃ³gicos avanÃ§ados
             </p>
           </div>
 
-          {/* Botão de Novo Projeto */}
+          {/* BotÃ£o de Novo Projeto */}
           <div className="flex justify-end mb-8">
             <Button
               onClick={irParaCriarProjeto}
               className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg"
             >
-              ➕ Novo Projeto
+              âž• Novo Projeto
             </Button>
           </div>
 
           {/* Mensagem de Feedback */}
           {mensagem && (
             <div className={`mb-8 p-4 rounded-lg text-center font-semibold ${
-              mensagem.includes("✅") 
+              mensagem.includes("âœ…") 
                 ? "bg-green-600/20 text-green-400 border border-green-600" 
                 : "bg-red-600/20 text-red-400 border border-red-600"
             }`}>
@@ -167,7 +167,7 @@ export default function CriadorProjetoMelhorado() {
           {/* Loading State */}
           {carregando && (
             <div className="text-center text-white">
-              <div className="text-6xl mb-4 animate-spin">⏳</div>
+              <div className="text-6xl mb-4 animate-spin">â³</div>
               <div className="text-2xl font-bold">Carregando projetos...</div>
             </div>
           )}
@@ -175,9 +175,9 @@ export default function CriadorProjetoMelhorado() {
           {/* Empty State */}
           {!carregando && projetos.length === 0 && (
             <div className="text-center text-white">
-              <div className="text-6xl mb-4">📝</div>
+              <div className="text-6xl mb-4">ðŸ“</div>
               <div className="text-2xl font-bold mb-4">Nenhum projeto encontrado</div>
-              <p className="text-gray-300 mb-8">Seja o primeiro a criar um projeto pedagógico!</p>
+              <p className="text-gray-300 mb-8">Seja o primeiro a criar um projeto pedagÃ³gico!</p>
             </div>
           )}
 
@@ -191,7 +191,7 @@ export default function CriadorProjetoMelhorado() {
                       {projeto.titulo}
                     </CardTitle>
                     <div className="text-gray-400 text-sm flex items-center gap-2">
-                      <span>📅</span>
+                      <span>ðŸ“…</span>
                       {new Date(projeto.criadoEm).toLocaleDateString('pt-BR', {
                         day: '2-digit',
                         month: 'short',
@@ -224,7 +224,7 @@ export default function CriadorProjetoMelhorado() {
                           onClick={() => abrirProjeto(projeto.id)}
                           className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition-all duration-300"
                         >
-                          👁️ Visualizar Projeto
+                          ðŸ‘ï¸ Visualizar Projeto
                         </Button>
                         <Button 
                           onClick={(e) => {
@@ -233,7 +233,7 @@ export default function CriadorProjetoMelhorado() {
                           }}
                           className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-bold py-2 rounded-lg transition-all duration-300"
                         >
-                          👨‍🎓 Modo Aluno
+                          ðŸ‘¨â€ðŸŽ“ Modo Aluno
                         </Button>
                         <div className="flex gap-2">
                           <Button 
@@ -243,7 +243,7 @@ export default function CriadorProjetoMelhorado() {
                             }}
                             className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-bold py-2 rounded-lg transition-all duration-300"
                           >
-                            ✏️ Editar
+                            âœï¸ Editar
                           </Button>
                           <Button 
                             onClick={(e) => {
@@ -252,7 +252,7 @@ export default function CriadorProjetoMelhorado() {
                             }}
                             className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-2 rounded-lg transition-all duration-300"
                           >
-                            🗑️ Excluir
+                            ðŸ—‘ï¸ Excluir
                           </Button>
                         </div>
                       </div>
@@ -263,17 +263,17 @@ export default function CriadorProjetoMelhorado() {
             </div>
           )}
 
-          {/* Modal de Criação de Novo Projeto removido. Agora a criação é feita em página dedicada. */}
+          {/* Modal de CriaÃ§Ã£o de Novo Projeto removido. Agora a criaÃ§Ã£o Ã© feita em pÃ¡gina dedicada. */}
 
-          {/* Modal de Confirmação de Exclusão */}
+          {/* Modal de ConfirmaÃ§Ã£o de ExclusÃ£o */}
           {projetoParaExcluir && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur flex items-center justify-center z-50">
               <div className="bg-gray-800 border border-gray-600 rounded-xl p-8 max-w-md w-full mx-4">
                 <div className="text-center">
-                  <div className="text-6xl mb-4">⚠️</div>
-                  <h3 className="text-2xl font-bold text-white mb-4">Confirmar Exclusão</h3>
+                  <div className="text-6xl mb-4">âš ï¸</div>
+                  <h3 className="text-2xl font-bold text-white mb-4">Confirmar ExclusÃ£o</h3>
                   <p className="text-gray-300 mb-6">
-                    Tem certeza que deseja excluir este projeto? Esta ação não pode ser desfeita.
+                    Tem certeza que deseja excluir este projeto? Esta aÃ§Ã£o nÃ£o pode ser desfeita.
                   </p>
                   <div className="flex gap-4">
                     <Button 
@@ -300,3 +300,4 @@ export default function CriadorProjetoMelhorado() {
     </ProtectedRoute>
   );
 }
+

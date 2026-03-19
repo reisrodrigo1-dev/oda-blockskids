@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -23,26 +23,26 @@ const db = getFirestore(app);
 const gradientes = [
   { nome: "Vermelho Espacial", classe: "from-red-900 via-red-700 to-orange-600" },
   { nome: "Azul Profundo", classe: "from-blue-900 via-purple-800 to-indigo-900" },
-  { nome: "Verde Tecnológico", classe: "from-green-800 via-teal-700 to-cyan-600" },
+  { nome: "Verde TecnolÃ³gico", classe: "from-green-800 via-teal-700 to-cyan-600" },
   { nome: "Cinza Industrial", classe: "from-gray-800 via-gray-600 to-blue-700" },
   { nome: "Laranja Marciano", classe: "from-red-800 via-orange-700 to-yellow-600" },
-  { nome: "Roxo Galáxia", classe: "from-purple-900 via-pink-800 to-indigo-900" },
+  { nome: "Roxo GalÃ¡xia", classe: "from-purple-900 via-pink-800 to-indigo-900" },
   { nome: "Verde Floresta", classe: "from-emerald-900 via-green-700 to-teal-600" },
   { nome: "Azul Oceano", classe: "from-blue-800 via-cyan-700 to-teal-600" },
 ];
 
-// Lista de ícones disponíveis
+// Lista de Ã­cones disponÃ­veis
 const icones = [
-  "🚀", "🛸", "🧑‍🚀", "👩‍🔬", "🤖", "👨‍💻", "🛰️", "🌟", "🔧", "💻", 
-  "📱", "🎯", "🧠", "🤝", "⚡", "🎨", "🔬", "🌍", "🌱", "💡",
-  "🏆", "📋", "🎪", "🎭", "🎲", "🎳", "🎮", "🎸", "🎹", "🎺",
-  "⚗️", "🔭", "🪐", "🌙", "☄️", "🌟", "✨", "💫", "🌈", "🔥"
+  "ðŸš€", "ðŸ›¸", "ðŸ§‘â€ðŸš€", "ðŸ‘©â€ðŸ”¬", "ðŸ¤–", "ðŸ‘¨â€ðŸ’»", "ðŸ›°ï¸", "ðŸŒŸ", "ðŸ”§", "ðŸ’»", 
+  "ðŸ“±", "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸŽ¨", "ðŸ”¬", "ðŸŒ", "ðŸŒ±", "ðŸ’¡",
+  "ðŸ†", "ðŸ“‹", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ³", "ðŸŽ®", "ðŸŽ¸", "ðŸŽ¹", "ðŸŽº",
+  "âš—ï¸", "ðŸ”­", "ðŸª", "ðŸŒ™", "â˜„ï¸", "ðŸŒŸ", "âœ¨", "ðŸ’«", "ðŸŒˆ", "ðŸ”¥"
 ];
 
-// Lista de ícones para objetivos
+// Lista de Ã­cones para objetivos
 const iconesObjetivos = [
-  "🎯", "🧠", "🤝", "⚡", "💡", "🔬", "🎨", "🚀", "📚", "🏆",
-  "⭐", "🔥", "💪", "🌟", "🎪", "🎭", "🎲", "🎮", "🔧", "💻"
+  "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸ’¡", "ðŸ”¬", "ðŸŽ¨", "ðŸš€", "ðŸ“š", "ðŸ†",
+  "â­", "ðŸ”¥", "ðŸ’ª", "ðŸŒŸ", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ®", "ðŸ”§", "ðŸ’»"
 ];
 
 interface Objetivo {
@@ -89,7 +89,7 @@ export default function CriadorProjetoAvancado() {
 
   async function salvarProjeto() {
     if (!tituloProjeto || etapas.length === 0) {
-      setMsg("Preencha o título e adicione pelo menos uma etapa.");
+      setMsg("Preencha o tÃ­tulo e adicione pelo menos uma etapa.");
       return;
     }
     setSalvando(true);
@@ -111,16 +111,16 @@ export default function CriadorProjetoAvancado() {
 
   return (
     <div className="max-w-3xl mx-auto py-12 px-4">
-      <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center">Criador de Projeto Avançado</h1>
+      <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center">Criador de Projeto AvanÃ§ado</h1>
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Título do Projeto</CardTitle>
+          <CardTitle>TÃ­tulo do Projeto</CardTitle>
         </CardHeader>
         <CardContent>
           <Input
             value={tituloProjeto}
             onChange={e => setTituloProjeto(e.target.value)}
-            placeholder="Ex: Missão: Robô Marciano"
+            placeholder="Ex: MissÃ£o: RobÃ´ Marciano"
             className="mb-2"
           />
         </CardContent>
@@ -134,13 +134,13 @@ export default function CriadorProjetoAvancado() {
           <Input
             value={novaEtapa.titulo}
             onChange={e => setNovaEtapa({ ...novaEtapa, titulo: e.target.value })}
-            placeholder="Título da etapa/aula"
+            placeholder="TÃ­tulo da etapa/aula"
             className="mb-2"
           />
           <Textarea
             value={novaEtapa.descricao}
             onChange={e => setNovaEtapa({ ...novaEtapa, descricao: e.target.value })}
-            placeholder="Descrição da etapa/aula"
+            placeholder="DescriÃ§Ã£o da etapa/aula"
             className="mb-2"
           />
           <Input
@@ -152,13 +152,13 @@ export default function CriadorProjetoAvancado() {
           <Input
             value={novaEtapa.icon}
             onChange={e => setNovaEtapa({ ...novaEtapa, icon: e.target.value })}
-            placeholder="Emoji/ícone grande (ex: 🚀)"
+            placeholder="Emoji/Ã­cone grande (ex: ðŸš€)"
             className="mb-2"
           />
           <Input
             value={novaEtapa.action}
             onChange={e => setNovaEtapa({ ...novaEtapa, action: e.target.value })}
-            placeholder="Texto do botão de ação (ex: Aceitar Missão)"
+            placeholder="Texto do botÃ£o de aÃ§Ã£o (ex: Aceitar MissÃ£o)"
             className="mb-2"
           />
           <div className="mb-2">
@@ -167,7 +167,7 @@ export default function CriadorProjetoAvancado() {
               <Input
                 value={novoObjetivo.icon}
                 onChange={e => setNovoObjetivo({ ...novoObjetivo, icon: e.target.value })}
-                placeholder="Ícone (ex: 🎯)"
+                placeholder="Ãcone (ex: ðŸŽ¯)"
                 className="w-16"
               />
               <Input
@@ -183,7 +183,7 @@ export default function CriadorProjetoAvancado() {
                 <div key={idx} className="flex items-center gap-2 text-sm">
                   <span>{obj.icon}</span>
                   <span>{obj.text}</span>
-                  <button onClick={() => removerObjetivo(idx)} className="text-red-500 hover:text-red-700 text-xs">✕</button>
+                  <button onClick={() => removerObjetivo(idx)} className="text-red-500 hover:text-red-700 text-xs">âœ•</button>
                 </div>
               ))}
             </div>
@@ -192,12 +192,12 @@ export default function CriadorProjetoAvancado() {
         </CardContent>
       </Card>
 
-      {/* Visualização do Projeto */}
+      {/* VisualizaÃ§Ã£o do Projeto */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-blue-600 mb-4">Visualização do Projeto</h2>
+        <h2 className="text-2xl font-bold text-blue-600 mb-4">VisualizaÃ§Ã£o do Projeto</h2>
         <Card>
           <CardHeader>
-            <CardTitle>{tituloProjeto || "(Sem título)"}</CardTitle>
+            <CardTitle>{tituloProjeto || "(Sem tÃ­tulo)"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-8">
@@ -208,14 +208,14 @@ export default function CriadorProjetoAvancado() {
                     onClick={() => removerEtapa(idx)}
                     className="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm"
                     title="Remover etapa"
-                  >✕</button>
+                  >âœ•</button>
                   <div className="text-8xl mb-6 animate-bounce">{etapa.icon}</div>
                   <h3 className="text-2xl font-bold text-white mb-4 drop-shadow-lg">{etapa.titulo}</h3>
                   <p className="text-lg text-white text-opacity-90 leading-relaxed mb-6 max-w-3xl mx-auto">{etapa.descricao}</p>
                   {etapa.objetivos.length > 0 && (
                     <div className="mt-6 bg-black bg-opacity-20 backdrop-blur-sm rounded-2xl p-4 max-w-2xl mx-auto">
                       <h4 className="text-white font-bold text-lg mb-2 flex items-center">
-                        <span className="text-2xl mr-3">📋</span>
+                        <span className="text-2xl mr-3">ðŸ“‹</span>
                         Objetivos desta Etapa:
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-white text-sm">
@@ -248,3 +248,4 @@ export default function CriadorProjetoAvancado() {
     </div>
   );
 }
+

@@ -1,11 +1,11 @@
-import { initializeApp } from "firebase/app";
+﻿import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -13,7 +13,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Função para criar dados de teste
+// FunÃ§Ã£o para criar dados de teste
 export async function criarDadosTeste() {
   try {
     console.log("Criando cliente de teste...");
@@ -21,7 +21,7 @@ export async function criarDadosTeste() {
     // 1. Criar cliente de teste
     const clienteRef = await addDoc(collection(db, "clientes"), {
       razaoSocial: "Escola Estadual Dom Pedro II",
-      nomeFantasia: "Colégio Dom Pedro",
+      nomeFantasia: "ColÃ©gio Dom Pedro",
       email: "contato@dompedro.edu.br",
       telefone: "(11) 3333-4444",
       cnpj: "12.345.678/0001-90",
@@ -34,15 +34,15 @@ export async function criarDadosTeste() {
     // 2. Criar rota de estudo com projetos
     const rotaRef = await addDoc(collection(db, "rotasEstudo"), {
       clienteId: clienteRef.id,
-      titulo: "Programação Arduino - 6º Ano",
-      descricao: "Curso introdutório de programação com Arduino para alunos do 6º ano",
+      titulo: "ProgramaÃ§Ã£o Arduino - 6Âº Ano",
+      descricao: "Curso introdutÃ³rio de programaÃ§Ã£o com Arduino para alunos do 6Âº ano",
       codigo: "DOM001",
       ativo: true,
       criadoEm: new Date(),
       projetos: [
         {
           titulo: "LED Piscante",
-          descricao: "Aprenda a fazer um LED piscar usando programação por blocos",
+          descricao: "Aprenda a fazer um LED piscar usando programaÃ§Ã£o por blocos",
           dificuldade: "facil",
           tipo: "basico",
           blocos: [
@@ -84,8 +84,8 @@ void loop() {
 }`
         },
         {
-          titulo: "Semáforo Simples",
-          descricao: "Crie um semáforo com LEDs vermelho, amarelo e verde",
+          titulo: "SemÃ¡foro Simples",
+          descricao: "Crie um semÃ¡foro com LEDs vermelho, amarelo e verde",
           dificuldade: "medio",
           tipo: "intermediario",
           blocos: [
@@ -165,7 +165,7 @@ void loop() {
         },
         {
           titulo: "Servo Motor Controlado",
-          descricao: "Controle um servo motor para mover em diferentes ângulos",
+          descricao: "Controle um servo motor para mover em diferentes Ã¢ngulos",
           dificuldade: "dificil",
           tipo: "avancado",
           blocos: [
@@ -247,3 +247,4 @@ void loop() {
 
 // Para usar no console do navegador:
 // window.criarDadosTeste = criarDadosTeste;
+

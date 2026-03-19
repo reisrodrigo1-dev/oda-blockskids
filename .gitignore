@@ -5,3 +5,6 @@ server/public
 vite.config.ts.*
 *.tar.gz
 .vercel
+AZURE_ENV_PRIVATE.md
+.env
+backend-debug.log

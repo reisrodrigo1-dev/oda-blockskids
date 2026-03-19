@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, getDoc, doc } from "firebase/firestore";
 
@@ -6,7 +6,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -24,17 +24,17 @@ export default function DebugRotas() {
 
   const carregarRotas = async () => {
     try {
-      console.log("🔍 Carregando todas as rotas de estudo...");
+      console.log("ðŸ” Carregando todas as rotas de estudo...");
       const rotasSnapshot = await getDocs(collection(db, "rotasEstudo"));
       const rotasData = rotasSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       
-      console.log("📚 Rotas encontradas:", rotasData);
+      console.log("ðŸ“š Rotas encontradas:", rotasData);
       setRotas(rotasData);
     } catch (error) {
-      console.error("❌ Erro ao carregar rotas:", error);
+      console.error("âŒ Erro ao carregar rotas:", error);
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function DebugRotas() {
         {rotas.map((rota, index) => (
           <div key={rota.id} className="bg-gray-800 p-6 rounded-lg border border-gray-700">
             <h2 className="text-xl font-semibold text-blue-400 mb-3">
-              {index + 1}. {rota.titulo || rota.nome || 'Sem título'}
+              {index + 1}. {rota.titulo || rota.nome || 'Sem tÃ­tulo'}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -60,7 +60,7 @@ export default function DebugRotas() {
                 <strong>ID:</strong> {rota.id}
               </div>
               <div>
-                <strong>Código:</strong> {rota.codigo}
+                <strong>CÃ³digo:</strong> {rota.codigo}
               </div>
               <div>
                 <strong>Cliente ID:</strong> {rota.clienteId}
@@ -86,7 +86,7 @@ export default function DebugRotas() {
             
             {(!rota.projetos || rota.projetos.length === 0) && (
               <div className="mt-4 text-red-400">
-                ⚠️ Esta rota não tem projetos definidos
+                âš ï¸ Esta rota nÃ£o tem projetos definidos
               </div>
             )}
           </div>
@@ -95,9 +95,10 @@ export default function DebugRotas() {
       
       {rotas.length === 0 && (
         <div className="text-center text-red-400 mt-8">
-          ❌ Nenhuma rota de estudo encontrada no banco de dados
+          âŒ Nenhuma rota de estudo encontrada no banco de dados
         </div>
       )}
     </div>
   );
 }
+

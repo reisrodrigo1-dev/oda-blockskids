@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useLocation, useRoute } from "wouter";
 import DashboardLayout from "./DashboardLayout";
 import { initializeApp } from "firebase/app";
@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -56,7 +56,7 @@ export default function AdminProjetoView() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <div className="text-center text-white">
-          <div className="text-6xl mb-4 animate-spin">⏳</div>
+          <div className="text-6xl mb-4 animate-spin">â³</div>
           <div className="text-2xl font-bold">Carregando projeto...</div>
         </div>
       </div>
@@ -66,10 +66,10 @@ export default function AdminProjetoView() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <div className="text-center text-white max-w-md">
-          <div className="text-6xl mb-4">❌</div>
-          <div className="text-2xl font-bold mb-4">Projeto não encontrado</div>
+          <div className="text-6xl mb-4">âŒ</div>
+          <div className="text-2xl font-bold mb-4">Projeto nÃ£o encontrado</div>
           <Button onClick={voltar} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-full">
-            Voltar à lista de projetos
+            Voltar Ã  lista de projetos
           </Button>
         </div>
       </div>
@@ -80,16 +80,16 @@ export default function AdminProjetoView() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <div className="max-w-4xl mx-auto py-12 px-4">
           <Button onClick={voltar} className="mb-6 bg-white/10 hover:bg-white/20 backdrop-blur text-white font-bold px-6 py-3 rounded-full border border-white/20">
-            ← Voltar aos Projetos
+            â† Voltar aos Projetos
           </Button>
           <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white text-3xl font-bold flex items-center gap-2">
-                <span>📚</span>
+                <span>ðŸ“š</span>
                 {projeto.titulo}
               </CardTitle>
               <div className="text-gray-400 text-sm flex items-center gap-2 mt-2">
-                <span>📅</span>
+                <span>ðŸ“…</span>
                 {projeto.criadoEm && new Date(projeto.criadoEm).toLocaleDateString('pt-BR', {
                   day: '2-digit', month: 'short', year: 'numeric'
                 })}
@@ -101,7 +101,7 @@ export default function AdminProjetoView() {
                 <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
-                      <span className="text-2xl">📦</span>
+                      <span className="text-2xl">ðŸ“¦</span>
                       Materiais do Projeto
                     </CardTitle>
                   </CardHeader>
@@ -129,8 +129,8 @@ export default function AdminProjetoView() {
                           {etapa.codigo && (
                             <div className="mb-4">
                               <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                                <span>💻</span>
-                                Código:
+                                <span>ðŸ’»</span>
+                                CÃ³digo:
                               </h4>
                               <div className="bg-black/30 p-3 rounded-lg border border-gray-600">
                                 <pre className="text-green-300 text-sm overflow-x-auto font-mono">
@@ -142,7 +142,7 @@ export default function AdminProjetoView() {
                           {etapa.imagemBlocos && (
                             <div className="mb-4">
                               <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                                <span>🖼️</span>
+                                <span>ðŸ–¼ï¸</span>
                                 Imagem dos Blocos:
                               </h4>
                               <img
@@ -155,7 +155,7 @@ export default function AdminProjetoView() {
                           {etapa.objetivos && etapa.objetivos.length > 0 && (
                             <div className="mb-4">
                               <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                                <span>🎯</span>
+                                <span>ðŸŽ¯</span>
                                 Objetivos:
                               </h4>
                               <div className="space-y-1">
@@ -188,3 +188,4 @@ export default function AdminProjetoView() {
     </DashboardLayout>
   );
 }
+

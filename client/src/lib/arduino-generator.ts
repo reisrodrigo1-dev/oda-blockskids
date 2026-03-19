@@ -13,10 +13,6 @@ export function generateArduinoCode(blocks: Block[]): string {
 // 🎨 Criado com Arduino Blocks Kids
 
 void setup() {
-  // Inicializar comunicação serial
-  Serial.begin(9600);
-  Serial.println("🚀 Arduino iniciado!");
-  
   // Configurar pinos
   pinMode(13, OUTPUT);  // LED no pino 13
 }
@@ -323,10 +319,7 @@ void loop() {
   let setup = `void setup() {\n`;
   
   if (hasSerialInit || blocks.length > 0) {
-    setup += `  // Inicializar comunicação serial\n`;
-    setup += `  Serial.begin(9600);\n`;
-    setup += `  Serial.println("🚀 Arduino iniciado!");\n`;
-    setup += `  \n`;
+    // Serial initialization removed - causes blocking on Arduino startup
   }
 
   if (usedPins.size > 0) {

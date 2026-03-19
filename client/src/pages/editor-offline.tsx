@@ -6,8 +6,7 @@ import CodePanel from "@/components/CodePanel";
 import ArduinoPanel from "@/components/ArduinoPanel";
 import TutorialModal from "@/components/TutorialModal";
 import { LocalStorage, Project } from "@/lib/local-storage";
-// Temporariamente comentado - problema com resolução do pacote
-// import { upload, boards } from "web-arduino-uploader";
+import { uploadToArduino } from "@/lib/web-serial-stk500";
 
 export default function EditorOffline() {
   const [showTutorial, setShowTutorial] = useState(false);
@@ -22,7 +21,7 @@ export default function EditorOffline() {
      window.location.hostname === '127.0.0.1' ||
      window.location.hostname.includes('oda-blockskids'));
 
-  const [generatedCode, setGeneratedCode] = useState(`// Código Arduino gerado pelos blocos\n// 🎨 Criado com Arduino Blocks Kids\n\nvoid setup() {\n  // Inicializar comunicação serial\n  Serial.begin(9600);\n  Serial.println(\"🚀 Arduino iniciado!\");\n  \n  // Configurar pinos\n  pinMode(13, OUTPUT);  // LED no pino 13\n}\n\nvoid loop() {\n  // Seu código aparecerá aqui quando você\n  // arrastar os blocos para o workspace!\n  \n  // Exemplo: Piscar LED\n  digitalWrite(13, HIGH);   // Acender LED\n  delay(1000);              // Esperar 1 segundo\n  digitalWrite(13, LOW);    // Apagar LED\n  delay(1000);              // Esperar 1 segundo\n}`);
+  const [generatedCode, setGeneratedCode] = useState(`// Código Arduino gerado pelos blocos\n// 🎨 Criado com Arduino Blocks Kids\n\nvoid setup() {\n  // Configurar pinos\n  pinMode(13, OUTPUT);  // LED no pino 13\n}\n\nvoid loop() {\n  // Seu código aparecerá aqui quando você\n  // arrastar os blocos para o workspace!\n  \n  // Exemplo: Piscar LED\n  digitalWrite(13, HIGH);   // Acender LED\n  delay(1000);              // Esperar 1 segundo\n  digitalWrite(13, LOW);    // Apagar LED\n  delay(1000);              // Esperar 1 segundo\n}`);
 
   // Estado para upload
   const [isUploading, setIsUploading] = useState(false);
@@ -90,7 +89,7 @@ export default function EditorOffline() {
   const createNewProject = () => {
     setCurrentProject(null);
     LocalStorage.clearCurrentProject();
-    setGeneratedCode(`// Código Arduino gerado pelos blocos\n// 🎨 Criado com Arduino Blocks Kids\n\nvoid setup() {\n  // Inicializar comunicação serial\n  Serial.begin(9600);\n  Serial.println(\"🚀 Arduino iniciado!\");\n  \n  // Configurar pinos\n  pinMode(13, OUTPUT);  // LED no pino 13\n}\n\nvoid loop() {\n  // Seu código aparecerá aqui quando você\n  // arrastar os blocos para o workspace!\n  \n  // Exemplo: Piscar LED\n  digitalWrite(13, HIGH);   // Acender LED\n  delay(1000);              // Esperar 1 segundo\n  digitalWrite(13, LOW);    // Apagar LED\n  delay(1000);              // Esperar 1 segundo\n}`);
+    setGeneratedCode(`// Código Arduino gerado pelos blocos\n// 🎨 Criado com Arduino Blocks Kids\n\nvoid setup() {\n  // Configurar pinos\n  pinMode(13, OUTPUT);  // LED no pino 13\n}\n\nvoid loop() {\n  // Seu código aparecerá aqui quando você\n  // arrastar os blocos para o workspace!\n  \n  // Exemplo: Piscar LED\n  digitalWrite(13, HIGH);   // Acender LED\n  delay(1000);              // Esperar 1 segundo\n  digitalWrite(13, LOW);    // Apagar LED\n  delay(1000);              // Esperar 1 segundo\n}`);
   };
 
   // Função para escanear portas disponíveis
@@ -141,11 +140,10 @@ export default function EditorOffline() {
       setIsUploading(true);
       setUploadProgress(0);
 
-      // Passo 1: "Compilar" o código (por enquanto, validação básica)
+      // Passo 1: Validação básica do código
       setUploadProgress(10);
       console.log('🔧 Iniciando compilação...');
 
-      // Validação básica do código Arduino
       if (!generatedCode.includes('void setup()') || !generatedCode.includes('void loop()')) {
         throw new Error('Código Arduino inválido: deve conter void setup() e void loop()');
       }
@@ -153,396 +151,120 @@ export default function EditorOffline() {
       setUploadProgress(30);
       console.log('✅ Validação do código OK');
 
-      // Detectar se estamos em localhost ou online
-      const isLocalEnvironment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-      // Passo 2: Compilar código usando API do servidor
+      // Passo 2: Compilar código no servidor
       setUploadProgress(50);
       console.log('⚙️ Compilando código...');
       console.log('📝 Código a ser compilado:', generatedCode);
 
-      // Detectar tipo de placa baseado na porta selecionada
-      let boardType = 'arduino:avr:uno'; // Sempre usar Uno por padrão
-      console.log('🎯 Usando Arduino Uno como padrão');
+      const apiUrl = (import.meta.env.VITE_API_URL || '').trim();
+      const compileEndpoint = `${apiUrl}/api/compile`;
+      const cliStatusEndpoint = `${apiUrl}/api/check-arduino-cli`;
+      console.log('🌐 Usando API URL:', apiUrl || '(mesmo dominio)');
 
-      let compileResponse;
-      let compileResult;
-
-      // Usar variável de ambiente para determinar a URL da API
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      console.log('� Usando API URL:', apiUrl);
-
+      // Verificação de saúde do compilador no backend (útil em produção/Azure)
       try {
-        compileResponse = await fetch(`${apiUrl}/api/compile`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            code: generatedCode,
-            boardType: boardType
-          })
-        });
-      } catch (fetchError) {
-        console.error('❌ Erro na chamada da API:', fetchError);
-        throw new Error(`Não foi possível conectar ao servidor de compilação em ${apiUrl}. Verifique se o servidor está rodando.`);
+        const cliStatusResponse = await fetch(cliStatusEndpoint);
+        if (!cliStatusResponse.ok) {
+          console.warn('⚠️ Arduino CLI indisponível no backend. Pode ocorrer fallback de compilação.');
+        }
+      } catch {
+        console.warn('⚠️ Não foi possível verificar status do Arduino CLI. Seguindo para compilação.');
       }
 
-      compileResult = await compileResponse.json();
+      let compileResult;
+      try {
+        const compileResponse = await fetch(compileEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            code: generatedCode,
+            boardType: 'arduino:avr:uno'
+          })
+        });
+
+        compileResult = await compileResponse.json();
+      } catch (fetchError) {
+        console.error('❌ Erro na chamada da API:', fetchError);
+        throw new Error(`Não foi possível conectar ao servidor em ${apiUrl || 'mesmo dominio'}. Verifique se está rodando.`);
+      }
 
       if (!compileResult.success) {
         throw new Error(`Erro na compilação: ${compileResult.message}\n${compileResult.error || ''}`);
       }
 
       const hexContent = compileResult.hex;
-      console.log('📦 Hex file gerado com sucesso');
+      console.log('📦 Arquivo HEX gerado com sucesso');
+      console.log(`📊 Tamanho do HEX: ${hexContent.length} caracteres`);
+
+      // Se backend retornar HEX de teste, confirmar com o usuário antes de gravar na placa.
+      if (typeof compileResult.message === 'string' && compileResult.message.includes('HEX de teste')) {
+        const shouldContinue = confirm(`⚠️ O servidor retornou HEX de teste (sem compilação real).\n\n${compileResult.message}\n\nDeseja continuar mesmo assim?`);
+        if (!shouldContinue) {
+          console.warn('⚠️ Upload cancelado: compilação real indisponível no servidor.');
+          return;
+        }
+      }
 
       setUploadProgress(70);
 
-      // Passo 3: Fazer upload direto usando Web Serial API
+      // Passo 3: Upload direto via Web Serial + STK500
       setUploadProgress(80);
-      console.log('🚀 Fazendo upload para Arduino...');
+      console.log('🚀 Fazendo upload para Arduino com STK500...');
 
-      // Verificar se a porta já está aberta e fechá-la se necessário
-      if (selectedPort.readable || selectedPort.writable) {
-        console.log('🔌 Porta já está aberta, fechando antes de reabrir...');
-        try {
-          await selectedPort.close();
-          await new Promise(resolve => setTimeout(resolve, 500)); // Aguardar um pouco
-        } catch (e) {
-          console.log('⚠️ Erro ao fechar porta anterior:', e);
-        }
-      }
-
-      // Abrir a porta serial
-      await selectedPort.open({ baudRate: 115200 });
-
-      // Implementar upload real do hex file via serial
-      console.log('📤 Enviando dados para Arduino...');
-
-      // Função auxiliar para enviar dados via serial
-      const sendData = async (data: Uint8Array) => {
-        const writer = selectedPort.writable.getWriter();
-        await writer.write(data);
-        await writer.close();
-      };
-
-      // Função auxiliar para receber dados via serial
-      const receiveData = async (length: number): Promise<Uint8Array> => {
-        const reader = selectedPort.readable.getReader();
-        const result = await reader.read();
-        reader.releaseLock();
-        return result.value.slice(0, length);
-      };
-
-      // Função auxiliar para enviar comando e verificar resposta
-      const sendCommand = async (command: Uint8Array, expectedResponse?: number): Promise<boolean> => {
-        await sendData(command);
-        if (expectedResponse !== undefined) {
-          await new Promise(resolve => setTimeout(resolve, 50));
-          try {
-            const response = await receiveData(2);
-            const responseCode = response[1]; // STK responde com [0x14, status]
-            console.log(`📡 Comando enviado: ${Array.from(command).map(b => b.toString(16).padStart(2, '0')).join(' ')}`);
-            console.log(`📡 Resposta recebida: ${Array.from(response).map(b => b.toString(16).padStart(2, '0')).join(' ')}`);
-            return responseCode === expectedResponse;
-          } catch (e) {
-            console.log('⚠️ Não foi possível ler resposta');
-            return false;
-          }
-        }
-        return true;
-      };
-
-      // Converter hex string Intel HEX para bytes
-      const parseIntelHex = (hexString: string): Uint8Array => {
-        console.log('🔍 Iniciando parsing Intel HEX...');
-        console.log('📄 Hex string completo:', hexString);
-
-        const lines = hexString.trim().split('\n');
-        console.log('📄 Número de linhas:', lines.length);
-
-        const memory = new Map<number, number>();
-
-        for (const line of lines) {
-          console.log('📄 Processando linha:', line);
-          if (!line.startsWith(':')) {
-            console.log('⚠️ Pulando linha que não começa com :');
-            continue;
-          }
-
-          // Parse Intel HEX line
-          const data = line.substring(1);
-          const byteCount = parseInt(data.substring(0, 2), 16);
-          const address = parseInt(data.substring(2, 6), 16);
-          const recordType = parseInt(data.substring(6, 8), 16);
-
-          console.log(`📄 Linha: ${byteCount} bytes, endereço 0x${address.toString(16)}, tipo ${recordType}`);
-
-          // Only process data records (type 0)
-          if (recordType === 0) {
-            const hexData = data.substring(8, 8 + byteCount * 2);
-
-            console.log(`📄 Dados hex: ${hexData}`);
-
-            for (let i = 0; i < hexData.length; i += 2) {
-              const byte = parseInt(hexData.substring(i, i + 2), 16);
-              memory.set(address + i / 2, byte);
-            }
-          } else if (recordType === 1) {
-            console.log('📄 Fim do arquivo (record type 1)');
-          }
-        }
-
-        // Convert to contiguous array
-        const addresses = Array.from(memory.keys()).sort((a, b) => a - b);
-        const minAddress = addresses[0] || 0;
-        const maxAddress = addresses[addresses.length - 1] || 0;
-
-        console.log(`📄 Endereços de ${minAddress} até ${maxAddress}`);
-
-        const result = new Uint8Array(maxAddress - minAddress + 1);
-
-        Array.from(memory.entries()).forEach(([address, byte]) => {
-          result[address - minAddress] = byte;
+      try {
+        // Upload real via Web Serial + STK500
+        await uploadToArduino(selectedPort, hexContent, {
+          board: 'uno',
+          onProgress: (progress, message) => {
+            setUploadProgress(Math.min(99, 80 + Math.floor(progress / 5))); // Map to 80-99
+            console.log(`📊 ${message}`);
+          },
+          onLog: console.log
         });
 
-        console.log(`📄 Array final: ${result.length} bytes`);
-        console.log('📄 Primeiros 64 bytes:', Array.from(result.slice(0, 64)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+        setUploadProgress(100);
+        console.log('✅ Upload concluído com sucesso!');
+        alert('🎉 Código enviado para Arduino com sucesso! O LED deve começar a piscar em 2 segundos.');
 
-        return result;
-      };
-
-      // Funções auxiliares para protocolo STK500 (Optiboot)
-      const sendSTKCommand = async (command: Uint8Array): Promise<void> => {
-        const message = new Uint8Array(command.length + 1);
-        message.set(command);
-        message[command.length] = 0x20; // CRC_EOP
-        await sendData(message);
-      };
-
-      const receiveSTKResponse = async (): Promise<Uint8Array> => {
-        const reader = selectedPort.readable.getReader();
-        const response = new Uint8Array(32);
-        let index = 0;
+      } catch (uploadError) {
+        console.error('❌ Erro no upload STK500:', uploadError);
         
-        try {
-          // Ler até encontrar Resp_STK_INSYNC (0x14)
-          while (index < response.length) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            
-            for (let i = 0; i < value.length && index < response.length; i++) {
-              response[index++] = value[i];
-              if (value[i] === 0x14) { // Resp_STK_INSYNC
-                // Ler próximo byte (deve ser Resp_STK_OK ou dados)
-                if (i + 1 < value.length) {
-                  response[index++] = value[i + 1];
-                  i++; // Pular o próximo byte já lido
-                } else {
-                  // Aguardar próximo chunk
-                  const nextResult = await reader.read();
-                  if (!nextResult.done && nextResult.value.length > 0) {
-                    response[index++] = nextResult.value[0];
-                  }
-                }
-                return response.slice(0, index);
-              }
-            }
-          }
-        } finally {
-          reader.releaseLock();
-        }
+        const shouldTryIDE = confirm(`❌ Erro no upload: ${(uploadError as Error).message}
+
+💡 Alternativa: Seu Arduino pode ter bootloader incompatível ou conexão instável.
+
+Deseja abrir no Arduino IDE para upload manual?`);
         
-        throw new Error('Timeout waiting for STK response');
-      };
-
-      // Função para fazer upload para Arduino Uno usando STK500 (Optiboot)
-      const uploadToUno = async (hexData: string) => {
-        console.log('🎯 Fazendo upload para Arduino Uno usando STK500...');
-
-        // Reset do Arduino com múltiplas tentativas para re-uploads
-        console.log('🔄 Fazendo reset do Arduino...');
-
-        let bootloaderReady = false;
-        let attempts = 0;
-        const maxAttempts = 3;
-
-        while (!bootloaderReady && attempts < maxAttempts) {
-          attempts++;
-          console.log(`🔄 Tentativa ${attempts}/${maxAttempts} de ativar bootloader...`);
-
-          try {
-            // Sequência de reset mais agressiva para Arduino já executando código
-            console.log('📡 Enviando sinal DTR LOW (500ms)...');
-            await selectedPort.setSignals({ dataTerminalReady: false });
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            console.log('📡 Enviando sinal DTR HIGH (100ms)...');
-            await selectedPort.setSignals({ dataTerminalReady: true });
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            // Aguardar bootloader inicializar (tempo aumentado para re-uploads)
-            console.log('⏳ Aguardando bootloader Optiboot inicializar...');
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Testar se bootloader está respondendo
-            console.log('🔍 Testando comunicação com bootloader...');
-            const testCmd = new Uint8Array([0x41]); // STK_GET_SYNC
-            await sendSTKCommand(testCmd);
-            const response = await receiveSTKResponse();
-
-            if (response && response.length > 0) {
-              console.log('✅ Bootloader respondeu - pronto para upload!');
-              bootloaderReady = true;
-            } else {
-              console.log('⚠️ Bootloader não respondeu nesta tentativa');
-              if (attempts < maxAttempts) {
-                console.log('⏳ Aguardando antes da próxima tentativa...');
-                await new Promise(resolve => setTimeout(resolve, 2000));
-              }
-            }
-
-          } catch (error) {
-            console.log(`❌ Erro na tentativa ${attempts}:`, error);
-            if (attempts < maxAttempts) {
-              console.log('⏳ Aguardando antes da próxima tentativa...');
-              await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-          }
+        if (shouldTryIDE) {
+          openInArduinoIDE();
         }
-
-        if (!bootloaderReady) {
-          throw new Error(`Não foi possível ativar o bootloader Optiboot após ${maxAttempts} tentativas. Verifique se o Arduino está conectado corretamente.`);
-        }
-
-        // Obter dados do programa
-        const programData = parseIntelHex(hexData);
-        console.log('� Enviando programa - Total bytes:', programData.length);
-
-        // Para Optiboot, programar em páginas de 128 bytes
-        const pageSize = 128;
-        let address = 0;
-
-        for (let offset = 0; offset < programData.length; offset += pageSize) {
-          const pageData = programData.slice(offset, offset + pageSize);
-          const wordAddress = Math.floor(address / 2); // Endereço de palavra para STK500
-
-          // STK_LOAD_ADDRESS - Define endereço (word address)
-          console.log(`� Definindo endereço: 0x${wordAddress.toString(16)}`);
-          const loadAddrCmd = new Uint8Array([
-            0x55, // STK_LOAD_ADDRESS
-            wordAddress & 0xFF,
-            (wordAddress >> 8) & 0xFF
-          ]);
-          await sendSTKCommand(loadAddrCmd);
-          await receiveSTKResponse();
-
-          // STK_PROG_PAGE - Programa página
-          console.log(`� Programando página: ${offset}-${offset + pageData.length} bytes`);
-          const progPageCmd = new Uint8Array(4 + pageData.length);
-          progPageCmd[0] = 0x64; // STK_PROG_PAGE
-          progPageCmd[1] = (pageData.length >> 8) & 0xFF;
-          progPageCmd[2] = pageData.length & 0xFF;
-          progPageCmd[3] = 0x46; // 'F' para flash
-          progPageCmd.set(pageData, 4);
-          await sendSTKCommand(progPageCmd);
-          await receiveSTKResponse();
-
-          address += pageData.length;
-
-          // Atualizar progresso
-          const progress = 80 + Math.floor((offset / programData.length) * 15);
-          setUploadProgress(progress);
-        }
-
-        console.log('📤 Todas as páginas enviadas');
-
-        // STK_LEAVE_PROGMODE - Sai do modo programação
-        console.log('🏁 Saindo do modo programação...');
-        const leaveCmd = new Uint8Array([0x51]); // STK_LEAVE_PROGMODE
-        await sendSTKCommand(leaveCmd);
-        await receiveSTKResponse();
-
-        console.log('✅ Upload STK500 concluído');
-      };
-
-
-
-      // Detectar tipo de placa e fazer upload (sempre Uno)
-      await uploadToUno(hexContent);
-
-      setUploadProgress(95);
-
-      // Aguardar um pouco para o Arduino reiniciar
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Reset adicional para garantir que o novo código seja executado
-      console.log('🔄 Fazendo reset adicional...');
-      await selectedPort.setSignals({ dataTerminalReady: false });
-      await new Promise(resolve => setTimeout(resolve, 100));
-      await selectedPort.setSignals({ dataTerminalReady: true });
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Fechar a porta
-      await selectedPort.close();
-
-      setUploadProgress(100);
-
-      setUploadProgress(100);
-      console.log('✅ Upload concluído com sucesso!');
-      alert('🎉 Código enviado para Arduino com sucesso!');
+        throw uploadError;
+      }
 
     } catch (error) {
-      console.error('❌ Erro no upload:', error);
-      
-      // Oferecer fallback: download do código quando compilação falhar
-      const shouldDownload = confirm(`❌ Erro na compilação/upload online: ${(error as Error).message}
+      console.error('❌ Erro geral:', error);
 
-💡 Alternativa: Deseja baixar o código Arduino para compilar localmente no Arduino IDE?
+      alert(`❌ Erro: ${(error as Error).message}
 
-✅ O download incluirá:
-• Arquivo .ino pronto para Arduino IDE
-• Script automático para abrir o Arduino IDE
-• Configurações pré-definidas para Arduino Uno
+Tente:
+1. Reconectar o Arduino USB
+2. Usar o botão "🖥️ IDE" para upload manual
+3. Verificar drivers do CH340 se estiver usando clone`);
 
-📝 Instruções:
-1. Execute o arquivo .bat baixado
-2. O Arduino IDE abrirá automaticamente
-3. Clique em Upload (→) no Arduino IDE`);
-
-      if (shouldDownload) {
-        // Usar a função existente para abrir no Arduino IDE (que faz download)
-        openInArduinoIDE();
-        alert('✅ Arquivos de download criados!\n\nExecute o arquivo .bat para abrir o Arduino IDE com configurações automáticas.');
-      } else {
-        alert(`❌ Upload cancelado.
-
-💡 Para tentar novamente:
-• Verifique sua conexão com a internet
-• Certifique-se de que o Arduino está conectado
-• Selecione a porta correta
-• Tente o botão "🖥️ Abrir no Arduino IDE" para compilação local`);
-      }
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
-      
-      // Garantir que a porta serial seja fechada
+
+      // Garantir que a porta seja fechada
       try {
-        if (selectedPort && (selectedPort.readable || selectedPort.writable)) {
+        if (selectedPort && selectedPort.readable) {
           await selectedPort.close();
-          console.log('🔌 Porta serial fechada com sucesso');
+          console.log('🔌 Porta serial fechada');
         }
       } catch (e) {
-        console.log('⚠️ Erro ao fechar porta no finally:', e);
+        console.log('⚠️ Erro ao fechar porta:', e);
       }
     }
-  };
-
-  const uploadToArduino = async () => {
-    // Chamar a nova função de compilação e upload direto
-    await compileAndUpload();
   };
 
   // Nova função: Abrir diretamente no Arduino IDE
@@ -873,8 +595,6 @@ pause
             </span>
           )}
         </div>
-        {/* REMOVIDO: Funcionalidades de upload para Arduino */}
-        {/*
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-lg">
             <span className="text-xs text-gray-600">Porta:</span>
@@ -888,7 +608,7 @@ pause
                 disabled={isScanningPorts}
                 className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 disabled:bg-gray-400"
               >
-                {isScanningPorts ? '🔍 Escaneando...' : '🔍 Escanear Portas'}
+                {isScanningPorts ? '🔍 Escaneando...' : '🔍 Conectar'}
               </button>
             )}
             <span className="text-xs text-gray-500 hidden md:inline">
@@ -897,37 +617,29 @@ pause
           </div>
 
           <button
+            onClick={() => compileAndUpload()}
+            disabled={isUploading || !selectedPort}
+            className="text-sm bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition-colors disabled:bg-gray-400"
+            title="Compilar e fazer upload do código para Arduino"
+          >
+            {isUploading ? '🚀 Enviando...' : '🚀 Upload'}
+          </button>
+
+          <button
             onClick={openInArduinoIDE}
             className="text-sm bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition-colors"
             title="Abrir código no Arduino IDE"
           >
-            🖥️ Abrir no Arduino IDE
+            🖥️ IDE
           </button>
-        */}
-     
-          {/* BOTÕES COMENTADOS TEMPORARIAMENTE */}
-          {/* <button
-            onClick={() => setShowArduinoPanel(!showArduinoPanel)}
-            className={`text-sm px-3 py-1 rounded-lg transition-colors ${
-              showArduinoPanel 
-                ? 'bg-green-500 text-white hover:bg-green-600' 
-                : 'bg-gray-500 text-white hover:bg-gray-600'
-            }`}
-          >
-            🤖 Arduino {showArduinoPanel ? 'Conectado' : 'Conectar'}
-          </button>
-          <button
-            onClick={createNewProject}
-            className="text-sm bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Novo Projeto
-          </button>
+
           <button
             onClick={() => setShowProjectModal(true)}
             className="text-sm bg-gray-500 text-white px-3 py-1 rounded-lg hover:bg-gray-600 transition-colors"
           >
-            Meus Projetos
-          </button> */}
+            💾 Projetos
+          </button>
+        </div>
 
       </div>
 

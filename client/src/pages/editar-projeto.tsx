@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -12,7 +12,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -22,28 +22,28 @@ const db = getFirestore(app);
 
 // Paleta de gradientes predefinidos
 const gradientes = [
-  { nome: "Vermelho Espacial", classe: "from-red-900 via-red-700 to-orange-600", preview: "🚀" },
-  { nome: "Azul Profundo", classe: "from-blue-900 via-purple-800 to-indigo-900", preview: "🌌" },
-  { nome: "Verde Tecnológico", classe: "from-green-800 via-teal-700 to-cyan-600", preview: "💻" },
-  { nome: "Cinza Industrial", classe: "from-gray-800 via-gray-600 to-blue-700", preview: "🔧" },
-  { nome: "Laranja Marciano", classe: "from-red-800 via-orange-700 to-yellow-600", preview: "🪐" },
-  { nome: "Roxo Galáxia", classe: "from-purple-900 via-pink-800 to-indigo-900", preview: "✨" },
-  { nome: "Verde Floresta", classe: "from-emerald-900 via-green-700 to-teal-600", preview: "🌲" },
-  { nome: "Azul Oceano", classe: "from-blue-800 via-cyan-700 to-teal-600", preview: "🌊" },
+  { nome: "Vermelho Espacial", classe: "from-red-900 via-red-700 to-orange-600", preview: "ðŸš€" },
+  { nome: "Azul Profundo", classe: "from-blue-900 via-purple-800 to-indigo-900", preview: "ðŸŒŒ" },
+  { nome: "Verde TecnolÃ³gico", classe: "from-green-800 via-teal-700 to-cyan-600", preview: "ðŸ’»" },
+  { nome: "Cinza Industrial", classe: "from-gray-800 via-gray-600 to-blue-700", preview: "ðŸ”§" },
+  { nome: "Laranja Marciano", classe: "from-red-800 via-orange-700 to-yellow-600", preview: "ðŸª" },
+  { nome: "Roxo GalÃ¡xia", classe: "from-purple-900 via-pink-800 to-indigo-900", preview: "âœ¨" },
+  { nome: "Verde Floresta", classe: "from-emerald-900 via-green-700 to-teal-600", preview: "ðŸŒ²" },
+  { nome: "Azul Oceano", classe: "from-blue-800 via-cyan-700 to-teal-600", preview: "ðŸŒŠ" },
 ];
 
-// Lista de ícones disponíveis para etapas
+// Lista de Ã­cones disponÃ­veis para etapas
 const icones = [
-  "🚀", "🛸", "🧑‍🚀", "👩‍🔬", "🤖", "👨‍💻", "🛰️", "🌟", "🔧", "💻", 
-  "📱", "🎯", "🧠", "🤝", "⚡", "🎨", "🔬", "🌍", "🌱", "💡",
-  "🏆", "📋", "🎪", "🎭", "🎲", "🎳", "🎮", "🎸", "🎹", "🎺",
-  "⚗️", "🔭", "🪐", "🌙", "☄️", "🌟", "✨", "💫", "🌈", "🔥"
+  "ðŸš€", "ðŸ›¸", "ðŸ§‘â€ðŸš€", "ðŸ‘©â€ðŸ”¬", "ðŸ¤–", "ðŸ‘¨â€ðŸ’»", "ðŸ›°ï¸", "ðŸŒŸ", "ðŸ”§", "ðŸ’»", 
+  "ðŸ“±", "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸŽ¨", "ðŸ”¬", "ðŸŒ", "ðŸŒ±", "ðŸ’¡",
+  "ðŸ†", "ðŸ“‹", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ³", "ðŸŽ®", "ðŸŽ¸", "ðŸŽ¹", "ðŸŽº",
+  "âš—ï¸", "ðŸ”­", "ðŸª", "ðŸŒ™", "â˜„ï¸", "ðŸŒŸ", "âœ¨", "ðŸ’«", "ðŸŒˆ", "ðŸ”¥"
 ];
 
-// Lista de ícones para objetivos
+// Lista de Ã­cones para objetivos
 const iconesObjetivos = [
-  "🎯", "🧠", "🤝", "⚡", "💡", "🔬", "🎨", "🚀", "📚", "🏆",
-  "⭐", "🔥", "💪", "🌟", "🎪", "🎭", "🎲", "🎮", "🔧", "💻"
+  "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸ’¡", "ðŸ”¬", "ðŸŽ¨", "ðŸš€", "ðŸ“š", "ðŸ†",
+  "â­", "ðŸ”¥", "ðŸ’ª", "ðŸŒŸ", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ®", "ðŸ”§", "ðŸ’»"
 ];
 
 interface Objetivo {
@@ -156,12 +156,12 @@ export default function EditarProjeto() {
 
   const salvarProjeto = async () => {
     if (!tituloProjeto.trim() || etapas.length === 0) {
-      setMsg("Preencha o título e adicione pelo menos uma etapa.");
+      setMsg("Preencha o tÃ­tulo e adicione pelo menos uma etapa.");
       return;
     }
 
     if (!params?.id) {
-      setMsg("❌ ID do projeto não encontrado.");
+      setMsg("âŒ ID do projeto nÃ£o encontrado.");
       return;
     }
 
@@ -173,13 +173,13 @@ export default function EditarProjeto() {
         etapas,
         atualizadoEm: new Date().toISOString(),
       });
-      setMsg("🎉 Projeto atualizado com sucesso!");
+      setMsg("ðŸŽ‰ Projeto atualizado com sucesso!");
       setTimeout(() => {
         setLocation("/projetos-avancados");
       }, 2000);
     } catch (e) {
       console.error("Erro ao atualizar projeto:", e);
-      setMsg("❌ Erro ao atualizar projeto.");
+      setMsg("âŒ Erro ao atualizar projeto.");
     }
     setSalvando(false);
   };
@@ -192,7 +192,7 @@ export default function EditarProjeto() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="text-6xl mb-4 animate-spin">⏳</div>
+          <div className="text-6xl mb-4 animate-spin">â³</div>
           <div className="text-2xl font-bold">Carregando projeto...</div>
         </div>
       </div>
@@ -203,10 +203,10 @@ export default function EditarProjeto() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <div className="text-center text-white max-w-md">
-          <div className="text-6xl mb-4">❌</div>
-          <div className="text-2xl font-bold mb-4">Projeto não encontrado</div>
+          <div className="text-6xl mb-4">âŒ</div>
+          <div className="text-2xl font-bold mb-4">Projeto nÃ£o encontrado</div>
           <Button onClick={voltarParaLista} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-full">
-            Voltar à lista de projetos
+            Voltar Ã  lista de projetos
           </Button>
         </div>
       </div>
@@ -222,63 +222,63 @@ export default function EditarProjeto() {
             onClick={voltarParaLista} 
             className="mb-6 bg-white/10 hover:bg-white/20 backdrop-blur text-white font-bold px-6 py-3 rounded-full border border-white/20"
           >
-            ← Voltar aos Projetos
+            â† Voltar aos Projetos
           </Button>
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-            ✏️ Editar Projeto
+            âœï¸ Editar Projeto
           </h1>
           <p className="text-xl text-gray-300">
-            Modifique o projeto pedagógico conforme necessário
+            Modifique o projeto pedagÃ³gico conforme necessÃ¡rio
           </p>
         </div>
 
-        {/* Título do Projeto */}
+        {/* TÃ­tulo do Projeto */}
         <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <span className="text-2xl">📝</span>
-              Título do Projeto
+              <span className="text-2xl">ðŸ“</span>
+              TÃ­tulo do Projeto
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Input
               value={tituloProjeto}
               onChange={e => setTituloProjeto(e.target.value)}
-              placeholder="Ex: Missão: Robô Marciano"
+              placeholder="Ex: MissÃ£o: RobÃ´ Marciano"
               className="bg-gray-700 border-gray-600 text-white text-lg p-4"
             />
           </CardContent>
         </Card>
 
-        {/* Formulário para Nova Etapa */}
+        {/* FormulÃ¡rio para Nova Etapa */}
         <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <span className="text-2xl">✨</span>
+              <span className="text-2xl">âœ¨</span>
               Adicionar/Editar Etapa
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Título da Etapa */}
+            {/* TÃ­tulo da Etapa */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                📝 Título da Etapa
+                ðŸ“ TÃ­tulo da Etapa
               </label>
               <Input
-                placeholder="Ex: Montagem do Robô Marciano"
+                placeholder="Ex: Montagem do RobÃ´ Marciano"
                 value={novaEtapa.titulo}
                 onChange={(e) => setNovaEtapa({ ...novaEtapa, titulo: e.target.value })}
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
 
-            {/* Descrição da Etapa */}
+            {/* DescriÃ§Ã£o da Etapa */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                📋 Descrição da Etapa
+                ðŸ“‹ DescriÃ§Ã£o da Etapa
               </label>
               <Textarea
-                placeholder="Descreva o que os alunos farão nesta etapa..."
+                placeholder="Descreva o que os alunos farÃ£o nesta etapa..."
                 value={novaEtapa.descricao}
                 onChange={(e) => setNovaEtapa({ ...novaEtapa, descricao: e.target.value })}
                 className="bg-gray-700 border-gray-600 text-white"
@@ -289,7 +289,7 @@ export default function EditarProjeto() {
             {/* Seletor de Gradiente */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                🎨 Tema Visual da Etapa
+                ðŸŽ¨ Tema Visual da Etapa
               </label>
               <div className="grid grid-cols-4 gap-3">
                 {gradientes.map((gradiente, index) => (
@@ -307,7 +307,7 @@ export default function EditarProjeto() {
                       <span className="text-2xl">{gradiente.preview}</span>
                       {novaEtapa.background === gradiente.classe && (
                         <div className="absolute top-1 right-1 bg-yellow-400 text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
-                          ✓
+                          âœ“
                         </div>
                       )}
                     </div>
@@ -319,10 +319,10 @@ export default function EditarProjeto() {
               </div>
             </div>
 
-            {/* Seletor de Ícone */}
+            {/* Seletor de Ãcone */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                🎭 Ícone Representativo da Etapa
+                ðŸŽ­ Ãcone Representativo da Etapa
               </label>
               <div className="grid grid-cols-10 gap-2 max-h-40 overflow-y-auto border border-gray-600 rounded-lg p-3 bg-gray-700/50">
                 {icones.map((icone, index) => (
@@ -342,10 +342,10 @@ export default function EditarProjeto() {
               </div>
             </div>
 
-            {/* Ação da Etapa */}
+            {/* AÃ§Ã£o da Etapa */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                ⚡ Ação Principal da Etapa
+                âš¡ AÃ§Ã£o Principal da Etapa
               </label>
               <Input
                 placeholder="Ex: Construir, Programar, Testar, Apresentar"
@@ -355,13 +355,13 @@ export default function EditarProjeto() {
               />
             </div>
 
-            {/* Código da Etapa */}
+            {/* CÃ³digo da Etapa */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                💻 Código para esta Etapa
+                ðŸ’» CÃ³digo para esta Etapa
               </label>
               <Textarea
-                placeholder="Cole aqui o código que será usado nesta etapa..."
+                placeholder="Cole aqui o cÃ³digo que serÃ¡ usado nesta etapa..."
                 value={novaEtapa.codigo}
                 onChange={(e) => setNovaEtapa({ ...novaEtapa, codigo: e.target.value })}
                 className="bg-gray-700 border-gray-600 text-white font-mono text-sm"
@@ -372,7 +372,7 @@ export default function EditarProjeto() {
             {/* Upload de Imagem dos Blocos */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                🖼️ Inserir Imagem dos Blocos
+                ðŸ–¼ï¸ Inserir Imagem dos Blocos
               </label>
               <div className="space-y-3">
                 <input
@@ -410,7 +410,7 @@ export default function EditarProjeto() {
                       className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-sm"
                       title="Remover imagem"
                     >
-                      ✕
+                      âœ•
                     </button>
                   </div>
                 )}
@@ -420,19 +420,19 @@ export default function EditarProjeto() {
             {/* Objetivos da Etapa */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                🎯 Objetivos de Aprendizagem (opcional)
+                ðŸŽ¯ Objetivos de Aprendizagem (opcional)
               </label>
               
               {/* Adicionar Objetivo */}
               <div className="bg-gray-700/50 p-4 rounded-lg mb-4 border border-gray-600">
                 <h4 className="text-white text-sm font-medium mb-3 flex items-center gap-2">
-                  <span>➕</span>
+                  <span>âž•</span>
                   Adicionar Novo Objetivo
                 </h4>
                 
-                {/* Seletor de Ícone para Objetivo */}
+                {/* Seletor de Ãcone para Objetivo */}
                 <div className="mb-3">
-                  <label className="block text-xs text-gray-400 mb-2">Ícone do Objetivo</label>
+                  <label className="block text-xs text-gray-400 mb-2">Ãcone do Objetivo</label>
                   <div className="grid grid-cols-10 gap-1 max-h-24 overflow-y-auto border border-gray-600 rounded p-2 bg-gray-800">
                     {iconesObjetivos.map((icone, index) => (
                       <button
@@ -464,7 +464,7 @@ export default function EditarProjeto() {
                     className="bg-green-600 hover:bg-green-700 text-white px-6"
                     disabled={!novoObjetivo.icon || !novoObjetivo.text.trim()}
                   >
-                    <span className="text-lg">➕</span>
+                    <span className="text-lg">âž•</span>
                   </Button>
                 </div>
               </div>
@@ -473,7 +473,7 @@ export default function EditarProjeto() {
               {novaEtapa.objetivos.length > 0 && (
                 <div className="space-y-2">
                   <h4 className="text-white text-sm font-medium flex items-center gap-2">
-                    <span>📋</span>
+                    <span>ðŸ“‹</span>
                     Objetivos Adicionados ({novaEtapa.objetivos.length})
                   </h4>
                   {novaEtapa.objetivos.map((obj, idx) => (
@@ -485,7 +485,7 @@ export default function EditarProjeto() {
                         className="text-red-400 hover:text-red-300 hover:bg-red-900/20 p-2 rounded transition-all"
                         title="Remover objetivo"
                       >
-                        <span className="text-lg">🗑️</span>
+                        <span className="text-lg">ðŸ—‘ï¸</span>
                       </button>
                     </div>
                   ))}
@@ -498,7 +498,7 @@ export default function EditarProjeto() {
               className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
               disabled={!novaEtapa.titulo.trim() || !novaEtapa.descricao.trim()}
             >
-              <span className="text-xl mr-2">✨</span>
+              <span className="text-xl mr-2">âœ¨</span>
               Adicionar Etapa ao Projeto
             </Button>
           </CardContent>
@@ -509,7 +509,7 @@ export default function EditarProjeto() {
           <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">👁️</span>
+                <span className="text-2xl">ðŸ‘ï¸</span>
                 Preview do Projeto ({etapas.length} etapa{etapas.length !== 1 ? 's' : ''})
               </CardTitle>
             </CardHeader>
@@ -523,14 +523,14 @@ export default function EditarProjeto() {
                         className="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded-full transition-all"
                         title="Editar etapa"
                       >
-                        <span className="text-sm">✏️</span>
+                        <span className="text-sm">âœï¸</span>
                       </button>
                       <button
                         onClick={() => removerEtapa(index)}
                         className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-all"
                         title="Remover etapa"
                       >
-                        <span className="text-sm">🗑️</span>
+                        <span className="text-sm">ðŸ—‘ï¸</span>
                       </button>
                     </div>
                     <div className="flex items-start gap-4">
@@ -539,12 +539,12 @@ export default function EditarProjeto() {
                         <h3 className="text-2xl font-bold text-white mb-2">{etapa.titulo}</h3>
                         <p className="text-gray-200 mb-4">{etapa.descricao}</p>
                         
-                        {/* Código da Etapa */}
+                        {/* CÃ³digo da Etapa */}
                         {etapa.codigo && (
                           <div className="mb-4">
                             <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                              <span>💻</span>
-                              Código:
+                              <span>ðŸ’»</span>
+                              CÃ³digo:
                             </h4>
                             <div className="bg-black/30 p-3 rounded-lg border border-gray-600">
                               <pre className="text-green-300 text-sm overflow-x-auto font-mono">
@@ -558,7 +558,7 @@ export default function EditarProjeto() {
                         {etapa.imagemBlocos && (
                           <div className="mb-4">
                             <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                              <span>🖼️</span>
+                              <span>ðŸ–¼ï¸</span>
                               Imagem dos Blocos:
                             </h4>
                             <img
@@ -572,7 +572,7 @@ export default function EditarProjeto() {
                         {etapa.objetivos.length > 0 && (
                           <div className="mb-4">
                             <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                              <span>🎯</span>
+                              <span>ðŸŽ¯</span>
                               Objetivos:
                             </h4>
                             <div className="space-y-1">
@@ -599,7 +599,7 @@ export default function EditarProjeto() {
           </Card>
         )}
 
-        {/* Botão Salvar e Mensagens */}
+        {/* BotÃ£o Salvar e Mensagens */}
         <div className="text-center space-y-4">
           <Button
             onClick={salvarProjeto}
@@ -608,13 +608,13 @@ export default function EditarProjeto() {
           >
             {salvando ? (
               <>
-                <span className="text-2xl mr-2">⏳</span>
-                Salvando Alterações...
+                <span className="text-2xl mr-2">â³</span>
+                Salvando AlteraÃ§Ãµes...
               </>
             ) : (
               <>
-                <span className="text-2xl mr-2">💾</span>
-                Salvar Alterações
+                <span className="text-2xl mr-2">ðŸ’¾</span>
+                Salvar AlteraÃ§Ãµes
               </>
             )}
           </Button>
@@ -633,3 +633,4 @@ export default function EditarProjeto() {
     </div>
   );
 }
+

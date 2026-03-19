@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -43,13 +43,13 @@ export default function CadastrarAluno() {
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState("");
   
-  // Estados do formulário
+  // Estados do formulÃ¡rio
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [idade, setIdade] = useState("");
 
   useEffect(() => {
-    // Verificar se professor está logado
+    // Verificar se professor estÃ¡ logado
     const professorData = localStorage.getItem('professor');
     if (!professorData) {
       setLocation('/login-professor');
@@ -68,7 +68,7 @@ export default function CadastrarAluno() {
     try {
       // Verificar se o professor tem acesso a esta turma
       if (!prof.codigosTurmas.includes(codigoTurma)) {
-        setMensagem("❌ Você não tem acesso a esta turma");
+        setMensagem("âŒ VocÃª nÃ£o tem acesso a esta turma");
         return;
       }
 
@@ -84,18 +84,18 @@ export default function CadastrarAluno() {
         const rotaDoc = rotasSnap.docs[0];
         setRotaEstudo({ id: rotaDoc.id, ...rotaDoc.data() } as RotaEstudo);
       } else {
-        setMensagem("❌ Turma não encontrada");
+        setMensagem("âŒ Turma nÃ£o encontrada");
       }
     } catch (error) {
       console.error("Erro ao carregar rota:", error);
-      setMensagem("❌ Erro ao carregar dados da turma");
+      setMensagem("âŒ Erro ao carregar dados da turma");
     }
   };
 
   const handleCadastrarAluno = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nome || !email || !idade || !professor || !rotaEstudo) {
-      setMensagem("❌ Preencha todos os campos");
+      setMensagem("âŒ Preencha todos os campos");
       return;
     }
 
@@ -103,7 +103,7 @@ export default function CadastrarAluno() {
     setMensagem("");
 
     try {
-      // Verificar se aluno já existe nesta turma
+      // Verificar se aluno jÃ¡ existe nesta turma
       const alunosQuery = query(
         collection(db, "alunos"),
         where("email", "==", email.toLowerCase()),
@@ -113,7 +113,7 @@ export default function CadastrarAluno() {
       const alunosSnap = await getDocs(alunosQuery);
 
       if (!alunosSnap.empty) {
-        setMensagem("❌ Aluno já cadastrado nesta turma");
+        setMensagem("âŒ Aluno jÃ¡ cadastrado nesta turma");
         setCarregando(false);
         return;
       }
@@ -140,9 +140,9 @@ export default function CadastrarAluno() {
 
       await addDoc(collection(db, "alunos"), novoAluno);
 
-      setMensagem("✅ Aluno cadastrado com sucesso!");
+      setMensagem("âœ… Aluno cadastrado com sucesso!");
       
-      // Limpar formulário
+      // Limpar formulÃ¡rio
       setNome("");
       setEmail("");
       setIdade("");
@@ -153,7 +153,7 @@ export default function CadastrarAluno() {
 
     } catch (error) {
       console.error("Erro ao cadastrar aluno:", error);
-      setMensagem("❌ Erro ao cadastrar aluno. Tente novamente.");
+      setMensagem("âŒ Erro ao cadastrar aluno. Tente novamente.");
     }
     
     setCarregando(false);
@@ -175,7 +175,7 @@ export default function CadastrarAluno() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                <span className="text-4xl">👨‍🎓</span>
+                <span className="text-4xl">ðŸ‘¨â€ðŸŽ“</span>
                 Cadastrar Aluno
               </h1>
               <p className="text-gray-300 mt-2">
@@ -192,18 +192,18 @@ export default function CadastrarAluno() {
           </div>
         </div>
 
-        {/* Informações da turma */}
+        {/* InformaÃ§Ãµes da turma */}
         <Card className="bg-gray-800/90 border-gray-700 mb-6">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <span className="text-2xl">📖</span>
+              <span className="text-2xl">ðŸ“–</span>
               {rotaEstudo.titulo}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Badge variant="secondary">Código: {rotaEstudo.codigo}</Badge>
+                <Badge variant="secondary">CÃ³digo: {rotaEstudo.codigo}</Badge>
                 <Badge className="bg-blue-600">Professor: {professor.nome}</Badge>
               </div>
               <p className="text-gray-300">{rotaEstudo.descricao}</p>
@@ -211,7 +211,7 @@ export default function CadastrarAluno() {
           </CardContent>
         </Card>
 
-        {/* Formulário de cadastro */}
+        {/* FormulÃ¡rio de cadastro */}
         <Card className="bg-gray-800/90 border-gray-700">
           <CardHeader>
             <CardTitle className="text-white">Dados do Aluno</CardTitle>
@@ -245,7 +245,7 @@ export default function CadastrarAluno() {
                   required
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  O aluno usará este e-mail para fazer login na plataforma
+                  O aluno usarÃ¡ este e-mail para fazer login na plataforma
                 </p>
               </div>
 
@@ -267,7 +267,7 @@ export default function CadastrarAluno() {
 
               {mensagem && (
                 <div className={`p-4 rounded-lg text-center font-medium ${
-                  mensagem.includes("✅") 
+                  mensagem.includes("âœ…") 
                     ? "bg-green-600/20 text-green-400 border border-green-600" 
                     : "bg-red-600/20 text-red-400 border border-red-600"
                 }`}>
@@ -300,14 +300,14 @@ export default function CadastrarAluno() {
         <Card className="bg-blue-600/20 border-blue-600 mt-6">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <span className="text-2xl">💡</span>
+              <span className="text-2xl">ðŸ’¡</span>
               <div>
                 <h3 className="text-white font-semibold mb-2">Dicas importantes:</h3>
                 <ul className="text-blue-200 text-sm space-y-1">
-                  <li>• O e-mail será usado pelo aluno para fazer login</li>
-                  <li>• Certifique-se de que o e-mail está correto</li>
-                  <li>• O aluno receberá instruções de acesso automaticamente</li>
-                  <li>• Você pode cadastrar quantos alunos precisar para esta turma</li>
+                  <li>â€¢ O e-mail serÃ¡ usado pelo aluno para fazer login</li>
+                  <li>â€¢ Certifique-se de que o e-mail estÃ¡ correto</li>
+                  <li>â€¢ O aluno receberÃ¡ instruÃ§Ãµes de acesso automaticamente</li>
+                  <li>â€¢ VocÃª pode cadastrar quantos alunos precisar para esta turma</li>
                 </ul>
               </div>
             </div>
@@ -317,3 +317,4 @@ export default function CadastrarAluno() {
     </div>
   );
 }
+

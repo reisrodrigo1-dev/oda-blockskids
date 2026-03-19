@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
@@ -12,7 +12,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -44,7 +44,7 @@ export default function NovaRotaEstudo() {
   const [salvando, setSalvando] = useState(false);
   const [mensagem, setMensagem] = useState("");
   
-  // Estados do formulário
+  // Estados do formulÃ¡rio
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [codigo, setCodigo] = useState("");
@@ -64,7 +64,7 @@ export default function NovaRotaEstudo() {
       if (clienteDoc.exists()) {
         setCliente({ id: clienteDoc.id, ...clienteDoc.data() } as Cliente);
       } else {
-        setMensagem("❌ Cliente não encontrado");
+        setMensagem("âŒ Cliente nÃ£o encontrado");
         return;
       }
 
@@ -80,14 +80,14 @@ export default function NovaRotaEstudo() {
       } as RotaEstudo));
       setRotasExistentes(rotasData);
 
-      // Gerar código automático
+      // Gerar cÃ³digo automÃ¡tico
       const proximoNumero = rotasData.length + 1;
       const codigoSugerido = `${clienteDoc.data()?.razaoSocial?.substring(0, 3).toUpperCase() || 'CLI'}${proximoNumero.toString().padStart(3, '0')}`;
       setCodigo(codigoSugerido);
 
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
-      setMensagem("❌ Erro ao carregar dados");
+      setMensagem("âŒ Erro ao carregar dados");
     }
     setCarregando(false);
   };
@@ -107,7 +107,7 @@ export default function NovaRotaEstudo() {
   const handleCriarRota = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!titulo || !codigo || !params?.clienteId || !cliente) {
-      setMensagem("❌ Preencha todos os campos obrigatórios");
+      setMensagem("âŒ Preencha todos os campos obrigatÃ³rios");
       return;
     }
 
@@ -115,10 +115,10 @@ export default function NovaRotaEstudo() {
     setMensagem("");
 
     try {
-      // Verificar se código é único para este cliente
+      // Verificar se cÃ³digo Ã© Ãºnico para este cliente
       const codigoUnico = await verificarCodigoUnico(codigo);
       if (!codigoUnico) {
-        setMensagem("❌ Este código já existe para este cliente. Escolha outro código.");
+        setMensagem("âŒ Este cÃ³digo jÃ¡ existe para este cliente. Escolha outro cÃ³digo.");
         setSalvando(false);
         return;
       }
@@ -135,13 +135,13 @@ export default function NovaRotaEstudo() {
 
       await addDoc(collection(db, "rotasEstudo"), novaRota);
       
-      setMensagem("✅ Rota de estudo criada com sucesso!");
+      setMensagem("âœ… Rota de estudo criada com sucesso!");
       
-      // Limpar formulário
+      // Limpar formulÃ¡rio
       setTitulo("");
       setDescricao("");
       
-      // Gerar novo código
+      // Gerar novo cÃ³digo
       const proximoNumero = rotasExistentes.length + 2;
       const novoCodigoSugerido = `${cliente.razaoSocial.substring(0, 3).toUpperCase()}${proximoNumero.toString().padStart(3, '0')}`;
       setCodigo(novoCodigoSugerido);
@@ -153,7 +153,7 @@ export default function NovaRotaEstudo() {
 
     } catch (error) {
       console.error("Erro ao criar rota:", error);
-      setMensagem("❌ Erro ao criar rota de estudo");
+      setMensagem("âŒ Erro ao criar rota de estudo");
     }
     
     setSalvando(false);
@@ -170,7 +170,7 @@ export default function NovaRotaEstudo() {
   if (!cliente) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-green-900 flex items-center justify-center">
-        <div className="text-white text-xl">Cliente não encontrado</div>
+        <div className="text-white text-xl">Cliente nÃ£o encontrado</div>
       </div>
     );
   }
@@ -183,7 +183,7 @@ export default function NovaRotaEstudo() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                <span className="text-4xl">📚</span>
+                <span className="text-4xl">ðŸ“š</span>
                 Nova Rota de Estudo
               </h1>
               <p className="text-gray-300 mt-2">
@@ -202,7 +202,7 @@ export default function NovaRotaEstudo() {
 
         {mensagem && (
           <div className={`mb-6 p-4 rounded-lg text-center font-medium ${
-            mensagem.includes("✅") 
+            mensagem.includes("âœ…") 
               ? "bg-green-600/20 text-green-400 border border-green-600" 
               : "bg-red-600/20 text-red-400 border border-red-600"
           }`}>
@@ -211,7 +211,7 @@ export default function NovaRotaEstudo() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Formulário */}
+          {/* FormulÃ¡rio */}
           <Card className="bg-gray-800/90 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white">Criar Nova Rota</CardTitle>
@@ -220,20 +220,20 @@ export default function NovaRotaEstudo() {
               <form onSubmit={handleCriarRota} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Título da Rota *
+                    TÃ­tulo da Rota *
                   </label>
                   <Input
                     value={titulo}
                     onChange={e => setTitulo(e.target.value)}
                     className="bg-gray-700 border-gray-600 text-white"
-                    placeholder="Ex: Programação Básica Arduino - 6º Ano"
+                    placeholder="Ex: ProgramaÃ§Ã£o BÃ¡sica Arduino - 6Âº Ano"
                     required
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Código da Turma *
+                    CÃ³digo da Turma *
                   </label>
                   <Input
                     value={codigo}
@@ -243,19 +243,19 @@ export default function NovaRotaEstudo() {
                     required
                   />
                   <p className="text-xs text-gray-400 mt-1">
-                    Este código será usado pelos professores para se cadastrarem
+                    Este cÃ³digo serÃ¡ usado pelos professores para se cadastrarem
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Descrição
+                    DescriÃ§Ã£o
                   </label>
                   <Textarea
                     value={descricao}
                     onChange={e => setDescricao(e.target.value)}
                     className="bg-gray-700 border-gray-600 text-white"
-                    placeholder="Descreva os objetivos e conteúdo desta rota de estudo..."
+                    placeholder="Descreva os objetivos e conteÃºdo desta rota de estudo..."
                     rows={4}
                   />
                 </div>
@@ -307,7 +307,7 @@ export default function NovaRotaEstudo() {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <div className="text-4xl mb-4">📚</div>
+                  <div className="text-4xl mb-4">ðŸ“š</div>
                   <p className="text-gray-400">
                     Nenhuma rota de estudo criada ainda.
                   </p>
@@ -321,14 +321,14 @@ export default function NovaRotaEstudo() {
         <Card className="bg-blue-600/20 border-blue-600 mt-6">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <span className="text-2xl">💡</span>
+              <span className="text-2xl">ðŸ’¡</span>
               <div>
                 <h3 className="text-white font-semibold mb-2">Dicas importantes:</h3>
                 <ul className="text-blue-200 text-sm space-y-1">
-                  <li>• O código da turma deve ser único para cada cliente</li>
-                  <li>• Professores usarão este código para se cadastrar</li>
-                  <li>• Após criar a rota, você pode adicionar projetos específicos</li>
-                  <li>• Use nomes descritivos que identifiquem série, modalidade ou período</li>
+                  <li>â€¢ O cÃ³digo da turma deve ser Ãºnico para cada cliente</li>
+                  <li>â€¢ Professores usarÃ£o este cÃ³digo para se cadastrar</li>
+                  <li>â€¢ ApÃ³s criar a rota, vocÃª pode adicionar projetos especÃ­ficos</li>
+                  <li>â€¢ Use nomes descritivos que identifiquem sÃ©rie, modalidade ou perÃ­odo</li>
                 </ul>
               </div>
             </div>
@@ -338,3 +338,4 @@ export default function NovaRotaEstudo() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -43,9 +43,9 @@ export default function EditarCliente() {
     setMsg("");
     try {
       await updateDoc(doc(db, "clientes", id), cliente);
-      setMsg("✅ Cliente atualizado!");
+      setMsg("âœ… Cliente atualizado!");
     } catch {
-      setMsg("❌ Erro ao atualizar cliente.");
+      setMsg("âŒ Erro ao atualizar cliente.");
     }
     setSalvando(false);
   }
@@ -59,7 +59,7 @@ export default function EditarCliente() {
           <h2 className="text-3xl font-bold mb-8 text-center text-white">Editar Cliente</h2>
           {msg && (
             <div className={`mb-6 p-3 rounded-lg text-center font-semibold ${
-              msg.includes("✅")
+              msg.includes("âœ…")
                 ? "bg-green-600/20 text-green-400 border border-green-600"
                 : "bg-red-600/20 text-red-400 border border-red-600"
             }`}>
@@ -67,9 +67,9 @@ export default function EditarCliente() {
             </div>
           )}
           <form onSubmit={salvar} className="space-y-6">
-            {/* Razão Social */}
+            {/* RazÃ£o Social */}
             <div>
-              <label className="block text-gray-300 font-semibold mb-1">Razão Social</label>
+              <label className="block text-gray-300 font-semibold mb-1">RazÃ£o Social</label>
               <Input value={cliente.razaoSocial} onChange={e => setCliente({ ...cliente, razaoSocial: e.target.value })} required className="bg-gray-900 text-white border-gray-700" />
             </div>
             {/* Nome Fantasia */}
@@ -82,7 +82,7 @@ export default function EditarCliente() {
               <label className="block text-gray-300 font-semibold mb-1">CNPJ</label>
               <Input value={cliente.cnpj} onChange={e => setCliente({ ...cliente, cnpj: e.target.value })} required className="bg-gray-900 text-white border-gray-700" />
             </div>
-            {/* Endereço (cidade, estado) */}
+            {/* EndereÃ§o (cidade, estado) */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-300 font-semibold mb-1">Cidade</label>
@@ -95,7 +95,7 @@ export default function EditarCliente() {
             </div>
             <div className="text-center mt-8">
               <Button type="submit" className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-12 py-3 text-lg font-bold rounded-xl transition-all duration-300" disabled={salvando}>
-                {salvando ? "Salvando..." : "Salvar Alterações"}
+                {salvando ? "Salvando..." : "Salvar AlteraÃ§Ãµes"}
               </Button>
             </div>
           </form>
@@ -104,3 +104,4 @@ export default function EditarCliente() {
     </ProtectedRoute>
   );
 }
+

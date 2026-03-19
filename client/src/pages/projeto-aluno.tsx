@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useLocation, useRoute } from "wouter";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -78,7 +78,7 @@ export default function VisualizarComoAluno() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="text-6xl mb-4 animate-spin">⏳</div>
+          <div className="text-6xl mb-4 animate-spin">â³</div>
           <div className="text-2xl font-bold">Carregando projeto...</div>
         </div>
       </div>
@@ -89,8 +89,8 @@ export default function VisualizarComoAluno() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <div className="text-center text-white max-w-md">
-          <div className="text-6xl mb-4">❌</div>
-          <div className="text-2xl font-bold mb-4">Projeto não encontrado</div>
+          <div className="text-6xl mb-4">âŒ</div>
+          <div className="text-2xl font-bold mb-4">Projeto nÃ£o encontrado</div>
           <Button onClick={voltarParaProjeto} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-full">
             Voltar ao projeto
           </Button>
@@ -104,18 +104,18 @@ export default function VisualizarComoAluno() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       <div className="max-w-5xl mx-auto py-8 px-4">
-        {/* Header com navegação */}
+        {/* Header com navegaÃ§Ã£o */}
         <div className="flex items-center justify-between mb-8">
           <Button 
             onClick={voltarParaProjeto} 
             className="bg-white/10 hover:bg-white/20 backdrop-blur text-white font-bold px-4 py-2 rounded-full border border-white/20"
           >
-            ← Sair da Visualização
+            â† Sair da VisualizaÃ§Ã£o
           </Button>
           
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white mb-1">
-              👨‍🎓 Modo Aluno
+              ðŸ‘¨â€ðŸŽ“ Modo Aluno
             </h1>
             <p className="text-gray-300 text-sm">
               {projeto.titulo}
@@ -144,7 +144,7 @@ export default function VisualizarComoAluno() {
                   }`}
                   title={`Etapa ${index + 1}: ${projeto.etapas[index].titulo}`}
                 >
-                  {index < etapaAtual ? '✓' : index + 1}
+                  {index < etapaAtual ? 'âœ“' : index + 1}
                 </button>
               ))}
             </div>
@@ -169,19 +169,19 @@ export default function VisualizarComoAluno() {
                 Etapa {etapaAtual + 1}
               </div>
 
-              {/* Ícone e Título */}
+              {/* Ãcone e TÃ­tulo */}
               <div className="text-9xl mb-8 animate-bounce">{etapa.icon}</div>
               <h2 className="text-4xl font-bold text-white mb-6 drop-shadow-lg">{etapa.titulo}</h2>
               <p className="text-xl text-white text-opacity-95 leading-relaxed mb-8 max-w-4xl mx-auto">
                 {etapa.descricao}
               </p>
 
-              {/* Código da Etapa */}
+              {/* CÃ³digo da Etapa */}
               {etapa.codigo && (
                 <div className="mt-8 bg-black bg-opacity-40 backdrop-blur-sm rounded-2xl p-6 max-w-5xl mx-auto">
                   <h3 className="text-white font-bold text-2xl mb-4 flex items-center justify-center">
-                    <span className="text-3xl mr-3">💻</span>
-                    Código para esta Etapa:
+                    <span className="text-3xl mr-3">ðŸ’»</span>
+                    CÃ³digo para esta Etapa:
                   </h3>
                   <div className="bg-gray-900 bg-opacity-80 rounded-xl p-6 overflow-x-auto border-2 border-gray-600">
                     <pre className="text-green-300 text-lg font-mono text-left whitespace-pre-wrap leading-relaxed">
@@ -195,7 +195,7 @@ export default function VisualizarComoAluno() {
               {etapa.imagemBlocos && (
                 <div className="mt-8 bg-black bg-opacity-30 backdrop-blur-sm rounded-2xl p-6 max-w-5xl mx-auto">
                   <h3 className="text-white font-bold text-2xl mb-4 flex items-center justify-center">
-                    <span className="text-3xl mr-3">🖼️</span>
+                    <span className="text-3xl mr-3">ðŸ–¼ï¸</span>
                     Imagem dos Blocos:
                   </h3>
                   <div className="flex justify-center">
@@ -212,7 +212,7 @@ export default function VisualizarComoAluno() {
               {etapa.objetivos && etapa.objetivos.length > 0 && (
                 <div className="mt-8 bg-black bg-opacity-30 backdrop-blur-sm rounded-2xl p-6 max-w-4xl mx-auto">
                   <h3 className="text-white font-bold text-2xl mb-4 flex items-center justify-center">
-                    <span className="text-3xl mr-3">🎯</span>
+                    <span className="text-3xl mr-3">ðŸŽ¯</span>
                     Objetivos desta Etapa:
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
@@ -226,7 +226,7 @@ export default function VisualizarComoAluno() {
                 </div>
               )}
 
-              {/* Botão de Ação */}
+              {/* BotÃ£o de AÃ§Ã£o */}
               {etapa.action && (
                 <div className="mt-8 flex justify-center">
                   <Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-6 px-12 rounded-2xl text-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
@@ -238,7 +238,7 @@ export default function VisualizarComoAluno() {
           </CardContent>
         </Card>
 
-        {/* Navegação entre Etapas */}
+        {/* NavegaÃ§Ã£o entre Etapas */}
         <div className="flex items-center justify-between">
           <Button
             onClick={etapaAnterior}
@@ -249,7 +249,7 @@ export default function VisualizarComoAluno() {
                 : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white hover:scale-105'
             }`}
           >
-            ← Etapa Anterior
+            â† Etapa Anterior
           </Button>
 
           <div className="text-center">
@@ -257,7 +257,7 @@ export default function VisualizarComoAluno() {
               {etapaAtual + 1} / {projeto.etapas.length}
             </div>
             <div className="text-gray-300 text-sm">
-              {etapaAtual === projeto.etapas.length - 1 ? 'Última etapa!' : 'Continue o projeto'}
+              {etapaAtual === projeto.etapas.length - 1 ? 'Ãšltima etapa!' : 'Continue o projeto'}
             </div>
           </div>
 
@@ -270,27 +270,27 @@ export default function VisualizarComoAluno() {
                 : 'bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white hover:scale-105'
             }`}
           >
-            Próxima Etapa →
+            PrÃ³xima Etapa â†’
           </Button>
         </div>
 
-        {/* Mensagem de Conclusão */}
+        {/* Mensagem de ConclusÃ£o */}
         {etapaAtual === projeto.etapas.length - 1 && (
           <div className="mt-8 text-center">
             <Card className="bg-gradient-to-r from-green-600/20 to-blue-600/20 border-green-500 backdrop-blur">
               <CardContent className="p-8">
-                <div className="text-6xl mb-4">🎉</div>
+                <div className="text-6xl mb-4">ðŸŽ‰</div>
                 <h3 className="text-2xl font-bold text-white mb-4">
-                  Parabéns! Você concluiu todas as etapas!
+                  ParabÃ©ns! VocÃª concluiu todas as etapas!
                 </h3>
                 <p className="text-green-300 text-lg mb-6">
-                  Você completou com sucesso o projeto "{projeto.titulo}"
+                  VocÃª completou com sucesso o projeto "{projeto.titulo}"
                 </p>
                 <Button 
                   onClick={voltarParaProjeto}
                   className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold px-8 py-4 rounded-xl text-lg"
                 >
-                  🏠 Voltar ao Projeto
+                  ðŸ  Voltar ao Projeto
                 </Button>
               </CardContent>
             </Card>
@@ -300,3 +300,4 @@ export default function VisualizarComoAluno() {
     </div>
   );
 }
+

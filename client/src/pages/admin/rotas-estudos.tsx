@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -45,7 +45,7 @@ export default function RotasEstudos() {
   async function fetchProjetos() {
     const snap = await getDocs(collection(db, "projetos-pedagogicos-avancados"));
     const lista: any[] = [];
-    snap.forEach(doc => lista.push({ id: doc.id, titulo: doc.data().titulo || "(Sem título)" }));
+    snap.forEach(doc => lista.push({ id: doc.id, titulo: doc.data().titulo || "(Sem tÃ­tulo)" }));
     setProjetos(lista);
   }
   useEffect(() => { fetchRotas(); fetchProjetos(); }, []);
@@ -54,7 +54,7 @@ export default function RotasEstudos() {
     if (!window.confirm("Tem certeza que deseja excluir esta rota?")) return;
     try {
       await deleteDoc(doc(db, "rotas-estudos", id));
-      setMsg("Rota excluída com sucesso!");
+      setMsg("Rota excluÃ­da com sucesso!");
       fetchRotas();
     } catch {
       setMsg("Erro ao excluir rota.");
@@ -126,11 +126,11 @@ export default function RotasEstudos() {
               {msg}
             </div>
           )}
-          {/* Formulário */}
+          {/* FormulÃ¡rio */}
           <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">{editId ? "✏️ Editar Rota" : "➕ Nova Rota"}</span>
+                <span className="text-2xl">{editId ? "âœï¸ Editar Rota" : "âž• Nova Rota"}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -142,7 +142,7 @@ export default function RotasEstudos() {
                 <div className="flex items-center gap-4">
                   <label className="block text-gray-300 font-semibold">Ativo?</label>
                   <input type="checkbox" checked={form.ativo} onChange={e => setForm({ ...form, ativo: e.target.checked })} className="w-5 h-5" />
-                  <span className="text-gray-400 text-sm">(Se desmarcado, a rota ficará invisível para os alunos)</span>
+                  <span className="text-gray-400 text-sm">(Se desmarcado, a rota ficarÃ¡ invisÃ­vel para os alunos)</span>
                 </div>
                 <div>
                   <label className="block text-gray-300 font-semibold mb-1">Projetos da Rota</label>
@@ -178,7 +178,7 @@ export default function RotasEstudos() {
                 </div>
                 <div className="text-center mt-8 flex gap-4 justify-center">
                   <Button type="submit" className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-12 py-3 text-lg font-bold rounded-xl transition-all duration-300" disabled={salvando}>
-                    {salvando ? (editId ? "Salvando..." : "Cadastrando...") : (editId ? "Salvar Alterações" : "Cadastrar Rota")}
+                    {salvando ? (editId ? "Salvando..." : "Cadastrando...") : (editId ? "Salvar AlteraÃ§Ãµes" : "Cadastrar Rota")}
                   </Button>
                   {editId && (
                     <Button type="button" onClick={cancelarEdicao} className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-xl">Cancelar</Button>
@@ -191,7 +191,7 @@ export default function RotasEstudos() {
           <Card className="bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">🛤️</span>
+                <span className="text-2xl">ðŸ›¤ï¸</span>
                 Lista de Rotas
               </CardTitle>
             </CardHeader>
@@ -224,3 +224,4 @@ export default function RotasEstudos() {
     </ProtectedRoute>
   );
 }
+

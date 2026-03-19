@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -21,28 +21,28 @@ const db = getFirestore(app);
 
 // Paleta de gradientes predefinidos
 const gradientes = [
-  { nome: "Vermelho Espacial", classe: "from-red-900 via-red-700 to-orange-600", preview: "🚀" },
-  { nome: "Azul Profundo", classe: "from-blue-900 via-purple-800 to-indigo-900", preview: "🌌" },
-  { nome: "Verde Tecnológico", classe: "from-green-800 via-teal-700 to-cyan-600", preview: "💻" },
-  { nome: "Cinza Industrial", classe: "from-gray-800 via-gray-600 to-blue-700", preview: "🔧" },
-  { nome: "Laranja Marciano", classe: "from-red-800 via-orange-700 to-yellow-600", preview: "🪐" },
-  { nome: "Roxo Galáxia", classe: "from-purple-900 via-pink-800 to-indigo-900", preview: "✨" },
-  { nome: "Verde Floresta", classe: "from-emerald-900 via-green-700 to-teal-600", preview: "🌲" },
-  { nome: "Azul Oceano", classe: "from-blue-800 via-cyan-700 to-teal-600", preview: "🌊" },
+  { nome: "Vermelho Espacial", classe: "from-red-900 via-red-700 to-orange-600", preview: "ðŸš€" },
+  { nome: "Azul Profundo", classe: "from-blue-900 via-purple-800 to-indigo-900", preview: "ðŸŒŒ" },
+  { nome: "Verde TecnolÃ³gico", classe: "from-green-800 via-teal-700 to-cyan-600", preview: "ðŸ’»" },
+  { nome: "Cinza Industrial", classe: "from-gray-800 via-gray-600 to-blue-700", preview: "ðŸ”§" },
+  { nome: "Laranja Marciano", classe: "from-red-800 via-orange-700 to-yellow-600", preview: "ðŸª" },
+  { nome: "Roxo GalÃ¡xia", classe: "from-purple-900 via-pink-800 to-indigo-900", preview: "âœ¨" },
+  { nome: "Verde Floresta", classe: "from-emerald-900 via-green-700 to-teal-600", preview: "ðŸŒ²" },
+  { nome: "Azul Oceano", classe: "from-blue-800 via-cyan-700 to-teal-600", preview: "ðŸŒŠ" },
 ];
 
-// Lista de ícones disponíveis para etapas
+// Lista de Ã­cones disponÃ­veis para etapas
 const icones = [
-  "🚀", "🛸", "🧑‍🚀", "👩‍🔬", "🤖", "👨‍💻", "🛰️", "🌟", "🔧", "💻", 
-  "📱", "🎯", "🧠", "🤝", "⚡", "🎨", "🔬", "🌍", "🌱", "💡",
-  "🏆", "📋", "🎪", "🎭", "🎲", "🎳", "🎮", "🎸", "🎹", "🎺",
-  "⚗️", "🔭", "🪐", "🌙", "☄️", "🌟", "✨", "💫", "🌈", "🔥"
+  "ðŸš€", "ðŸ›¸", "ðŸ§‘â€ðŸš€", "ðŸ‘©â€ðŸ”¬", "ðŸ¤–", "ðŸ‘¨â€ðŸ’»", "ðŸ›°ï¸", "ðŸŒŸ", "ðŸ”§", "ðŸ’»", 
+  "ðŸ“±", "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸŽ¨", "ðŸ”¬", "ðŸŒ", "ðŸŒ±", "ðŸ’¡",
+  "ðŸ†", "ðŸ“‹", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ³", "ðŸŽ®", "ðŸŽ¸", "ðŸŽ¹", "ðŸŽº",
+  "âš—ï¸", "ðŸ”­", "ðŸª", "ðŸŒ™", "â˜„ï¸", "ðŸŒŸ", "âœ¨", "ðŸ’«", "ðŸŒˆ", "ðŸ”¥"
 ];
 
-// Lista de ícones para objetivos
+// Lista de Ã­cones para objetivos
 const iconesObjetivos = [
-  "🎯", "🧠", "🤝", "⚡", "💡", "🔬", "🎨", "🚀", "📚", "🏆",
-  "⭐", "🔥", "💪", "🌟", "🎪", "🎭", "🎲", "🎮", "🔧", "💻"
+  "ðŸŽ¯", "ðŸ§ ", "ðŸ¤", "âš¡", "ðŸ’¡", "ðŸ”¬", "ðŸŽ¨", "ðŸš€", "ðŸ“š", "ðŸ†",
+  "â­", "ðŸ”¥", "ðŸ’ª", "ðŸŒŸ", "ðŸŽª", "ðŸŽ­", "ðŸŽ²", "ðŸŽ®", "ðŸ”§", "ðŸ’»"
 ];
 
 interface Objetivo {
@@ -116,7 +116,7 @@ export default function CriadorProjetoMelhorado() {
 
   const salvarProjeto = async () => {
     if (!tituloProjeto.trim() || etapas.length === 0) {
-      setMsg("Preencha o título e adicione pelo menos uma etapa.");
+      setMsg("Preencha o tÃ­tulo e adicione pelo menos uma etapa.");
       return;
     }
 
@@ -128,11 +128,11 @@ export default function CriadorProjetoMelhorado() {
         etapas,
         criadoEm: new Date().toISOString(),
       });
-      setMsg("🎉 Projeto salvo com sucesso!");
+      setMsg("ðŸŽ‰ Projeto salvo com sucesso!");
       setTituloProjeto("");
       setEtapas([]);
     } catch (e) {
-      setMsg("❌ Erro ao salvar projeto.");
+      setMsg("âŒ Erro ao salvar projeto.");
     }
     setSalvando(false);
   };
@@ -143,74 +143,74 @@ export default function CriadorProjetoMelhorado() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-            ✨ Criador de Projeto Avançado
+            âœ¨ Criador de Projeto AvanÃ§ado
           </h1>
           <p className="text-xl text-gray-300">
-            Crie projetos pedagógicos visuais e interativos
+            Crie projetos pedagÃ³gicos visuais e interativos
           </p>
         </div>
 
-        {/* Título do Projeto */}
+        {/* TÃ­tulo do Projeto */}
         <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <span className="text-2xl">📝</span>
-              Título do Projeto
+              <span className="text-2xl">ðŸ“</span>
+              TÃ­tulo do Projeto
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Input
               value={tituloProjeto}
               onChange={e => setTituloProjeto(e.target.value)}
-              placeholder="Ex: Missão: Robô Marciano"
+              placeholder="Ex: MissÃ£o: RobÃ´ Marciano"
               className="bg-gray-700 border-gray-600 text-white text-lg p-4"
             />
           </CardContent>
         </Card>
 
-        {/* Formulário para Nova Etapa */}
+        {/* FormulÃ¡rio para Nova Etapa */}
         <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <span className="text-2xl">✨</span>
+              <span className="text-2xl">âœ¨</span>
               Adicionar Nova Etapa/Aula
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Título da Etapa */}
+            {/* TÃ­tulo da Etapa */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">📝 Título da Etapa</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">ðŸ“ TÃ­tulo da Etapa</label>
               <Input
-                placeholder="Ex: Montagem do Robô Marciano"
+                placeholder="Ex: Montagem do RobÃ´ Marciano"
                 value={novaEtapa.titulo}
                 onChange={(e) => setNovaEtapa({ ...novaEtapa, titulo: e.target.value })}
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-            {/* Descrição da Etapa */}
+            {/* DescriÃ§Ã£o da Etapa */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">📋 Descrição da Etapa</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">ðŸ“‹ DescriÃ§Ã£o da Etapa</label>
               <Textarea
-                placeholder="Descreva o que os alunos farão nesta etapa..."
+                placeholder="Descreva o que os alunos farÃ£o nesta etapa..."
                 value={novaEtapa.descricao}
                 onChange={(e) => setNovaEtapa({ ...novaEtapa, descricao: e.target.value })}
                 className="bg-gray-700 border-gray-600 text-white"
                 rows={3}
               />
             </div>
-            {/* ...existing code for gradiente, ícone, ação, código, upload imagem... */}
+            {/* ...existing code for gradiente, Ã­cone, aÃ§Ã£o, cÃ³digo, upload imagem... */}
             {/* Objetivos da Etapa */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">🎯 Objetivos de Aprendizagem (opcional)</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">ðŸŽ¯ Objetivos de Aprendizagem (opcional)</label>
               {/* Adicionar Objetivo */}
               <div className="bg-gray-700/50 p-4 rounded-lg mb-4 border border-gray-600">
                 <h4 className="text-white text-sm font-medium mb-3 flex items-center gap-2">
-                  <span>➕</span>
+                  <span>âž•</span>
                   Adicionar Novo Objetivo
                 </h4>
-                {/* Seletor de Ícone para Objetivo */}
+                {/* Seletor de Ãcone para Objetivo */}
                 <div className="mb-3">
-                  <label className="block text-xs text-gray-400 mb-2">Ícone do Objetivo</label>
+                  <label className="block text-xs text-gray-400 mb-2">Ãcone do Objetivo</label>
                   <div className="grid grid-cols-10 gap-1 max-h-24 overflow-y-auto border border-gray-600 rounded p-2 bg-gray-800">
                     {iconesObjetivos.map((icone, index) => (
                       <button
@@ -241,7 +241,7 @@ export default function CriadorProjetoMelhorado() {
                     className="bg-green-600 hover:bg-green-700 text-white px-6"
                     disabled={!novoObjetivo.icon || !novoObjetivo.text.trim()}
                   >
-                    <span className="text-lg">➕</span>
+                    <span className="text-lg">âž•</span>
                   </Button>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function CriadorProjetoMelhorado() {
               {novaEtapa.objetivos.length > 0 && (
                 <div className="space-y-2">
                   <h4 className="text-white text-sm font-medium flex items-center gap-2">
-                    <span>📋</span>
+                    <span>ðŸ“‹</span>
                     Objetivos Adicionados ({novaEtapa.objetivos.length})
                   </h4>
                   {novaEtapa.objetivos.map((obj, idx) => (
@@ -261,7 +261,7 @@ export default function CriadorProjetoMelhorado() {
                         className="text-red-400 hover:text-red-300 hover:bg-red-900/20 p-2 rounded transition-all"
                         title="Remover objetivo"
                       >
-                        <span className="text-lg">🗑️</span>
+                        <span className="text-lg">ðŸ—‘ï¸</span>
                       </button>
                     </div>
                   ))}
@@ -273,7 +273,7 @@ export default function CriadorProjetoMelhorado() {
               className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
               disabled={!novaEtapa.titulo.trim() || !novaEtapa.descricao.trim()}
             >
-              <span className="text-xl mr-2">✨</span>
+              <span className="text-xl mr-2">âœ¨</span>
               Adicionar Etapa ao Projeto
             </Button>
           </CardContent>
@@ -284,7 +284,7 @@ export default function CriadorProjetoMelhorado() {
           <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">👁️</span>
+                <span className="text-2xl">ðŸ‘ï¸</span>
                 Preview do Projeto ({etapas.length} etapa{etapas.length !== 1 ? 's' : ''})
               </CardTitle>
             </CardHeader>
@@ -297,7 +297,7 @@ export default function CriadorProjetoMelhorado() {
                       className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-all"
                       title="Remover etapa"
                     >
-                      <span className="text-sm">🗑️</span>
+                      <span className="text-sm">ðŸ—‘ï¸</span>
                     </button>
                     <div className="flex items-start gap-4">
                       <div className="text-4xl">{etapa.icon}</div>
@@ -305,12 +305,12 @@ export default function CriadorProjetoMelhorado() {
                         <h3 className="text-2xl font-bold text-white mb-2">{etapa.titulo}</h3>
                         <p className="text-gray-200 mb-4">{etapa.descricao}</p>
                         
-                        {/* Código da Etapa */}
+                        {/* CÃ³digo da Etapa */}
                         {etapa.codigo && (
                           <div className="mb-4">
                             <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                              <span>💻</span>
-                              Código:
+                              <span>ðŸ’»</span>
+                              CÃ³digo:
                             </h4>
                             <div className="bg-black/30 p-3 rounded-lg border border-gray-600">
                               <pre className="text-green-300 text-sm overflow-x-auto font-mono">
@@ -324,7 +324,7 @@ export default function CriadorProjetoMelhorado() {
                         {etapa.imagemBlocos && (
                           <div className="mb-4">
                             <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                              <span>🖼️</span>
+                              <span>ðŸ–¼ï¸</span>
                               Imagem dos Blocos:
                             </h4>
                             <img
@@ -338,7 +338,7 @@ export default function CriadorProjetoMelhorado() {
                         {etapa.objetivos.length > 0 && (
                           <div className="mb-4">
                             <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-                              <span>🎯</span>
+                              <span>ðŸŽ¯</span>
                               Objetivos:
                             </h4>
                             <div className="space-y-1">
@@ -365,7 +365,7 @@ export default function CriadorProjetoMelhorado() {
           </Card>
         )}
 
-        {/* Botão Salvar e Mensagens */}
+        {/* BotÃ£o Salvar e Mensagens */}
         <div className="text-center space-y-4">
           <Button
             onClick={salvarProjeto}
@@ -374,12 +374,12 @@ export default function CriadorProjetoMelhorado() {
           >
             {salvando ? (
               <>
-                <span className="text-2xl mr-2">⏳</span>
+                <span className="text-2xl mr-2">â³</span>
                 Salvando Projeto...
               </>
             ) : (
               <>
-                <span className="text-2xl mr-2">💾</span>
+                <span className="text-2xl mr-2">ðŸ’¾</span>
                 Salvar Projeto Completo
               </>
             )}
@@ -399,3 +399,4 @@ export default function CriadorProjetoMelhorado() {
     </div>
   );
 }
+

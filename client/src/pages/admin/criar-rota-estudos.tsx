@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -42,7 +42,7 @@ export default function CriarRotaEstudos() {
       const lista: Projeto[] = [];
       snap.forEach(doc => {
         const data = doc.data();
-        lista.push({ id: doc.id, titulo: data.titulo || "(Sem título)" });
+        lista.push({ id: doc.id, titulo: data.titulo || "(Sem tÃ­tulo)" });
       });
       setProjetos(lista);
     }
@@ -84,12 +84,12 @@ export default function CriarRotaEstudos() {
         projetos: selecionados.map(p => ({ id: p.id, titulo: p.titulo, ordem: p.ordem })),
         criadoEm: new Date().toISOString(),
       });
-      setMsg("✅ Rota criada com sucesso!");
+      setMsg("âœ… Rota criada com sucesso!");
       setNome("");
       setAtivo(true);
       setSelecionados([]);
     } catch (e) {
-      setMsg("❌ Erro ao salvar rota.");
+      setMsg("âŒ Erro ao salvar rota.");
     }
     setSalvando(false);
   }
@@ -101,7 +101,7 @@ export default function CriarRotaEstudos() {
           <h2 className="text-3xl font-bold mb-8 text-center text-white">Criar Rota de Estudos</h2>
           {msg && (
             <div className={`mb-6 p-3 rounded-lg text-center font-semibold ${
-              msg.includes("sucesso") || msg.includes("✅")
+              msg.includes("sucesso") || msg.includes("âœ…")
                 ? "bg-green-600/20 text-green-400 border border-green-600"
                 : "bg-red-600/20 text-red-400 border border-red-600"
             }`}>
@@ -111,7 +111,7 @@ export default function CriarRotaEstudos() {
           <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">🛤️</span>
+                <span className="text-2xl">ðŸ›¤ï¸</span>
                 Nova Rota
               </CardTitle>
             </CardHeader>
@@ -123,14 +123,14 @@ export default function CriarRotaEstudos() {
               <div className="flex items-center gap-4">
                 <label className="block text-gray-300 font-semibold">Ativo?</label>
                 <input type="checkbox" checked={ativo} onChange={e => setAtivo(e.target.checked)} className="w-5 h-5" />
-                <span className="text-gray-400 text-sm">(Se desmarcado, a rota ficará invisível para os alunos)</span>
+                <span className="text-gray-400 text-sm">(Se desmarcado, a rota ficarÃ¡ invisÃ­vel para os alunos)</span>
               </div>
             </CardContent>
           </Card>
           <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">📚</span>
+                <span className="text-2xl">ðŸ“š</span>
                 Selecionar Projetos da Rota
               </CardTitle>
             </CardHeader>
@@ -176,3 +176,4 @@ export default function CriarRotaEstudos() {
     </ProtectedRoute>
   );
 }
+

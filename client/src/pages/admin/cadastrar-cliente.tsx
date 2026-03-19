@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -79,13 +79,13 @@ export default function CadastrarCliente() {
         },
         criadoEm: new Date().toISOString(),
       });
-      setMensagem("✅ Cliente cadastrado com sucesso!");
+      setMensagem("âœ… Cliente cadastrado com sucesso!");
       setLogo(""); setRazaoSocial(""); setNomeFantasia(""); setCnpj(""); setInscricaoEstadual(""); setInscricaoMunicipal("");
       setLogradouro(""); setNumero(""); setComplemento(""); setBairro(""); setCidade(""); setEstado(""); setCep("");
       setTelefone(""); setEmail(""); setWebsite(""); setRedesSociais("");
       setRepNome(""); setRepCargo(""); setRepTelefone(""); setRepEmail("");
     } catch (e) {
-      setMensagem("❌ Erro ao cadastrar cliente.");
+      setMensagem("âŒ Erro ao cadastrar cliente.");
     }
     setSalvando(false);
   }
@@ -97,7 +97,7 @@ export default function CadastrarCliente() {
           <h2 className="text-3xl font-bold mb-8 text-center text-white">Cadastrar Cliente</h2>
           {mensagem && (
             <div className={`mb-6 p-3 rounded-lg text-center font-semibold ${
-              mensagem.includes("✅")
+              mensagem.includes("âœ…")
                 ? "bg-green-600/20 text-green-400 border border-green-600"
                 : "bg-red-600/20 text-red-400 border border-red-600"
             }`}>
@@ -113,7 +113,7 @@ export default function CadastrarCliente() {
             {/* Dados da Empresa */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Razão Social</label>
+                <label className="block text-gray-300 font-semibold mb-1">RazÃ£o Social</label>
                 <Input value={razaoSocial} onChange={e => setRazaoSocial(e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
               </div>
               <div>
@@ -125,22 +125,22 @@ export default function CadastrarCliente() {
                 <Input value={cnpj} onChange={e => setCnpj(e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
               </div>
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Inscrição Estadual</label>
+                <label className="block text-gray-300 font-semibold mb-1">InscriÃ§Ã£o Estadual</label>
                 <Input value={inscricaoEstadual} onChange={e => setInscricaoEstadual(e.target.value)} className="bg-gray-900 text-white border-gray-700" />
               </div>
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Inscrição Municipal</label>
+                <label className="block text-gray-300 font-semibold mb-1">InscriÃ§Ã£o Municipal</label>
                 <Input value={inscricaoMunicipal} onChange={e => setInscricaoMunicipal(e.target.value)} className="bg-gray-900 text-white border-gray-700" />
               </div>
             </div>
-            {/* Endereço */}
+            {/* EndereÃ§o */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-300 font-semibold mb-1">Logradouro</label>
                 <Input value={logradouro} onChange={e => setLogradouro(e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
               </div>
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Número</label>
+                <label className="block text-gray-300 font-semibold mb-1">NÃºmero</label>
                 <Input value={numero} onChange={e => setNumero(e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
               </div>
               <div>
@@ -213,3 +213,4 @@ export default function CadastrarCliente() {
     </ProtectedRoute>
   );
 }
+

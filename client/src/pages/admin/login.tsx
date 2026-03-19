@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
@@ -6,7 +6,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -30,10 +30,10 @@ const LoginAdmin = () => {
     try {
       await signInWithEmailAndPassword(auth, form.email, form.senha);
       setMsg("Login realizado com sucesso!");
-      // Redirecionar para área admin após login
+      // Redirecionar para Ã¡rea admin apÃ³s login
       window.location.href = "/admin";
     } catch (error: any) {
-      setMsg("Email ou senha inválidos.");
+      setMsg("Email ou senha invÃ¡lidos.");
     }
     setLoading(false);
   };
@@ -61,3 +61,4 @@ const LoginAdmin = () => {
 };
 
 export default LoginAdmin;
+

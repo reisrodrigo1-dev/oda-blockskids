@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -38,7 +38,7 @@ const CadastroAdmin = () => {
     e.preventDefault();
     setMsg("");
     if (form.codigo !== ADMIN_CODE) {
-      setMsg("Código administrativo incorreto.");
+      setMsg("CÃ³digo administrativo incorreto.");
       return;
     }
     setLoading(true);
@@ -52,7 +52,7 @@ const CadastroAdmin = () => {
         telefone: form.telefone,
         criadoEm: new Date().toISOString()
       });
-      setMsg("Cadastro realizado com sucesso! Faça login.");
+      setMsg("Cadastro realizado com sucesso! FaÃ§a login.");
       setForm({ nome: "", email: "", cpf: "", telefone: "", senha: "", codigo: "" });
     } catch (error: any) {
       setMsg(error.message || "Erro ao cadastrar.");
@@ -69,7 +69,7 @@ const CadastroAdmin = () => {
         <input name="cpf" value={form.cpf} onChange={handleChange} placeholder="CPF" className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600" required />
         <input name="telefone" value={form.telefone} onChange={handleChange} placeholder="Telefone" className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600" required />
         <input name="senha" type="password" value={form.senha} onChange={handleChange} placeholder="Senha" className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600" required />
-        <input name="codigo" value={form.codigo} onChange={handleChange} placeholder="Código Administrativo" className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600" required />
+        <input name="codigo" value={form.codigo} onChange={handleChange} placeholder="CÃ³digo Administrativo" className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600" required />
         <button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded mt-2">
           {loading ? "Cadastrando..." : "Cadastrar"}
         </button>
@@ -80,3 +80,4 @@ const CadastroAdmin = () => {
 };
 
 export default CadastroAdmin;
+

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -38,7 +38,7 @@ export default function GerenciarClientes() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mensagem, setMensagem] = useState("");
   
-  // Estados do formulário
+  // Estados do formulÃ¡rio
   const [razaoSocial, setRazaoSocial] = useState("");
   const [nomeFantasia, setNomeFantasia] = useState("");
   const [cnpj, setCnpj] = useState("");
@@ -64,7 +64,7 @@ export default function GerenciarClientes() {
       setClientes(clientesData);
     } catch (error) {
       console.error("Erro ao carregar clientes:", error);
-      setMensagem("❌ Erro ao carregar clientes");
+      setMensagem("âŒ Erro ao carregar clientes");
     }
     setCarregando(false);
   };
@@ -72,7 +72,7 @@ export default function GerenciarClientes() {
   const handleCriarCliente = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!razaoSocial || !email) {
-      setMensagem("❌ Preencha pelo menos Razão Social e E-mail");
+      setMensagem("âŒ Preencha pelo menos RazÃ£o Social e E-mail");
       return;
     }
 
@@ -90,10 +90,10 @@ export default function GerenciarClientes() {
 
       await addDoc(collection(db, "clientes"), novoCliente);
       
-      setMensagem("✅ Cliente criado com sucesso!");
+      setMensagem("âœ… Cliente criado com sucesso!");
       setMostrarFormulario(false);
       
-      // Limpar formulário
+      // Limpar formulÃ¡rio
       setRazaoSocial("");
       setNomeFantasia("");
       setCnpj("");
@@ -106,7 +106,7 @@ export default function GerenciarClientes() {
       setTimeout(() => setMensagem(""), 3000);
     } catch (error) {
       console.error("Erro ao criar cliente:", error);
-      setMensagem("❌ Erro ao criar cliente");
+      setMensagem("âŒ Erro ao criar cliente");
     }
   };
 
@@ -126,11 +126,11 @@ export default function GerenciarClientes() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                <span className="text-4xl">🏢</span>
+                <span className="text-4xl">ðŸ¢</span>
                 Gerenciar Clientes
               </h1>
               <p className="text-gray-300 mt-2">
-                Administração de instituições de ensino cadastradas
+                AdministraÃ§Ã£o de instituiÃ§Ãµes de ensino cadastradas
               </p>
             </div>
             <div className="flex gap-3">
@@ -153,7 +153,7 @@ export default function GerenciarClientes() {
 
         {mensagem && (
           <div className={`mb-6 p-4 rounded-lg text-center font-medium ${
-            mensagem.includes("✅") 
+            mensagem.includes("âœ…") 
               ? "bg-green-600/20 text-green-400 border border-green-600" 
               : "bg-red-600/20 text-red-400 border border-red-600"
           }`}>
@@ -161,7 +161,7 @@ export default function GerenciarClientes() {
           </div>
         )}
 
-        {/* Formulário de novo cliente */}
+        {/* FormulÃ¡rio de novo cliente */}
         {mostrarFormulario && (
           <Card className="bg-gray-800/90 border-gray-700 mb-6">
             <CardHeader>
@@ -172,13 +172,13 @@ export default function GerenciarClientes() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Razão Social *
+                      RazÃ£o Social *
                     </label>
                     <Input
                       value={razaoSocial}
                       onChange={e => setRazaoSocial(e.target.value)}
                       className="bg-gray-700 border-gray-600 text-white"
-                      placeholder="Nome oficial da instituição"
+                      placeholder="Nome oficial da instituiÃ§Ã£o"
                       required
                     />
                   </div>
@@ -190,7 +190,7 @@ export default function GerenciarClientes() {
                       value={nomeFantasia}
                       onChange={e => setNomeFantasia(e.target.value)}
                       className="bg-gray-700 border-gray-600 text-white"
-                      placeholder="Nome popular da instituição"
+                      placeholder="Nome popular da instituiÃ§Ã£o"
                     />
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export default function GerenciarClientes() {
                 <CardTitle className="text-white flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl">🏢</span>
+                      <span className="text-2xl">ðŸ¢</span>
                       {cliente.nomeFantasia || cliente.razaoSocial}
                     </div>
                     {cliente.nomeFantasia && (
@@ -281,23 +281,23 @@ export default function GerenciarClientes() {
               <CardContent>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2 text-gray-300">
-                    <span>📧</span>
+                    <span>ðŸ“§</span>
                     {cliente.email}
                   </div>
                   {cliente.telefone && (
                     <div className="flex items-center gap-2 text-gray-300">
-                      <span>📞</span>
+                      <span>ðŸ“ž</span>
                       {cliente.telefone}
                     </div>
                   )}
                   {cliente.cnpj && (
                     <div className="flex items-center gap-2 text-gray-300">
-                      <span>📄</span>
+                      <span>ðŸ“„</span>
                       {cliente.cnpj}
                     </div>
                   )}
                   <div className="flex items-center gap-2 text-gray-400">
-                    <span>📅</span>
+                    <span>ðŸ“…</span>
                     Criado em {new Date(cliente.criadoEm).toLocaleDateString()}
                   </div>
                 </div>
@@ -326,10 +326,10 @@ export default function GerenciarClientes() {
         {clientes.length === 0 && (
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-8 text-center">
-              <div className="text-6xl mb-4">🏢</div>
+              <div className="text-6xl mb-4">ðŸ¢</div>
               <h3 className="text-xl text-white mb-2">Nenhum cliente cadastrado</h3>
               <p className="text-gray-400 mb-4">
-                Comece criando seu primeiro cliente (instituição de ensino).
+                Comece criando seu primeiro cliente (instituiÃ§Ã£o de ensino).
               </p>
               <Button
                 onClick={() => setMostrarFormulario(true)}
@@ -344,3 +344,4 @@ export default function GerenciarClientes() {
     </div>
   );
 }
+

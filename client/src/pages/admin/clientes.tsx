@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
@@ -13,7 +13,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -108,7 +108,7 @@ export default function Clientes() {
     if (!window.confirm("Tem certeza que deseja excluir este cliente?")) return;
     try {
       await deleteDoc(doc(db, "clientes", id));
-      setMsg("Cliente excluído com sucesso!");
+      setMsg("Cliente excluÃ­do com sucesso!");
       fetchClientes();
     } catch {
       setMsg("Erro ao excluir cliente.");
@@ -175,11 +175,11 @@ export default function Clientes() {
               {msg}
             </div>
           )}
-          {/* Formulário */}
+          {/* FormulÃ¡rio */}
           <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">{editId ? "✏️ Editar Cliente" : "➕ Novo Cliente"}</span>
+                <span className="text-2xl">{editId ? "âœï¸ Editar Cliente" : "âž• Novo Cliente"}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -190,7 +190,7 @@ export default function Clientes() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-gray-300 font-semibold mb-1">Razão Social</label>
+                    <label className="block text-gray-300 font-semibold mb-1">RazÃ£o Social</label>
                     <Input value={form.razaoSocial} onChange={e => handleInput("razaoSocial", e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
                   </div>
                   <div>
@@ -202,22 +202,22 @@ export default function Clientes() {
                     <Input value={form.cnpj} onChange={e => handleInput("cnpj", e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
                   </div>
                   <div>
-                    <label className="block text-gray-300 font-semibold mb-1">Inscrição Estadual</label>
+                    <label className="block text-gray-300 font-semibold mb-1">InscriÃ§Ã£o Estadual</label>
                     <Input value={form.inscricaoEstadual} onChange={e => handleInput("inscricaoEstadual", e.target.value)} className="bg-gray-900 text-white border-gray-700" />
                   </div>
                   <div>
-                    <label className="block text-gray-300 font-semibold mb-1">Inscrição Municipal</label>
+                    <label className="block text-gray-300 font-semibold mb-1">InscriÃ§Ã£o Municipal</label>
                     <Input value={form.inscricaoMunicipal} onChange={e => handleInput("inscricaoMunicipal", e.target.value)} className="bg-gray-900 text-white border-gray-700" />
                   </div>
                 </div>
-                {/* Endereço */}
+                {/* EndereÃ§o */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-300 font-semibold mb-1">Logradouro</label>
                     <Input value={form.endereco.logradouro} onChange={e => handleInput("endereco.logradouro", e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
                   </div>
                   <div>
-                    <label className="block text-gray-300 font-semibold mb-1">Número</label>
+                    <label className="block text-gray-300 font-semibold mb-1">NÃºmero</label>
                     <Input value={form.endereco.numero} onChange={e => handleInput("endereco.numero", e.target.value)} required className="bg-gray-900 text-white border-gray-700" />
                   </div>
                   <div>
@@ -281,7 +281,7 @@ export default function Clientes() {
                 </div>
                 <div className="text-center mt-8 flex gap-4 justify-center">
                   <Button type="submit" className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-12 py-3 text-lg font-bold rounded-xl transition-all duration-300" disabled={salvando}>
-                    {salvando ? (editId ? "Salvando..." : "Cadastrando...") : (editId ? "Salvar Alterações" : "Cadastrar Cliente")}
+                    {salvando ? (editId ? "Salvando..." : "Cadastrando...") : (editId ? "Salvar AlteraÃ§Ãµes" : "Cadastrar Cliente")}
                   </Button>
                   {editId && (
                     <Button type="button" onClick={cancelarEdicao} className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-xl">Cancelar</Button>
@@ -294,7 +294,7 @@ export default function Clientes() {
           <Card className="bg-gray-800/50 border-gray-700 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <span className="text-2xl">🏢</span>
+                <span className="text-2xl">ðŸ¢</span>
                 Lista de Clientes
               </CardTitle>
             </CardHeader>
@@ -308,7 +308,7 @@ export default function Clientes() {
                   {clientes.map(cliente => (
                     <div key={cliente.id} className="flex flex-col md:flex-row md:items-center md:gap-4 gap-2 p-4 rounded-lg border border-gray-700 bg-gray-900/30">
                       <div className="flex-1">
-                        <div className="font-bold text-white text-lg">{cliente.razaoSocial || "(Sem razão social)"}</div>
+                        <div className="font-bold text-white text-lg">{cliente.razaoSocial || "(Sem razÃ£o social)"}</div>
                         <div className="text-gray-300 text-sm">CNPJ: {cliente.cnpj}</div>
                         <div className="text-gray-400 text-xs">{cliente.endereco?.cidade} - {cliente.endereco?.estado}</div>
                       </div>
@@ -386,3 +386,4 @@ export default function Clientes() {
     </ProtectedRoute>
   );
 }
+

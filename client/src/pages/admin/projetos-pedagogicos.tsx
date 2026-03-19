@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import DashboardLayout from "./DashboardLayout";
 import { initializeApp } from "firebase/app";
@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -41,7 +41,7 @@ export default function AdminProjetosPedagogicos() {
       lista.sort((a, b) => new Date(b.criadoEm).getTime() - new Date(a.criadoEm).getTime());
       setProjetos(lista);
     } catch (error) {
-      setMensagem("❌ Erro ao carregar projetos.");
+      setMensagem("âŒ Erro ao carregar projetos.");
     }
     setCarregando(false);
   }
@@ -75,12 +75,12 @@ export default function AdminProjetosPedagogicos() {
     setExcluindo(true);
     try {
       await deleteDoc(doc(db, "projetos-pedagogicos-avancados", projetoParaExcluir));
-      setMensagem("✅ Projeto excluído com sucesso!");
+      setMensagem("âœ… Projeto excluÃ­do com sucesso!");
       setProjetos(projetos.filter(p => p.id !== projetoParaExcluir));
       setProjetoParaExcluir(null);
       setTimeout(() => setMensagem(""), 3000);
     } catch (error) {
-      setMensagem("❌ Erro ao excluir projeto.");
+      setMensagem("âŒ Erro ao excluir projeto.");
       setTimeout(() => setMensagem(""), 3000);
     }
     setExcluindo(false);
@@ -93,7 +93,7 @@ export default function AdminProjetosPedagogicos() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-              📚 Projetos Pedagógicos Avançados
+              ðŸ“š Projetos PedagÃ³gicos AvanÃ§ados
             </h1>
             <p className="text-xl text-gray-300 mb-8">
               Explore os projetos criados pela nossa comunidade educativa
@@ -102,14 +102,14 @@ export default function AdminProjetosPedagogicos() {
               onClick={criarNovoProjeto}
               className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 hover:scale-105"
             >
-              ✨ Criar Novo Projeto
+              âœ¨ Criar Novo Projeto
             </Button>
           </div>
 
           {/* Mensagem de Feedback */}
           {mensagem && (
             <div className={`mb-8 p-4 rounded-lg text-center font-semibold ${
-              mensagem.includes("✅") 
+              mensagem.includes("âœ…") 
                 ? "bg-green-600/20 text-green-400 border border-green-600" 
                 : "bg-red-600/20 text-red-400 border border-red-600"
             }`}>
@@ -120,7 +120,7 @@ export default function AdminProjetosPedagogicos() {
           {/* Loading State */}
           {carregando && (
             <div className="text-center text-white">
-              <div className="text-6xl mb-4 animate-spin">⏳</div>
+              <div className="text-6xl mb-4 animate-spin">â³</div>
               <div className="text-2xl font-bold">Carregando projetos...</div>
             </div>
           )}
@@ -128,14 +128,14 @@ export default function AdminProjetosPedagogicos() {
           {/* Empty State */}
           {!carregando && projetos.length === 0 && (
             <div className="text-center text-white">
-              <div className="text-6xl mb-4">📝</div>
+              <div className="text-6xl mb-4">ðŸ“</div>
               <div className="text-2xl font-bold mb-4">Nenhum projeto encontrado</div>
-              <p className="text-gray-300 mb-8">Seja o primeiro a criar um projeto pedagógico!</p>
+              <p className="text-gray-300 mb-8">Seja o primeiro a criar um projeto pedagÃ³gico!</p>
               <Button 
                 onClick={criarNovoProjeto}
                 className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold px-8 py-4 rounded-xl text-lg"
               >
-                ✨ Criar Primeiro Projeto
+                âœ¨ Criar Primeiro Projeto
               </Button>
             </div>
           )}
@@ -150,7 +150,7 @@ export default function AdminProjetosPedagogicos() {
                       {projeto.titulo}
                     </CardTitle>
                     <div className="text-gray-400 text-sm flex items-center gap-2">
-                      <span>📅</span>
+                      <span>ðŸ“…</span>
                       {new Date(projeto.criadoEm).toLocaleDateString('pt-BR', {
                         day: '2-digit',
                         month: 'short',
@@ -165,7 +165,7 @@ export default function AdminProjetosPedagogicos() {
                         <span className="font-semibold">{projeto.etapas?.length || 0}</span> 
                         <span className="ml-1">etapa{(projeto.etapas?.length || 0) !== 1 ? 's' : ''}</span>
                       </div>
-                      {/* Preview dos Ícones das Etapas */}
+                      {/* Preview dos Ãcones das Etapas */}
                       {projeto.etapas && projeto.etapas.length > 0 && (
                         <div className="flex gap-2 flex-wrap">
                           {projeto.etapas.slice(0, 5).map((etapa: any, idx: number) => (
@@ -180,13 +180,13 @@ export default function AdminProjetosPedagogicos() {
                           )}
                         </div>
                       )}
-                      {/* Botões de Ação */}
+                      {/* BotÃµes de AÃ§Ã£o */}
                       <div className="space-y-2">
                         <Button 
                           onClick={() => abrirProjeto(projeto.id)}
                           className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition-all duration-300"
                         >
-                          👁️ Visualizar Projeto
+                          ðŸ‘ï¸ Visualizar Projeto
                         </Button>
                         <Button 
                           onClick={(e) => {
@@ -195,7 +195,7 @@ export default function AdminProjetosPedagogicos() {
                           }}
                           className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-bold py-2 rounded-lg transition-all duration-300"
                         >
-                          👨‍🎓 Modo Aluno
+                          ðŸ‘¨â€ðŸŽ“ Modo Aluno
                         </Button>
                         <div className="flex gap-2">
                           <Button 
@@ -205,7 +205,7 @@ export default function AdminProjetosPedagogicos() {
                             }}
                             className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-bold py-2 rounded-lg transition-all duration-300"
                           >
-                            ✏️ Editar
+                            âœï¸ Editar
                           </Button>
                           <Button 
                             onClick={(e) => {
@@ -214,7 +214,7 @@ export default function AdminProjetosPedagogicos() {
                             }}
                             className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-2 rounded-lg transition-all duration-300"
                           >
-                            🗑️ Excluir
+                            ðŸ—‘ï¸ Excluir
                           </Button>
                         </div>
                       </div>
@@ -228,26 +228,26 @@ export default function AdminProjetosPedagogicos() {
           {/* Footer */}
           <div className="text-center mt-16 pt-8 border-t border-white/20">
             <p className="text-gray-300 mb-4">
-              💡 Dica: Clique em qualquer projeto para visualizá-lo em uma nova tela
+              ðŸ’¡ Dica: Clique em qualquer projeto para visualizÃ¡-lo em uma nova tela
             </p>
             <Button 
               onClick={criarNovoProjeto}
               className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold px-6 py-3 rounded-full"
             >
-              ➕ Adicionar Novo Projeto
+              âž• Adicionar Novo Projeto
             </Button>
           </div>
         </div>
 
-        {/* Modal de Confirmação de Exclusão */}
+        {/* Modal de ConfirmaÃ§Ã£o de ExclusÃ£o */}
         {projetoParaExcluir && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur flex items-center justify-center z-50">
             <div className="bg-gray-800 border border-gray-600 rounded-xl p-8 max-w-md w-full mx-4">
               <div className="text-center">
-                <div className="text-6xl mb-4">⚠️</div>
-                <h3 className="text-2xl font-bold text-white mb-4">Confirmar Exclusão</h3>
+                <div className="text-6xl mb-4">âš ï¸</div>
+                <h3 className="text-2xl font-bold text-white mb-4">Confirmar ExclusÃ£o</h3>
                 <p className="text-gray-300 mb-6">
-                  Tem certeza que deseja excluir este projeto? Esta ação não pode ser desfeita.
+                  Tem certeza que deseja excluir este projeto? Esta aÃ§Ã£o nÃ£o pode ser desfeita.
                 </p>
                 <div className="flex gap-4">
                   <Button 
@@ -273,3 +273,4 @@ export default function AdminProjetosPedagogicos() {
     </DashboardLayout>
   );
 }
+

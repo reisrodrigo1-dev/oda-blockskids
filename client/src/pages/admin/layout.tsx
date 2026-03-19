@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "wouter";
 
 const AdminLayout = () => {
   return (
@@ -12,7 +12,7 @@ const AdminLayout = () => {
         </ul>
       </nav>
       <main style={{ flex: 1, padding: 32 }}>
-        <Outlet />
+        <div>Selecione uma opcao no menu administrativo.</div>
       </main>
     </div>
   );

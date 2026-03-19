@@ -40,8 +40,11 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const now = new Date();
     const project: Project = { 
-      ...insertProject, 
+      ...insertProject,
       id,
+      code: insertProject.code ?? "",
+      blocks: insertProject.blocks ?? {},
+      description: insertProject.description ?? null,
       createdAt: now,
       updatedAt: now
     };
@@ -78,8 +81,9 @@ export class MemStorage implements IStorage {
   async createArduinoBoard(insertBoard: InsertArduinoBoard): Promise<ArduinoBoard> {
     const id = randomUUID();
     const board: ArduinoBoard = { 
-      ...insertBoard, 
+      ...insertBoard,
       id,
+      isConnected: insertBoard.isConnected ?? "false",
       lastSeen: new Date()
     };
     this.arduinoBoards.set(id, board);

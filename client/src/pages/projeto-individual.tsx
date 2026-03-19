@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useLocation, useRoute } from "wouter";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -65,7 +65,7 @@ export default function ProjetoIndividual() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="text-6xl mb-4 animate-spin">⏳</div>
+          <div className="text-6xl mb-4 animate-spin">â³</div>
           <div className="text-2xl font-bold">Carregando projeto...</div>
         </div>
       </div>
@@ -76,10 +76,10 @@ export default function ProjetoIndividual() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <div className="text-center text-white max-w-md">
-          <div className="text-6xl mb-4">❌</div>
-          <div className="text-2xl font-bold mb-4">Projeto não encontrado</div>
+          <div className="text-6xl mb-4">âŒ</div>
+          <div className="text-2xl font-bold mb-4">Projeto nÃ£o encontrado</div>
           <Button onClick={voltarParaLista} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-full">
-            Voltar à lista de projetos
+            Voltar Ã  lista de projetos
           </Button>
         </div>
       </div>
@@ -96,13 +96,13 @@ export default function ProjetoIndividual() {
               onClick={voltarParaLista} 
               className="bg-white/10 hover:bg-white/20 backdrop-blur text-white font-bold px-6 py-3 rounded-full border border-white/20"
             >
-              ← Voltar à Lista de Projetos
+              â† Voltar Ã  Lista de Projetos
             </Button>
             <Button 
               onClick={visualizarComoAluno} 
               className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold px-6 py-3 rounded-full border border-green-400/20"
             >
-              👨‍🎓 Visualizar como Aluno
+              ðŸ‘¨â€ðŸŽ“ Visualizar como Aluno
             </Button>
           </div>
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
@@ -118,7 +118,7 @@ export default function ProjetoIndividual() {
             })}
           </div>
           <div className="text-gray-300 text-sm">
-            💡 Use o botão "Visualizar como Aluno" para ver como os estudantes experimentarão este projeto
+            ðŸ’¡ Use o botÃ£o "Visualizar como Aluno" para ver como os estudantes experimentarÃ£o este projeto
           </div>
         </div>
 
@@ -137,12 +137,12 @@ export default function ProjetoIndividual() {
                   <h3 className="text-3xl font-bold text-white mb-4 drop-shadow-lg">{etapa.titulo}</h3>
                   <p className="text-xl text-white text-opacity-90 leading-relaxed mb-6 max-w-4xl mx-auto">{etapa.descricao}</p>
                   
-                  {/* Código da Etapa */}
+                  {/* CÃ³digo da Etapa */}
                   {etapa.codigo && (
                     <div className="mt-8 bg-black bg-opacity-30 backdrop-blur-sm rounded-2xl p-6 max-w-5xl mx-auto">
                       <h4 className="text-white font-bold text-xl mb-4 flex items-center justify-center">
-                        <span className="text-3xl mr-3">💻</span>
-                        Código para esta Etapa:
+                        <span className="text-3xl mr-3">ðŸ’»</span>
+                        CÃ³digo para esta Etapa:
                       </h4>
                       <div className="bg-gray-900 bg-opacity-70 rounded-xl p-6 overflow-x-auto border border-gray-600">
                         <pre className="text-green-300 text-base font-mono text-left whitespace-pre-wrap leading-relaxed">
@@ -156,7 +156,7 @@ export default function ProjetoIndividual() {
                   {etapa.imagemBlocos && (
                     <div className="mt-8 bg-black bg-opacity-20 backdrop-blur-sm rounded-2xl p-6 max-w-5xl mx-auto">
                       <h4 className="text-white font-bold text-xl mb-4 flex items-center justify-center">
-                        <span className="text-3xl mr-3">🖼️</span>
+                        <span className="text-3xl mr-3">ðŸ–¼ï¸</span>
                         Imagem dos Blocos:
                       </h4>
                       <div className="flex justify-center">
@@ -173,7 +173,7 @@ export default function ProjetoIndividual() {
                   {etapa.objetivos && etapa.objetivos.length > 0 && (
                     <div className="mt-8 bg-black bg-opacity-20 backdrop-blur-sm rounded-2xl p-6 max-w-4xl mx-auto">
                       <h4 className="text-white font-bold text-xl mb-4 flex items-center justify-center">
-                        <span className="text-3xl mr-3">🎯</span>
+                        <span className="text-3xl mr-3">ðŸŽ¯</span>
                         Objetivos desta Etapa:
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
@@ -187,7 +187,7 @@ export default function ProjetoIndividual() {
                     </div>
                   )}
 
-                  {/* Botão de Ação */}
+                  {/* BotÃ£o de AÃ§Ã£o */}
                   {etapa.action && (
                     <div className="mt-8 flex justify-center">
                       <Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
@@ -201,16 +201,17 @@ export default function ProjetoIndividual() {
           ))}
         </div>
 
-        {/* Footer da Página */}
+        {/* Footer da PÃ¡gina */}
         <div className="text-center mt-12 pt-8 border-t border-white/20">
           <Button 
             onClick={voltarParaLista} 
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 hover:scale-105"
           >
-            ← Voltar aos Projetos
+            â† Voltar aos Projetos
           </Button>
         </div>
       </div>
     </div>
   );
 }
+

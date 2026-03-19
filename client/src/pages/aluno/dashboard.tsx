@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -54,7 +54,7 @@ export default function DashboardAluno() {
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
-    // Verificar se aluno está logado
+    // Verificar se aluno estÃ¡ logado
     const alunoData = localStorage.getItem('aluno');
     if (!alunoData) {
       setLocation('/login-aluno');
@@ -85,7 +85,7 @@ export default function DashboardAluno() {
           projetosDisponiveis = rotaData.projetos.map((projeto: any, index: number) => ({
             ...projeto,
             id: `${doc.id}_${index}`,
-            concluido: false // TODO: Verificar se aluno já completou
+            concluido: false // TODO: Verificar se aluno jÃ¡ completou
           }));
         }
       });
@@ -114,10 +114,10 @@ export default function DashboardAluno() {
 
   const getDificuldadeText = (dificuldade: string) => {
     switch (dificuldade) {
-      case 'facil': return '🟢 Fácil';
-      case 'medio': return '🟡 Médio';
-      case 'dificil': return '🔴 Difícil';
-      default: return '⚪ Desconhecido';
+      case 'facil': return 'ðŸŸ¢ FÃ¡cil';
+      case 'medio': return 'ðŸŸ¡ MÃ©dio';
+      case 'dificil': return 'ðŸ”´ DifÃ­cil';
+      default: return 'âšª Desconhecido';
     }
   };
 
@@ -143,8 +143,8 @@ export default function DashboardAluno() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                <span className="text-4xl">🚀</span>
-                Olá, {aluno.nome.split(' ')[0]}!
+                <span className="text-4xl">ðŸš€</span>
+                OlÃ¡, {aluno.nome.split(' ')[0]}!
               </h1>
               <p className="text-gray-300 mt-2">
                 Turma: <strong>{aluno.rotaEstudoTitulo}</strong> | 
@@ -161,7 +161,7 @@ export default function DashboardAluno() {
         <Card className="bg-gray-800/90 border-gray-700 mb-6">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <span className="text-2xl">📊</span>
+              <span className="text-2xl">ðŸ“Š</span>
               Seu Progresso
             </CardTitle>
           </CardHeader>
@@ -172,40 +172,40 @@ export default function DashboardAluno() {
                   Projetos Completados: {aluno.progresso.projetosCompletados} de {projetos.length}
                 </span>
                 <Badge className="bg-blue-600">
-                  Nível {aluno.progresso.nivelAtual}
+                  NÃ­vel {aluno.progresso.nivelAtual}
                 </Badge>
               </div>
               <Progress value={progressoTotal} className="h-3" />
               <div className="text-center text-gray-400 text-sm">
-                {progressoTotal.toFixed(0)}% concluído
+                {progressoTotal.toFixed(0)}% concluÃ­do
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Estatísticas */}
+        {/* EstatÃ­sticas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl text-green-400 mb-2">✅</div>
+              <div className="text-3xl text-green-400 mb-2">âœ…</div>
               <div className="text-2xl font-bold text-white">{aluno.progresso.projetosCompletados}</div>
-              <div className="text-gray-400">Projetos Concluídos</div>
+              <div className="text-gray-400">Projetos ConcluÃ­dos</div>
             </CardContent>
           </Card>
 
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl text-blue-400 mb-2">📚</div>
+              <div className="text-3xl text-blue-400 mb-2">ðŸ“š</div>
               <div className="text-2xl font-bold text-white">{projetos.length}</div>
-              <div className="text-gray-400">Projetos Disponíveis</div>
+              <div className="text-gray-400">Projetos DisponÃ­veis</div>
             </CardContent>
           </Card>
 
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl text-purple-400 mb-2">🏆</div>
+              <div className="text-3xl text-purple-400 mb-2">ðŸ†</div>
               <div className="text-2xl font-bold text-white">{aluno.progresso.nivelAtual}</div>
-              <div className="text-gray-400">Nível Atual</div>
+              <div className="text-gray-400">NÃ­vel Atual</div>
             </CardContent>
           </Card>
         </div>
@@ -213,7 +213,7 @@ export default function DashboardAluno() {
         {/* Projetos */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-            <span className="text-3xl">🛠️</span>
+            <span className="text-3xl">ðŸ› ï¸</span>
             Seus Projetos
           </h2>
 
@@ -225,11 +225,11 @@ export default function DashboardAluno() {
                     <CardTitle className="text-white flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">
-                          {projeto.concluido ? '✅' : index + 1}
+                          {projeto.concluido ? 'âœ…' : index + 1}
                         </span>
                         <span className="text-sm">{projeto.titulo}</span>
                       </div>
-                      {projeto.concluido && <Badge className="bg-green-600">Concluído</Badge>}
+                      {projeto.concluido && <Badge className="bg-green-600">ConcluÃ­do</Badge>}
                     </CardTitle>
                   </CardHeader>
                   
@@ -256,7 +256,7 @@ export default function DashboardAluno() {
                         }`}
                         onClick={() => setLocation(`/aluno/projeto/${projeto.id}`)}
                       >
-                        {projeto.concluido ? 'Revisar Projeto' : 'Começar Projeto'}
+                        {projeto.concluido ? 'Revisar Projeto' : 'ComeÃ§ar Projeto'}
                       </Button>
                     </div>
                   </CardContent>
@@ -266,24 +266,24 @@ export default function DashboardAluno() {
           ) : (
             <Card className="bg-gray-800/90 border-gray-700">
               <CardContent className="p-8 text-center">
-                <div className="text-6xl mb-4">📚</div>
-                <h3 className="text-xl text-white mb-2">Nenhum projeto disponível</h3>
+                <div className="text-6xl mb-4">ðŸ“š</div>
+                <h3 className="text-xl text-white mb-2">Nenhum projeto disponÃ­vel</h3>
                 <p className="text-gray-400">
-                  Seu professor ainda não adicionou projetos para sua turma. 
-                  Que tal perguntar quando os projetos ficarão disponíveis?
+                  Seu professor ainda nÃ£o adicionou projetos para sua turma. 
+                  Que tal perguntar quando os projetos ficarÃ£o disponÃ­veis?
                 </p>
               </CardContent>
             </Card>
           )}
         </div>
 
-        {/* Menu rápido */}
+        {/* Menu rÃ¡pido */}
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
           <Button
             className="h-16 bg-blue-600 hover:bg-blue-700 flex flex-col items-center justify-center"
             onClick={() => setLocation('/aluno/projetos')}
           >
-            <span className="text-2xl mb-1">🛠️</span>
+            <span className="text-2xl mb-1">ðŸ› ï¸</span>
             <span className="text-sm">Meus Projetos</span>
           </Button>
           
@@ -291,7 +291,7 @@ export default function DashboardAluno() {
             className="h-16 bg-green-600 hover:bg-green-700 flex flex-col items-center justify-center"
             onClick={() => setLocation('/aluno/conquistas')}
           >
-            <span className="text-2xl mb-1">🏆</span>
+            <span className="text-2xl mb-1">ðŸ†</span>
             <span className="text-sm">Conquistas</span>
           </Button>
           
@@ -299,7 +299,7 @@ export default function DashboardAluno() {
             className="h-16 bg-purple-600 hover:bg-purple-700 flex flex-col items-center justify-center"
             onClick={() => setLocation('/aluno/perfil')}
           >
-            <span className="text-2xl mb-1">👤</span>
+            <span className="text-2xl mb-1">ðŸ‘¤</span>
             <span className="text-sm">Meu Perfil</span>
           </Button>
           
@@ -307,7 +307,7 @@ export default function DashboardAluno() {
             className="h-16 bg-yellow-600 hover:bg-yellow-700 flex flex-col items-center justify-center"
             onClick={() => setLocation('/aluno/ajuda')}
           >
-            <span className="text-2xl mb-1">🆘</span>
+            <span className="text-2xl mb-1">ðŸ†˜</span>
             <span className="text-sm">Ajuda</span>
           </Button>
         </div>
@@ -315,3 +315,4 @@ export default function DashboardAluno() {
     </div>
   );
 }
+

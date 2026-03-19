@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -45,7 +45,7 @@ export default function LoginAluno() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
-      setMensagem("❌ Informe o e-mail");
+      setMensagem("âŒ Informe o e-mail");
       return;
     }
 
@@ -62,7 +62,7 @@ export default function LoginAluno() {
       const alunosSnap = await getDocs(alunosQuery);
 
       if (alunosSnap.empty) {
-        setMensagem("❌ Aluno não encontrado. Verifique o e-mail ou entre em contato com seu professor.");
+        setMensagem("âŒ Aluno nÃ£o encontrado. Verifique o e-mail ou entre em contato com seu professor.");
         setCarregando(false);
         return;
       }
@@ -70,20 +70,20 @@ export default function LoginAluno() {
       const alunoDoc = alunosSnap.docs[0];
       const alunoData = { id: alunoDoc.id, ...alunoDoc.data() } as Aluno;
 
-      // Atualizar último acesso
-      // TODO: Implementar update do último acesso
+      // Atualizar Ãºltimo acesso
+      // TODO: Implementar update do Ãºltimo acesso
 
       // Salvar dados do aluno no localStorage
       localStorage.setItem('aluno', JSON.stringify(alunoData));
 
-      setMensagem("✅ Login realizado com sucesso!");
+      setMensagem("âœ… Login realizado com sucesso!");
       setTimeout(() => {
         setLocation('/aluno/dashboard');
       }, 1500);
 
     } catch (error) {
       console.error("Erro no login:", error);
-      setMensagem("❌ Erro ao fazer login. Tente novamente.");
+      setMensagem("âŒ Erro ao fazer login. Tente novamente.");
     }
     
     setCarregando(false);
@@ -94,11 +94,11 @@ export default function LoginAluno() {
       <Card className="w-full max-w-md bg-gray-800/90 border-gray-700 backdrop-blur">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl text-white flex items-center justify-center gap-2">
-            <span className="text-3xl">👨‍🎓</span>
+            <span className="text-3xl">ðŸ‘¨â€ðŸŽ“</span>
             Login Aluno
           </CardTitle>
           <p className="text-gray-300 text-sm">
-            Acesse sua conta para começar seus projetos incríveis!
+            Acesse sua conta para comeÃ§ar seus projetos incrÃ­veis!
           </p>
         </CardHeader>
 
@@ -115,7 +115,7 @@ export default function LoginAluno() {
                 required
               />
               <p className="text-xs text-gray-400 mt-1">
-                Use o e-mail que seu professor cadastrou para você
+                Use o e-mail que seu professor cadastrou para vocÃª
               </p>
             </div>
 
@@ -130,7 +130,7 @@ export default function LoginAluno() {
 
           {mensagem && (
             <div className={`p-3 rounded-lg text-center text-sm font-medium ${
-              mensagem.includes("✅") 
+              mensagem.includes("âœ…") 
                 ? "bg-green-600/20 text-green-400 border border-green-600" 
                 : "bg-red-600/20 text-red-400 border border-red-600"
             }`}>
@@ -143,7 +143,7 @@ export default function LoginAluno() {
               onClick={() => setLocation('/')}
               className="text-gray-400 hover:text-white text-sm"
             >
-              ← Voltar ao início
+              â† Voltar ao inÃ­cio
             </button>
           </div>
 
@@ -151,11 +151,11 @@ export default function LoginAluno() {
           <Card className="bg-blue-600/20 border-blue-600">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
-                <span className="text-xl">🆘</span>
+                <span className="text-xl">ðŸ†˜</span>
                 <div>
                   <h3 className="text-white font-semibold text-sm mb-1">Precisa de ajuda?</h3>
                   <p className="text-blue-200 text-xs">
-                    Se você não conseguir fazer login, peça ajuda ao seu professor. 
+                    Se vocÃª nÃ£o conseguir fazer login, peÃ§a ajuda ao seu professor. 
                     Ele tem o seu e-mail de cadastro.
                   </p>
                 </div>
@@ -167,3 +167,4 @@ export default function LoginAluno() {
     </div>
   );
 }
+

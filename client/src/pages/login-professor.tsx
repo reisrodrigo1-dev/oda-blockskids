@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -35,14 +35,14 @@ export default function LoginProfessor() {
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState("");
   
-  // Estados do formulário
+  // Estados do formulÃ¡rio
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [codigosTurmas, setCodigosTurmas] = useState("");
 
-  // Função para validar códigos de turma e encontrar cliente
+  // FunÃ§Ã£o para validar cÃ³digos de turma e encontrar cliente
   const validarCodigosTurmas = async (codigos: string[]) => {
     try {
       const clientesSnap = await getDocs(collection(db, "clientes"));
@@ -51,7 +51,7 @@ export default function LoginProfessor() {
         const clienteData = clienteDoc.data();
         const rotasEstudo = clienteData.rotasEstudo || [];
         
-        // Verifica se todos os códigos informados existem neste cliente
+        // Verifica se todos os cÃ³digos informados existem neste cliente
         const codigosValidos = codigos.every(codigo => 
           rotasEstudo.some((rota: any) => rota.codigo === codigo)
         );
@@ -72,7 +72,7 @@ export default function LoginProfessor() {
       
       return null;
     } catch (error) {
-      console.error("Erro ao validar códigos:", error);
+      console.error("Erro ao validar cÃ³digos:", error);
       return null;
     }
   };
@@ -80,7 +80,7 @@ export default function LoginProfessor() {
   const handleCadastro = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nome || !email || !telefone || !codigosTurmas) {
-      setMensagem("❌ Preencha todos os campos");
+      setMensagem("âŒ Preencha todos os campos");
       return;
     }
 
@@ -88,28 +88,28 @@ export default function LoginProfessor() {
     setMensagem("");
 
     try {
-      // Processar códigos de turma (separados por vírgula)
+      // Processar cÃ³digos de turma (separados por vÃ­rgula)
       const codigos = codigosTurmas
         .split(',')
         .map(c => c.trim().toUpperCase())
         .filter(c => c.length > 0);
 
       if (codigos.length === 0) {
-        setMensagem("❌ Informe pelo menos um código de turma válido");
+        setMensagem("âŒ Informe pelo menos um cÃ³digo de turma vÃ¡lido");
         setCarregando(false);
         return;
       }
 
-      // Validar códigos e encontrar cliente
+      // Validar cÃ³digos e encontrar cliente
       const validacao = await validarCodigosTurmas(codigos);
       
       if (!validacao) {
-        setMensagem("❌ Código(s) de turma inválido(s). Verifique com sua instituição.");
+        setMensagem("âŒ CÃ³digo(s) de turma invÃ¡lido(s). Verifique com sua instituiÃ§Ã£o.");
         setCarregando(false);
         return;
       }
 
-      // Verificar se professor já existe
+      // Verificar se professor jÃ¡ existe
       const professoresQuery = query(
         collection(db, "professores"),
         where("email", "==", email.toLowerCase()),
@@ -118,7 +118,7 @@ export default function LoginProfessor() {
       const professoresSnap = await getDocs(professoresQuery);
 
       if (!professoresSnap.empty) {
-        setMensagem("❌ Professor já cadastrado nesta instituição com este e-mail");
+        setMensagem("âŒ Professor jÃ¡ cadastrado nesta instituiÃ§Ã£o com este e-mail");
         setCarregando(false);
         return;
       }
@@ -144,14 +144,14 @@ export default function LoginProfessor() {
         id: docRef.id
       }));
 
-      setMensagem("✅ Cadastro realizado com sucesso!");
+      setMensagem("âœ… Cadastro realizado com sucesso!");
       setTimeout(() => {
         setLocation('/professor/dashboard');
       }, 1500);
 
     } catch (error) {
       console.error("Erro no cadastro:", error);
-      setMensagem("❌ Erro ao realizar cadastro. Tente novamente.");
+      setMensagem("âŒ Erro ao realizar cadastro. Tente novamente.");
     }
     
     setCarregando(false);
@@ -160,7 +160,7 @@ export default function LoginProfessor() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
-      setMensagem("❌ Informe o e-mail");
+      setMensagem("âŒ Informe o e-mail");
       return;
     }
 
@@ -176,7 +176,7 @@ export default function LoginProfessor() {
       const professoresSnap = await getDocs(professoresQuery);
 
       if (professoresSnap.empty) {
-        setMensagem("❌ Professor não encontrado. Verifique o e-mail ou faça seu cadastro.");
+        setMensagem("âŒ Professor nÃ£o encontrado. Verifique o e-mail ou faÃ§a seu cadastro.");
         setCarregando(false);
         return;
       }
@@ -187,14 +187,14 @@ export default function LoginProfessor() {
       // Salvar dados do professor no localStorage
       localStorage.setItem('professor', JSON.stringify(professorData));
 
-      setMensagem("✅ Login realizado com sucesso!");
+      setMensagem("âœ… Login realizado com sucesso!");
       setTimeout(() => {
         setLocation('/professor/dashboard');
       }, 1500);
 
     } catch (error) {
       console.error("Erro no login:", error);
-      setMensagem("❌ Erro ao fazer login. Tente novamente.");
+      setMensagem("âŒ Erro ao fazer login. Tente novamente.");
     }
     
     setCarregando(false);
@@ -205,13 +205,13 @@ export default function LoginProfessor() {
       <Card className="w-full max-w-md bg-gray-800/90 border-gray-700 backdrop-blur">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl text-white flex items-center justify-center gap-2">
-            <span className="text-3xl">👨‍🏫</span>
+            <span className="text-3xl">ðŸ‘¨â€ðŸ«</span>
             {modo === 'login' ? 'Login Professor' : 'Cadastro Professor'}
           </CardTitle>
           <p className="text-gray-300 text-sm">
             {modo === 'login' 
               ? 'Acesse sua conta para gerenciar suas turmas'
-              : 'Crie sua conta usando o código da turma fornecido pela instituição'
+              : 'Crie sua conta usando o cÃ³digo da turma fornecido pela instituiÃ§Ã£o'
             }
           </p>
         </CardHeader>
@@ -277,9 +277,9 @@ export default function LoginProfessor() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Código(s) da Turma
+                  CÃ³digo(s) da Turma
                   <span className="text-xs text-gray-200 block mt-1">
-                    Informe o(s) código(s) fornecido(s) pela instituição. Para múltiplos códigos, separe por vírgula.
+                    Informe o(s) cÃ³digo(s) fornecido(s) pela instituiÃ§Ã£o. Para mÃºltiplos cÃ³digos, separe por vÃ­rgula.
                   </span>
                 </label>
                 <Input
@@ -303,7 +303,7 @@ export default function LoginProfessor() {
 
           {mensagem && (
             <div className={`p-3 rounded-lg text-center text-sm font-medium ${
-              mensagem.includes("✅") 
+              mensagem.includes("âœ…") 
                 ? "bg-green-600/20 text-green-400 border border-green-600" 
                 : "bg-red-600/20 text-red-400 border border-red-600"
             }`}>
@@ -326,8 +326,8 @@ export default function LoginProfessor() {
               className="text-blue-400 hover:text-blue-300 text-sm"
             >
               {modo === 'login' 
-                ? "Não tem conta? Cadastre-se aqui" 
-                : "Já tem conta? Faça login"
+                ? "NÃ£o tem conta? Cadastre-se aqui" 
+                : "JÃ¡ tem conta? FaÃ§a login"
               }
             </button>
           </div>
@@ -337,7 +337,7 @@ export default function LoginProfessor() {
               onClick={() => setLocation('/')}
               className="text-white hover:text-gray-200 text-sm"
             >
-              ← Voltar ao início
+              â† Voltar ao inÃ­cio
             </button>
           </div>
         </CardContent>
@@ -345,3 +345,4 @@ export default function LoginProfessor() {
     </div>
   );
 }
+

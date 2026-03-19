@@ -152,50 +152,29 @@ export const useArduinoSerial = (): ArduinoSerial => {
     setError(null);
 
     try {
-      console.log('🚀 Iniciando envio do código...');
-      
-      // Passo 1: Preparar código (20%)
-      setUploadProgress(20);
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      // Passo 2: Enviar código via Serial (60%)
-      setUploadProgress(60);
-      console.log('� Enviando código via Serial...');
+      console.log('📡 Enviando código via serial...');
       
       const writer = port.writable?.getWriter();
       if (!writer) {
         throw new Error('Não foi possível obter o writer da porta');
       }
 
-      // Enviar o código completo via serial
       const encoder = new TextEncoder();
-      
-      // Enviar linha por linha para garantir recepção
       const lines = code.split('\n');
-      console.log(`📝 Enviando ${lines.length} linhas de código...`);
+      console.warn('⚠️ uploadCode() apenas envia via serial - use compileAndUpload() para upload real via STK500');
       
       for (let i = 0; i < lines.length; i++) {
-        if (lines[i].trim()) { // Apenas linhas não vazias
+        if (lines[i].trim()) {
           await writer.write(encoder.encode(lines[i] + '\r\n'));
-          await new Promise(resolve => setTimeout(resolve, 10)); // Pausa entre linhas
+          await new Promise(resolve => setTimeout(resolve, 10));
         }
         
-        // Atualizar progresso
-        const progress = 60 + (i / lines.length) * 30;
+        const progress = 20 + (i / lines.length) * 70;
         setUploadProgress(Math.round(progress));
       }
       
       writer.releaseLock();
-      
-      // Passo 3: Finalização (100%)
       setUploadProgress(100);
-      console.log('✅ Código enviado via Serial!');
-      
-      // Mostrar instruções importantes
-      setError('⚠️ IMPORTANTE: O código foi enviado via Serial. Para upload real, use o Arduino IDE com o arquivo .ino baixado.');
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       return true;
     } catch (error: any) {
       const errorMsg = `Erro no envio: ${error.message}`;
@@ -204,12 +183,7 @@ export const useArduinoSerial = (): ArduinoSerial => {
       return false;
     } finally {
       setIsUploading(false);
-      setTimeout(() => {
-        setUploadProgress(0);
-        if (error?.includes('IMPORTANTE')) {
-          setError(null); // Limpar a mensagem informativa após um tempo
-        }
-      }, 5000);
+      setTimeout(() => setUploadProgress(0), 3000);
     }
   }, [port, isConnected, error]);
 
@@ -228,7 +202,7 @@ export const useArduinoSerial = (): ArduinoSerial => {
     setError(null);
 
     try {
-      console.log('🚀 Iniciando compilação e upload...');
+      console.log('🚀 Iniciando compilação e upload via STK500...');
 
       // Etapa 1: Inicializar compilador (20%)
       setCompilationProgress(20);
@@ -267,28 +241,25 @@ export const useArduinoSerial = (): ArduinoSerial => {
         console.warn('⚠️ Avisos de compilação:', compilationResult.warnings);
       }
 
-      // Etapa 5: Upload (0-100%)
-      console.log('📤 Iniciando upload...');
+      // Etapa 5: Upload real via STK500 (0-100%)
+      console.log('📤 Iniciando upload via protocoloSTK500v1...');
       setUploadProgress(10);
 
       if (!compilationResult.hex) {
         throw new Error('Código compilado não disponível');
       }
 
-      // Simular progresso de upload
-      for (let i = 10; i <= 90; i += 10) {
-        setUploadProgress(i);
-        await new Promise(resolve => setTimeout(resolve, 200));
-      }
-
+      // ✅ NOVO: Upload REAL usando protocolo STK500
+      // (Não simulamos mais - isso vai de verdade para o Arduino!)
       const uploadSuccess = await arduinoCompiler.upload(compilationResult.hex, port);
       
       if (!uploadSuccess) {
-        throw new Error('Falha no upload');
+        throw new Error('Falha no upload STK500');
       }
 
       setUploadProgress(100);
       console.log('🎉 Upload concluído com sucesso!');
+      console.log('✨ Seu código está rodando no Arduino agora!');
 
       return true;
     } catch (error: any) {

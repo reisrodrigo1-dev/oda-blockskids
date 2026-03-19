@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./DashboardLayout";
 import { Button } from "../../components/ui/button";
@@ -12,7 +12,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -81,7 +81,7 @@ export default function AssociarRotasClientes() {
         setRotas(rotasData);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
-        setMsg("❌ Erro ao carregar dados do Firebase.");
+        setMsg("âŒ Erro ao carregar dados do Firebase.");
       }
     }
     fetchData();
@@ -106,7 +106,7 @@ export default function AssociarRotasClientes() {
       await updateDoc(clienteRef, {
         rotasEstudo: arrayUnion({ rotaId: rotaSelecionada, codigo })
       });
-      setMsg("✅ Associação realizada!");
+      setMsg("âœ… AssociaÃ§Ã£o realizada!");
       setRotaSelecionada("");
       // Atualiza lista local
       setClientes(clientes => clientes.map(c => c.id === clienteSelecionado ? {
@@ -114,12 +114,12 @@ export default function AssociarRotasClientes() {
         rotasEstudo: [...(c.rotasEstudo || []), { rotaId: rotaSelecionada, codigo }]
       } : c));
     } catch (e) {
-      setMsg("❌ Erro ao associar rota.");
+      setMsg("âŒ Erro ao associar rota.");
     }
     setAssociando(false);
   };
 
-  // Função para associar múltiplas rotas
+  // FunÃ§Ã£o para associar mÃºltiplas rotas
   const associarRotasMultiplas = async () => {
     if (!clienteSelecionado || rotasSelecionadas.length === 0) return;
     setAssociando(true);
@@ -137,7 +137,7 @@ export default function AssociarRotasClientes() {
         rotasEstudo: arrayUnion(...novasAssociacoes)
       });
       
-      setMsg(`✅ ${rotasSelecionadas.length} rota(s) associada(s) com sucesso!`);
+      setMsg(`âœ… ${rotasSelecionadas.length} rota(s) associada(s) com sucesso!`);
       setRotasSelecionadas([]);
       
       // Atualiza lista local
@@ -146,12 +146,12 @@ export default function AssociarRotasClientes() {
         rotasEstudo: [...(c.rotasEstudo || []), ...novasAssociacoes]
       } : c));
     } catch (e) {
-      setMsg("❌ Erro ao associar rotas.");
+      setMsg("âŒ Erro ao associar rotas.");
     }
     setAssociando(false);
   };
 
-  // Função para alternar seleção de rota
+  // FunÃ§Ã£o para alternar seleÃ§Ã£o de rota
   const toggleRotaSelecionada = (rotaId: string) => {
     setRotasSelecionadas(prev => 
       prev.includes(rotaId) 
@@ -160,19 +160,19 @@ export default function AssociarRotasClientes() {
     );
   };
 
-  // Função para selecionar/deselecionar todas as rotas
+  // FunÃ§Ã£o para selecionar/deselecionar todas as rotas
   const toggleTodasRotas = () => {
     if (rotasSelecionadas.length === rotas.length) {
       setRotasSelecionadas([]);
     } else {
-      // Filtra rotas que não estão já associadas
+      // Filtra rotas que nÃ£o estÃ£o jÃ¡ associadas
       const rotasJaAssociadas = associacoes.map(a => a.rotaId);
       const rotasDisponiveis = rotas.filter(r => !rotasJaAssociadas.includes(r.id));
       setRotasSelecionadas(rotasDisponiveis.map(r => r.id));
     }
   };
 
-  // Função para remover associação
+  // FunÃ§Ã£o para remover associaÃ§Ã£o
   const removerAssociacao = async (rotaId: string, codigo: string) => {
     if (!clienteSelecionado) return;
     setAssociando(true);
@@ -184,13 +184,13 @@ export default function AssociarRotasClientes() {
       await updateDoc(clienteRef, {
         rotasEstudo: (associacoes.filter(a => !(a.rotaId === rotaId && a.codigo === codigo)))
       });
-      setMsg("✅ Associação removida!");
+      setMsg("âœ… AssociaÃ§Ã£o removida!");
       setClientes(clientes => clientes.map(c => c.id === clienteSelecionado ? {
         ...c,
         rotasEstudo: (c.rotasEstudo || []).filter(a => !(a.rotaId === rotaId && a.codigo === codigo))
       } : c));
     } catch (e) {
-      setMsg("❌ Erro ao remover associação.");
+      setMsg("âŒ Erro ao remover associaÃ§Ã£o.");
     }
     setAssociando(false);
   };
@@ -203,7 +203,7 @@ export default function AssociarRotasClientes() {
             <Card className="mb-8 bg-gray-800/50 border-gray-700 backdrop-blur">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <span className="text-2xl">🔗</span>
+                  <span className="text-2xl">ðŸ”—</span>
                   Associar Rotas de Estudos a Clientes
                 </CardTitle>
               </CardHeader>
@@ -221,7 +221,7 @@ export default function AssociarRotasClientes() {
                   >
                     <option value="">Selecione um cliente</option>
                     {clientes.map(cliente => {
-                      // Criar uma exibição mais completa do cliente
+                      // Criar uma exibiÃ§Ã£o mais completa do cliente
                       let displayName = "";
                       if (cliente.razaoSocial && cliente.nomeFantasia) {
                         displayName = `${cliente.razaoSocial} (${cliente.nomeFantasia})`;
@@ -240,7 +240,7 @@ export default function AssociarRotasClientes() {
                   </select>
                 </div>
 
-                {/* Toggle entre modo simples e múltiplo */}
+                {/* Toggle entre modo simples e mÃºltiplo */}
                 {clienteSelecionado && (
                   <div className="flex items-center gap-4">
                     <label className="flex items-center gap-2 text-gray-300">
@@ -254,7 +254,7 @@ export default function AssociarRotasClientes() {
                         }}
                         className="rounded"
                       />
-                      Modo seleção múltipla
+                      Modo seleÃ§Ã£o mÃºltipla
                     </label>
                   </div>
                 )}
@@ -302,7 +302,7 @@ export default function AssociarRotasClientes() {
                         </label>
                       ))}
                       {rotas.filter(rota => !associacoes.some(a => a.rotaId === rota.id)).length === 0 && (
-                        <p className="text-gray-400 text-center py-4">Todas as rotas já estão associadas a este cliente</p>
+                        <p className="text-gray-400 text-center py-4">Todas as rotas jÃ¡ estÃ£o associadas a este cliente</p>
                       )}
                     </div>
                     {rotasSelecionadas.length > 0 && (
@@ -325,7 +325,7 @@ export default function AssociarRotasClientes() {
                       : "Associar Rota ao Cliente"}
                 </Button>
                 {msg && (
-                  <div className={`p-3 rounded-lg text-center font-semibold ${msg.includes("✅") ? "bg-green-600/20 text-green-400 border border-green-600" : "bg-red-600/20 text-red-400 border border-red-600"}`}>{msg}</div>
+                  <div className={`p-3 rounded-lg text-center font-semibold ${msg.includes("âœ…") ? "bg-green-600/20 text-green-400 border border-green-600" : "bg-red-600/20 text-red-400 border border-red-600"}`}>{msg}</div>
                 )}
               </CardContent>
             </Card>
@@ -334,7 +334,7 @@ export default function AssociarRotasClientes() {
               <Card className="bg-gray-800/50 border-gray-700 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <span className="text-2xl">📋</span>
+                    <span className="text-2xl">ðŸ“‹</span>
                     Rotas Associadas ao Cliente
                   </CardTitle>
                 </CardHeader>
@@ -345,7 +345,7 @@ export default function AssociarRotasClientes() {
                       return (
                         <li key={idx} className="flex items-center gap-4 bg-gray-700/50 p-3 rounded-lg border border-gray-600 text-white">
                           <span className="font-bold">{rota?.nome || assoc.rotaId}</span>
-                          <span className="ml-auto text-xs bg-gray-900 px-2 py-1 rounded">Código: <b>{assoc.codigo}</b></span>
+                          <span className="ml-auto text-xs bg-gray-900 px-2 py-1 rounded">CÃ³digo: <b>{assoc.codigo}</b></span>
                           <Button
                             onClick={() => removerAssociacao(assoc.rotaId, assoc.codigo)}
                             className="ml-4 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
@@ -366,3 +366,4 @@ export default function AssociarRotasClientes() {
     </ProtectedRoute>
   );
 }
+

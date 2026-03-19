@@ -32,7 +32,9 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
     sendCode,
     uploadCode,
     compileAndUpload,
-    readData 
+    readData,
+    isSupported,
+    port,
   } = useArduinoSerial();
 
   const handleConnect = async () => {
@@ -302,8 +304,12 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
       };
 
       // Funções auxiliares para STK500
+      const serialPort = port as SerialPort & {
+        setSignals?: (signals: { dataTerminalReady?: boolean }) => Promise<void>;
+      };
+
       const sendData = async (data: Uint8Array) => {
-        const writer = port!.writable?.getWriter();
+        const writer = serialPort.writable?.getWriter();
         if (!writer) throw new Error('Não foi possível obter writer da porta');
         await writer.write(data);
         writer.releaseLock();
@@ -315,14 +321,15 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
             reject(new Error('Timeout ao receber dados'));
           }, timeout);
 
-          const reader = port!.readable?.getReader();
+          const reader = serialPort.readable?.getReader();
           if (!reader) {
             clearTimeout(timer);
             reject(new Error('Não foi possível obter reader da porta'));
             return;
           }
 
-          reader.read().then(({ value }) => {
+          reader.read().then((result: ReadableStreamReadResult<Uint8Array>) => {
+            const { value } = result;
             clearTimeout(timer);
             reader.releaseLock();
             resolve(value || new Uint8Array(0));
@@ -357,9 +364,9 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
 
       // Reset do Arduino
       setSerialData(prev => [...prev, '🔄 Fazendo reset do Arduino...']);
-      await port.setSignals({ dataTerminalReady: false });
+      await serialPort.setSignals?.({ dataTerminalReady: false });
       await new Promise(resolve => setTimeout(resolve, 250));
-      await port.setSignals({ dataTerminalReady: true });
+      await serialPort.setSignals?.({ dataTerminalReady: true });
       await new Promise(resolve => setTimeout(resolve, 50));
 
       // Aguardar bootloader
@@ -412,9 +419,9 @@ const ArduinoPanel: React.FC<ArduinoPanelProps> = ({ code }) => {
 
       // Reset final
       await new Promise(resolve => setTimeout(resolve, 2000));
-      await port.setSignals({ dataTerminalReady: false });
+      await serialPort.setSignals?.({ dataTerminalReady: false });
       await new Promise(resolve => setTimeout(resolve, 100));
-      await port.setSignals({ dataTerminalReady: true });
+      await serialPort.setSignals?.({ dataTerminalReady: true });
 
       setSerialData(prev => [...prev, '✅ Upload concluído com sucesso!']);
       setSerialData(prev => [...prev, '🎉 Código enviado para Arduino via WebSerial!']);

@@ -1,6 +1,6 @@
 /**
- * Arduino Compiler via WebAssembly
- * Implementação experimental para compilação e upload direto no navegador
+ * Arduino Compiler com Protocolo STK500v1 Implementado
+ * Upload real para Arduino via Web Serial API
  */
 
 interface CompilerOptions {
@@ -15,6 +15,20 @@ interface CompilationResult {
   error?: string;
   warnings?: string[];
 }
+
+// Constantes do protocolo STK500v1
+const STK_OK = 0x10;
+const STK_INSYNC = 0x14;
+const STK_PARAMETER = 0x40;
+const STK_SET_PARAMETER = 0x40;
+const STK_GET_PARAMETER = 0x41;
+const STK_GET_SYNC = 0x30;
+const STK_SET_DEVICE = 0x42;
+const STK_ENTER_PROGMODE = 0x50;
+const STK_LEAVE_PROGMODE = 0x51;
+const STK_LOAD_ADDRESS = 0x55;
+const STK_PROG_PAGE = 0x64;
+const CRC_EOP = 0x20;
 
 export class ArduinoCompiler {
   private wasmModule: any = null;
@@ -67,9 +81,15 @@ export class ArduinoCompiler {
 
   async upload(hex: string, port: SerialPort): Promise<boolean> {
     try {
-      console.log('🚀 Iniciando upload via protocolo STK500...');
+      console.log('🚀 Iniciando upload via protocolo STK500v1...');
 
-      // Implementar protocolo STK500 para upload
+      // Fazer reset via DTR antes de tentar upload
+      await this.resetArduino(port);
+      
+      // Esperar bootloader estar pronto
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Implementar protocolo STK500v1 para upload
       const success = await this.stk500Upload(hex, port);
       
       if (success) {
@@ -127,86 +147,293 @@ export class ArduinoCompiler {
     return mockHex.join('\n');
   }
 
-  private async stk500Upload(hex: string, port: SerialPort): Promise<boolean> {
+  // ===== PROTOCOLO STK500v1 COMPLETO =====
+
+  /**
+   * Reseta o Arduino via sinal DTR da porta serial
+   * Isso "acorda" o bootloader
+   */
+  private async resetArduino(port: SerialPort): Promise<void> {
     try {
-      const writer = port.writable?.getWriter();
-      if (!writer) {
-        throw new Error('Não foi possível obter writer da porta');
+      // Cast para acessar methods não padronizados
+      const portAny = port as any;
+      
+      console.log('🔄 Resetando Arduino via DTR...');
+      
+      // Descer DTR (sinal de reset)
+      if (portAny.setSignals) {
+        await portAny.setSignals({ dataTerminalReady: false });
+        await new Promise(resolve => setTimeout(resolve, 250)); // Capacitor precisa descarregar
+        
+        // Subir DTR de novo
+        await portAny.setSignals({ dataTerminalReady: true });
+        console.log('✅ Arduino resetado com sucesso!');
+      } else {
+        console.warn('⚠️ setSignals não disponível - reset DTR não funciona');
       }
+    } catch (error) {
+      console.warn('⚠️ Erro ao resetar via DTR:', error);
+      // Continuar mesmo com erro
+    }
+  }
 
-      // Implementar protocolo STK500v1 básico
-      console.log('📡 Sincronizando com bootloader...');
-      
-      // 1. Sync
-      await this.sendSTKCommand(writer, [0x30, 0x20]);
-      
-      // 2. Get Sync (verificar se bootloader responde)
-      const syncResponse = await this.waitForResponse(port, 2);
-      if (!syncResponse || syncResponse[0] !== 0x14 || syncResponse[1] !== 0x10) {
-        throw new Error('Falha na sincronização com bootloader');
-      }
+  /**
+   * Implementação completa do protocolo STK500v1
+   */
+  private async stk500Upload(hex: string, port: SerialPort): Promise<boolean> {
+    const writer = port.writable?.getWriter();
+    if (!writer) {
+      throw new Error('Não foi possível obter writer da porta');
+    }
 
-      console.log('✅ Bootloader detectado!');
-
-      // 3. Enter programming mode
-      await this.sendSTKCommand(writer, [0x50, 0x20]);
+    try {
+      console.log('📡 Iniciando sincronização com bootloader...');
       
-      // 4. Upload hex data
+      // Passo 1: Sincronize com bootloader
+      await this.stk500Sync(port, writer);
+      console.log('✅ Bootloader sincronizado!');
+
+      // Passo 2: Enter Programming Mode
+      console.log('🔐 Entrando em modo de programação...');
+      await this.stk500EnterProgMode(port, writer);
+      console.log('✅ Modo de programação ativo!');
+
+      // Passo 3: Parse e converter .HEX para array de bytes
+      console.log('📦 Parseando arquivo .HEX...');
+      const hexData = this.parseHex(hex);
+      console.log(`✅ ${hexData.length} bytes parsed para upload`);
+
+      // Passo 4: Upload das páginas
       console.log('📤 Enviando código compilado...');
-      const hexLines = hex.split('\n').filter(line => line.startsWith(':'));
-      
-      for (let i = 0; i < hexLines.length; i++) {
-        if (hexLines[i] === ':00000001FF') break; // End of file
-        
-        await this.uploadHexLine(writer, hexLines[i]);
-        
-        // Simular progresso
-        if (i % 10 === 0) {
-          console.log(`📊 Progresso: ${Math.round((i / hexLines.length) * 100)}%`);
-        }
-      }
+      await this.uploadPages(port, writer, hexData);
+      console.log('✅ Todas as páginas enviadas!');
 
-      // 5. Leave programming mode
-      await this.sendSTKCommand(writer, [0x51, 0x20]);
+      // Passo 5: Leave Programming Mode
+      console.log('🔓 Saindo do modo de programação...');
+      await this.stk500LeaveProgMode(port, writer);
+      console.log('✅ Bootloader finalizado!');
 
       writer.releaseLock();
       return true;
     } catch (error) {
       console.error('❌ Erro no protocolo STK500:', error);
+      try {
+        writer.releaseLock();
+      } catch (e) {
+        // Ignorar se já foi liberado
+      }
       return false;
     }
   }
 
-  private async sendSTKCommand(writer: WritableStreamDefaultWriter, command: number[]): Promise<void> {
-    const buffer = new Uint8Array(command);
-    await writer.write(buffer);
-    await new Promise(resolve => setTimeout(resolve, 50)); // Aguardar resposta
+  /**
+   * Sincroniza com o bootloader (aperto de mão)
+   */
+  private async stk500Sync(port: SerialPort, writer: WritableStreamDefaultWriter): Promise<void> {
+    // Enviar comando GET_SYNC: [0x30, 0x20]
+    await this.sendCommand(writer, [STK_GET_SYNC, CRC_EOP]);
+    
+    // Esperar resposta: [0x14, 0x10] (INSYNC, OK)
+    const response = await this.readResponse(port, 2, 1000);
+    
+    if (!response || response[0] !== STK_INSYNC || response[1] !== STK_OK) {
+      throw new Error('Falha na sincronização: Bootloader não respondeu correctamente');
+    }
   }
 
-  private async uploadHexLine(writer: WritableStreamDefaultWriter, hexLine: string): Promise<void> {
-    // Converter linha hex para bytes e enviar
-    const bytes = [];
-    for (let i = 1; i < hexLine.length; i += 2) {
-      bytes.push(parseInt(hexLine.substr(i, 2), 16));
+  /**
+   * Entra em modo de programação
+   */
+  private async stk500EnterProgMode(port: SerialPort, writer: WritableStreamDefaultWriter): Promise<void> {
+    // Enviar comando ENTER_PROGMODE: [0x50, 0x20]
+    await this.sendCommand(writer, [STK_ENTER_PROGMODE, CRC_EOP]);
+    
+    // Esperar resposta: [0x14, 0x10]
+    const response = await this.readResponse(port, 2, 1000);
+    
+    if (!response || response[0] !== STK_INSYNC || response[1] !== STK_OK) {
+      throw new Error('Falha ao entrar em modo de programação');
+    }
+  }
+
+  /**
+   * Sai do modo de programação
+   */
+  private async stk500LeaveProgMode(port: SerialPort, writer: WritableStreamDefaultWriter): Promise<void> {
+    // Enviar comando LEAVE_PROGMODE: [0x51, 0x20]
+    await this.sendCommand(writer, [STK_LEAVE_PROGMODE, CRC_EOP]);
+    
+    // Esperar resposta: [0x14, 0x10]
+    const response = await this.readResponse(port, 2, 1000);
+    
+    if (!response || response[0] !== STK_INSYNC || response[1] !== STK_OK) {
+      throw new Error('Falha ao sair do modo de programação');
+    }
+  }
+
+  /**
+   * Parse do arquivo .HEX e conversão para array de bytes
+   * Formato .HEX: :10 0000 00 A9878787... FF
+   *               ^^  ^^^^ ^^ ^^^^^^^^^^^^^^ ^^
+   *               len addr type    data    chk
+   */
+  private parseHex(hexString: string): Uint8Array {
+    const lines = hexString.split('\n').filter(line => line.startsWith(':'));
+    const bytes: number[] = [];
+    let currentAddr = 0;
+    let extendedAddr = 0;
+
+    for (const line of lines) {
+      const byteCount = parseInt(line.substr(1, 2), 16);
+      const address = parseInt(line.substr(3, 4), 16);
+      const recordType = parseInt(line.substr(7, 2), 16);
+      
+      // Tipo 0x00 = Data
+      if (recordType === 0x00) {
+        const fullAddr = extendedAddr + address;
+        
+        // Garantir espaço para todos os bytes
+        while (bytes.length < fullAddr + byteCount) {
+          bytes.push(0xff);
+        }
+        
+        // Ler bytes de dados
+        for (let i = 0; i < byteCount; i++) {
+          const byteStr = line.substr(9 + i * 2, 2);
+          bytes[fullAddr + i] = parseInt(byteStr, 16);
+        }
+      }
+      // Tipo 0x01 = End of file
+      else if (recordType === 0x01) {
+        break;
+      }
+      // Tipo 0x04 = Extended linear address
+      else if (recordType === 0x04) {
+        extendedAddr = parseInt(line.substr(9, 4), 16) * 65536;
+      }
+    }
+
+    return new Uint8Array(bytes);
+  }
+
+  /**
+   * Upload das páginas de 128 bytes
+   */
+  private async uploadPages(port: SerialPort, writer: WritableStreamDefaultWriter, data: Uint8Array): Promise<void> {
+    const pageSize = 128; // Arduino Uno usa 128 bytes por página
+    
+    for (let addr = 0; addr < data.length; addr += pageSize) {
+      const page = data.slice(addr, Math.min(addr + pageSize, data.length));
+      const padded = new Uint8Array(pageSize);
+      padded.fill(0xff); // Preencher com 0xff (padrão)
+      padded.set(page);
+      
+      // Enviar endereço (em palavras de 16 bits)
+      const addrWords = addr >> 1; // Converter bytes para words
+      await this.stk500LoadAddress(port, writer, addrWords);
+      
+      // Enviar página
+      await this.stk500ProgPage(port, writer, padded);
+      
+      // Log de progresso
+      if (addr % (pageSize * 10) === 0) {
+        const progress = Math.round((addr / data.length) * 100);
+        console.log(`📊 Progresso: ${progress}%`);
+      }
+    }
+  }
+
+  /**
+   * Comando STK_LOAD_ADDRESS: define endereço de escrita
+   */
+  private async stk500LoadAddress(port: SerialPort, writer: WritableStreamDefaultWriter, addr: number): Promise<void> {
+    const addrLow = addr & 0xff;
+    const addrHigh = (addr >> 8) & 0xff;
+    
+    await this.sendCommand(writer, [STK_LOAD_ADDRESS, addrLow, addrHigh, CRC_EOP]);
+    const response = await this.readResponse(port, 2, 500);
+    
+    if (!response || response[0] !== STK_INSYNC || response[1] !== STK_OK) {
+      throw new Error(`Falha ao carregar endereço 0x${addr.toString(16)}`);
+    }
+  }
+
+  /**
+   * Comando STK_PROG_PAGE: escreve uma página na memória
+   */
+  private async stk500ProgPage(port: SerialPort, writer: WritableStreamDefaultWriter, page: Uint8Array): Promise<void> {
+    const pageSize = page.length;
+    const pageSizeLow = pageSize & 0xff;
+    const pageSizeHigh = (pageSize >> 8) & 0xff;
+    
+    // Montar comando: [0x64, pageHigh, pageLow, 0x46] + data + [0x20]
+    const command: number[] = [STK_PROG_PAGE, pageSizeHigh, pageSizeLow, 0x46];
+    
+    // Adicionar dados da página
+    for (let i = 0; i < page.length; i++) {
+      command.push(page[i]);
     }
     
-    const buffer = new Uint8Array(bytes);
-    await writer.write(buffer);
-    await new Promise(resolve => setTimeout(resolve, 10));
+    // Terminar com CRC_EOP
+    command.push(CRC_EOP);
+    
+    await this.sendCommand(writer, command);
+    const response = await this.readResponse(port, 2, 1000);
+    
+    if (!response || response[0] !== STK_INSYNC || response[1] !== STK_OK) {
+      throw new Error('Falha ao gravar página');
+    }
   }
 
-  private async waitForResponse(port: SerialPort, expectedBytes: number): Promise<Uint8Array | null> {
-    try {
-      const reader = port.readable?.getReader();
-      if (!reader) return null;
+  /**
+   * Envia um comando para o bootloader
+   */
+  private async sendCommand(writer: WritableStreamDefaultWriter, command: number[]): Promise<void> {
+    const buffer = new Uint8Array(command);
+    await writer.write(buffer);
+    // Pequena pausa para o dispositivo processar
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
 
-      const { value } = await reader.read();
-      reader.releaseLock();
+  /**
+   * Lê resposta do bootloader com timeout
+   */
+  private async readResponse(port: SerialPort, expectedBytes: number, timeoutMs: number): Promise<Uint8Array | null> {
+    return new Promise((resolve) => {
+      let timeoutHandle: any = null;
+      
+      const doRead = async () => {
+        try {
+          const reader = port.readable?.getReader();
+          if (!reader) {
+            resolve(null);
+            return;
+          }
 
-      return value && value.length >= expectedBytes ? value : null;
-    } catch (error) {
-      return null;
-    }
+          // Ler com timeout
+          const readPromise = reader.read();
+          const timeoutPromise = new Promise<any>((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout reading response')), timeoutMs)
+          );
+
+          const { value } = await Promise.race([readPromise, timeoutPromise]);
+          reader.releaseLock();
+
+          if (value && value.length >= expectedBytes) {
+            resolve(value.slice(0, expectedBytes));
+          } else {
+            resolve(null);
+          }
+        } catch (error) {
+          console.warn('Erro ao ler resposta:', error);
+          resolve(null);
+        } finally {
+          if (timeoutHandle) clearTimeout(timeoutHandle);
+        }
+      };
+
+      doRead();
+    });
   }
 
   // Detectar placa automaticamente

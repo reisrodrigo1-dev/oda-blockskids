@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -65,7 +65,7 @@ export default function RotaDetalhes() {
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
-    // Verificar se professor está logado
+    // Verificar se professor estÃ¡ logado
     const professorData = localStorage.getItem('professor');
     if (!professorData) {
       setLocation('/login-professor');
@@ -148,13 +148,13 @@ export default function RotaDetalhes() {
 
   const obterCorDificuldade = (dificuldade: string) => {
     switch (dificuldade?.toLowerCase()) {
-      case 'fácil':
+      case 'fÃ¡cil':
       case 'facil':
         return 'bg-green-600';
-      case 'médio':
+      case 'mÃ©dio':
       case 'medio':
         return 'bg-yellow-600';
-      case 'difícil':
+      case 'difÃ­cil':
       case 'dificil':
         return 'bg-red-600';
       default:
@@ -173,7 +173,7 @@ export default function RotaDetalhes() {
   if (!rota) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-green-900 flex items-center justify-center">
-        <div className="text-white text-xl">Rota não encontrada</div>
+        <div className="text-white text-xl">Rota nÃ£o encontrada</div>
       </div>
     );
   }
@@ -186,13 +186,13 @@ export default function RotaDetalhes() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                <span className="text-4xl">📚</span>
+                <span className="text-4xl">ðŸ“š</span>
                 {rota.titulo}
               </h1>
               <div className="flex items-center gap-4 mt-2">
                 <Badge className="bg-blue-600">{rota.codigo}</Badge>
                 <p className="text-gray-300">
-                  {rota.projetos?.length || 0} aulas disponíveis
+                  {rota.projetos?.length || 0} aulas disponÃ­veis
                 </p>
               </div>
               {rota.descricao && (
@@ -209,11 +209,11 @@ export default function RotaDetalhes() {
           </div>
         </div>
 
-        {/* Estatísticas gerais */}
+        {/* EstatÃ­sticas gerais */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl text-blue-400 mb-2">📖</div>
+              <div className="text-3xl text-blue-400 mb-2">ðŸ“–</div>
               <div className="text-2xl font-bold text-white">{rota.projetos?.length || 0}</div>
               <div className="text-gray-400">Aulas Total</div>
             </CardContent>
@@ -221,17 +221,17 @@ export default function RotaDetalhes() {
 
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl text-green-400 mb-2">✅</div>
+              <div className="text-3xl text-green-400 mb-2">âœ…</div>
               <div className="text-2xl font-bold text-white">
                 {projetosAlunos.filter(p => p.concluido).length}
               </div>
-              <div className="text-gray-400">Projetos Concluídos</div>
+              <div className="text-gray-400">Projetos ConcluÃ­dos</div>
             </CardContent>
           </Card>
 
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl text-yellow-400 mb-2">⏳</div>
+              <div className="text-3xl text-yellow-400 mb-2">â³</div>
               <div className="text-2xl font-bold text-white">
                 {projetosAlunos.filter(p => !p.concluido).length}
               </div>
@@ -241,7 +241,7 @@ export default function RotaDetalhes() {
 
           <Card className="bg-gray-800/90 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl text-purple-400 mb-2">👥</div>
+              <div className="text-3xl text-purple-400 mb-2">ðŸ‘¥</div>
               <div className="text-2xl font-bold text-white">
                 {new Set(projetosAlunos.map(p => p.alunoId)).size}
               </div>
@@ -285,7 +285,7 @@ export default function RotaDetalhes() {
                     </CardHeader>
                     
                     <CardContent>
-                      {/* Estatísticas do projeto */}
+                      {/* EstatÃ­sticas do projeto */}
                       <div className="bg-gray-700/50 rounded-lg p-4 mb-4">
                         <h4 className="text-white font-semibold mb-3">Progresso dos Alunos</h4>
                         <div className="grid grid-cols-3 gap-4 text-center">
@@ -295,7 +295,7 @@ export default function RotaDetalhes() {
                           </div>
                           <div>
                             <div className="text-lg font-bold text-green-400">{stats.concluidos}</div>
-                            <div className="text-xs text-gray-400">Concluídos</div>
+                            <div className="text-xs text-gray-400">ConcluÃ­dos</div>
                           </div>
                           <div>
                             <div className="text-lg font-bold text-yellow-400">{stats.emAndamento}</div>
@@ -306,7 +306,7 @@ export default function RotaDetalhes() {
                         {stats.total > 0 && (
                           <div className="mt-3">
                             <div className="flex justify-between text-sm text-gray-400 mb-1">
-                              <span>Taxa de Conclusão</span>
+                              <span>Taxa de ConclusÃ£o</span>
                               <span>{stats.percentualConclusao}%</span>
                             </div>
                             <div className="w-full bg-gray-600 rounded-full h-2">
@@ -319,13 +319,13 @@ export default function RotaDetalhes() {
                         )}
                       </div>
 
-                      {/* Ações */}
+                      {/* AÃ§Ãµes */}
                       <div className="flex gap-2">
                         <Button
                           size="sm"
                           className="bg-blue-600 hover:bg-blue-700 flex-1"
                           onClick={() => {
-                            // Redireciona para a visualização do projeto do professor
+                            // Redireciona para a visualizaÃ§Ã£o do projeto do professor
                             if ((projeto as any).id) {
                               setLocation(`/professor/projeto/${(projeto as any).id}`);
                             } else {
@@ -341,7 +341,7 @@ export default function RotaDetalhes() {
                           variant="outline"
                           className="border-gray-600 text-gray-300 hover:bg-gray-700"
                           onClick={() => {
-                            // Aqui você pode implementar a visualização dos trabalhos dos alunos
+                            // Aqui vocÃª pode implementar a visualizaÃ§Ã£o dos trabalhos dos alunos
                             console.log('Ver trabalhos dos alunos para:', projeto.titulo);
                           }}
                         >
@@ -356,13 +356,13 @@ export default function RotaDetalhes() {
           ) : (
             <Card className="bg-gray-800/90 border-gray-700">
               <CardContent className="p-8 text-center">
-                <div className="text-4xl mb-4">📝</div>
+                <div className="text-4xl mb-4">ðŸ“</div>
                 <h3 className="text-white text-lg font-semibold mb-2">
                   Nenhuma aula configurada ainda
                 </h3>
                 <p className="text-gray-400">
-                  Esta rota de estudo ainda não possui aulas/projetos configurados.
-                  Entre em contato com o administrador para adicionar conteúdo.
+                  Esta rota de estudo ainda nÃ£o possui aulas/projetos configurados.
+                  Entre em contato com o administrador para adicionar conteÃºdo.
                 </p>
               </CardContent>
             </Card>
@@ -372,3 +372,4 @@ export default function RotaDetalhes() {
     </div>
   );
 }
+

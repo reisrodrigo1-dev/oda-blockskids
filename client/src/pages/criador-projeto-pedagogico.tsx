@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 // Firebase config
@@ -6,7 +6,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCWRarkiBugYjwdmrwocbLT5K301iSbwP8",
   authDomain: "oda-blockskids.firebaseapp.com",
   projectId: "oda-blockskids",
-  storageBucket: "oda-blockskids.appspot.com",
+  storageBucket: "oda-blockskids.firebasestorage.app",
   messagingSenderId: "567014936342",
   appId: "1:567014936342:web:88c733b99cb5b1d62e0a37",
   measurementId: "G-TCMP1KJK0H"
@@ -32,7 +32,7 @@ export default function CriadorProjetoPedagogico() {
   const [msg, setMsg] = useState("");
   async function salvarProjeto() {
     if (!tituloProjeto || etapas.length === 0) {
-      setMsg("Preencha o título e adicione pelo menos uma etapa.");
+      setMsg("Preencha o tÃ­tulo e adicione pelo menos uma etapa.");
       return;
     }
     setSalvando(true);
@@ -64,16 +64,16 @@ export default function CriadorProjetoPedagogico() {
 
   return (
     <div className="max-w-3xl mx-auto py-12 px-4">
-      <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center">Criador de Projeto Pedagógico</h1>
+      <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center">Criador de Projeto PedagÃ³gico</h1>
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Título do Projeto</CardTitle>
+          <CardTitle>TÃ­tulo do Projeto</CardTitle>
         </CardHeader>
         <CardContent>
           <Input
             value={tituloProjeto}
             onChange={e => setTituloProjeto(e.target.value)}
-            placeholder="Ex: Tema #M21 – Exploração Espacial: Robô Marciano"
+            placeholder="Ex: Tema #M21 â€“ ExploraÃ§Ã£o Espacial: RobÃ´ Marciano"
             className="mb-2"
           />
         </CardContent>
@@ -87,13 +87,13 @@ export default function CriadorProjetoPedagogico() {
           <Input
             value={novaEtapa.titulo}
             onChange={e => setNovaEtapa({ ...novaEtapa, titulo: e.target.value })}
-            placeholder="Título da etapa/aula"
+            placeholder="TÃ­tulo da etapa/aula"
             className="mb-2"
           />
           <Textarea
             value={novaEtapa.atividade}
             onChange={e => setNovaEtapa({ ...novaEtapa, atividade: e.target.value })}
-            placeholder="Descrição da atividade"
+            placeholder="DescriÃ§Ã£o da atividade"
             className="mb-2"
           />
           <Textarea
@@ -106,12 +106,12 @@ export default function CriadorProjetoPedagogico() {
         </CardContent>
       </Card>
 
-      {/* Visualização do Projeto */}
+      {/* VisualizaÃ§Ã£o do Projeto */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-blue-600 mb-4">Visualização do Projeto</h2>
+        <h2 className="text-2xl font-bold text-blue-600 mb-4">VisualizaÃ§Ã£o do Projeto</h2>
         <Card>
           <CardHeader>
-            <CardTitle>{tituloProjeto || "(Sem título)"}</CardTitle>
+            <CardTitle>{tituloProjeto || "(Sem tÃ­tulo)"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
@@ -122,7 +122,7 @@ export default function CriadorProjetoPedagogico() {
                     onClick={() => removerEtapa(idx)}
                     className="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm"
                     title="Remover etapa"
-                  >✕</button>
+                  >âœ•</button>
                   <h3 className="text-xl font-bold text-blue-600 mb-2">{etapa.titulo}</h3>
                   <p className="text-gray-700 mb-2"><span className="font-semibold">Atividade:</span> {etapa.atividade}</p>
                   <p className="text-gray-600"><span className="font-semibold">Habilidade:</span> {etapa.habilidade}</p>
@@ -141,3 +141,4 @@ export default function CriadorProjetoPedagogico() {
     </div>
   );
 }
+
