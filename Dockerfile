@@ -5,6 +5,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+RUN echo "VITE_API_URL=" > client/.env
 ENV VITE_API_URL=
 RUN npm run build
 

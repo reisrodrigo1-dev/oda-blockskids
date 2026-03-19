@@ -7,4 +7,6 @@ vite.config.ts.*
 .vercel
 AZURE_ENV_PRIVATE.md
 .env
+client/.env
+client/.env.local
 backend-debug.log
